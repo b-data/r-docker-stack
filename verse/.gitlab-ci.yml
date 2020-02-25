@@ -32,3 +32,19 @@ build-latest:
   except:
     variables:
       - $R_VERSION_UPDATE == "true"
+
+trigger-latest-build:
+  stage: deploy
+  before_script:
+    - apk add --update curl
+    - rm -rf /var/cache/apk/*
+  script:
+    - curl -X POST -F token=$R_GEOSPATIAL -F ref=master https://gitlab.b-data.ch/api/v4/projects/175/trigger/pipeline
+  only:
+    refs:
+      - master
+    changes:
+      - verse/latest.Dockerfile
+  except:
+    variables:
+      - $R_VERSION_UPDATE == "true"
