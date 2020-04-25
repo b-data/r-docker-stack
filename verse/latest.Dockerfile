@@ -1,4 +1,4 @@
-FROM registry.gitlab.b-data.ch/r/tidyverse:3.6.3
+FROM registry.gitlab.b-data.ch/r/tidyverse:4.0.0
 
 # Version-stable CTAN repo from the tlnet archive at texlive.info, used in the
 # TinyTeX installation: chosen as the frozen snapshot of the TeXLive release
@@ -26,6 +26,7 @@ RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
     libbz2-dev \
     libicu-dev \
     liblzma-dev \
+    libpcre2-dev \
     ## system dependency of hunspell (devtools)
     libhunspell-dev \
     ## system dependency of hadley/pkgdown

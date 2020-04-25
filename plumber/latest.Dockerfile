@@ -1,4 +1,4 @@
-FROM registry.gitlab.b-data.ch/r/r-ver:3.6.3
+FROM registry.gitlab.b-data.ch/r/r-ver:4.0.0
 
 LABEL org.label-schema.vcs-url="https://gitlab.b-data.ch/r/yads"
 
