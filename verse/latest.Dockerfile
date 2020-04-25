@@ -1,4 +1,4 @@
-FROM registry.gitlab.b-data.ch/r/tidyverse:3.6.2
+FROM registry.gitlab.b-data.ch/r/tidyverse:3.6.3
 
 # Version-stable CTAN repo from the tlnet archive at texlive.info, used in the
 # TinyTeX installation: chosen as the frozen snapshot of the TeXLive release
@@ -15,6 +15,7 @@ RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
   && rm texlive-local.deb \
   && apt-get update \
   && apt-get install -y --no-install-recommends \
+    curl \
     ## for rJava
     default-jdk \
     ## Nice Google fonts
@@ -23,7 +24,7 @@ RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
     ghostscript \
     ## used to build rJava and other packages
     libbz2-dev \
-    #libicu-dev \
+    libicu-dev \
     liblzma-dev \
     ## system dependency of hunspell (devtools)
     libhunspell-dev \
