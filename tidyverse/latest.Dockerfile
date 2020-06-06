@@ -22,6 +22,7 @@ RUN apt-get update \
     libxml2-dev \
     unixodbc-dev \
     wget \
+  && install2.r --error BiocManager \
   && install2.r --error \
     --deps TRUE \
     tidyverse \
@@ -30,7 +31,6 @@ RUN apt-get update \
     formatR \
     selectr \
     caTools \
-    BiocManager \
   ## Clean up
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/* \
