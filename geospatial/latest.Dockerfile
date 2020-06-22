@@ -1,4 +1,4 @@
-FROM registry.gitlab.b-data.ch/r/verse:4.0.1
+FROM registry.gitlab.b-data.ch/r/verse:4.0.2
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \

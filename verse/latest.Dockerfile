@@ -1,4 +1,4 @@
-FROM registry.gitlab.b-data.ch/r/tidyverse:4.0.1
+FROM registry.gitlab.b-data.ch/r/tidyverse:4.0.2
 
 # Version-stable CTAN repo from the tlnet archive at texlive.info, used in the
 # TinyTeX installation: chosen as the frozen snapshot of the TeXLive release
@@ -31,6 +31,8 @@ RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
     libhunspell-dev \
     ## system dependency of hadley/pkgdown
     libmagick++-dev \
+    ## system dependency of pdftools
+    libpoppler-cpp-dev \
     ## rdf, for redland / linked data
     librdf0-dev \
     ## for V8-based javascript wrappers
