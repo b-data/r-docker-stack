@@ -19,6 +19,7 @@ RUN apt-get update \
     libssh2-1-dev \
     libsqlite3-dev \
     libssl-dev \
+    libtiff-dev \
     libxml2-dev \
     unixodbc-dev \
     wget \
