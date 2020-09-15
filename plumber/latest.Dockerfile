@@ -7,6 +7,7 @@ WORKDIR /usr/src
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
     libcurl4-openssl-dev \
+    libsodium-dev \
     libssl-dev \
     libxml2-dev \
   ## Install plumber
