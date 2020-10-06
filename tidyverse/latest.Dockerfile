@@ -12,6 +12,8 @@ RUN apt-get update \
     libcairo2-dev \
     libclang-dev \
     libcurl4-openssl-dev \
+    libfribidi-dev \
+    libharfbuzz-dev \
     libmariadbclient-dev \
     libmariadbd-dev \
     libpq-dev \
