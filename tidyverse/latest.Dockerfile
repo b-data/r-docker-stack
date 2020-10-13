@@ -1,4 +1,4 @@
-FROM registry.gitlab.b-data.ch/r/r-ver:4.0.1
+FROM registry.gitlab.b-data.ch/r/r-ver:4.0.2
 
 LABEL org.label-schema.vcs-url="https://gitlab.b-data.ch/r/yads"
 
@@ -12,6 +12,8 @@ RUN apt-get update \
     libcairo2-dev \
     libclang-dev \
     libcurl4-openssl-dev \
+    libfribidi-dev \
+    libharfbuzz-dev \
     libmariadbclient-dev \
     libmariadbd-dev \
     libpq-dev \
@@ -19,6 +21,7 @@ RUN apt-get update \
     libssh2-1-dev \
     libsqlite3-dev \
     libssl-dev \
+    libtiff-dev \
     libxml2-dev \
     unixodbc-dev \
     wget \
