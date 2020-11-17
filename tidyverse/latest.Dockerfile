@@ -4,7 +4,7 @@ LABEL org.label-schema.vcs-url="https://gitlab.b-data.ch/r/yads"
 
 ARG PANDOC_VERSION
 
-ENV PANDOC_VERSION=${PANDOC_VERSION:-2.9}
+ENV PANDOC_VERSION=${PANDOC_VERSION:-2.11.1.1}
 
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
