@@ -13,6 +13,7 @@ RUN apt-get update \
     libclang-dev \
     libcurl4-openssl-dev \
     libfribidi-dev \
+    libgit2-dev \
     libharfbuzz-dev \
     libmariadbclient-dev \
     libmariadbd-dev \
