@@ -1,10 +1,10 @@
-FROM registry.gitlab.b-data.ch/r/r-ver:4.0.2
+FROM registry.gitlab.b-data.ch/r/r-ver:4.0.3
 
 LABEL org.label-schema.vcs-url="https://gitlab.b-data.ch/r/yads"
 
 ARG PANDOC_VERSION
 
-ENV PANDOC_VERSION=${PANDOC_VERSION:-2.9}
+ENV PANDOC_VERSION=${PANDOC_VERSION:-2.11.1.1}
 
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
@@ -13,6 +13,7 @@ RUN apt-get update \
     libclang-dev \
     libcurl4-openssl-dev \
     libfribidi-dev \
+    libgit2-dev \
     libharfbuzz-dev \
     libmariadbclient-dev \
     libmariadbd-dev \
