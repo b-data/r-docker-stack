@@ -31,9 +31,9 @@ build-latest:
 build-version:
   stage: build
   script:
-    - cd plumber && docker build --pull -t $CI_REGISTRY_IMAGE:4.0.2 -f 4.0.2.Dockerfile .
-    - docker push $CI_REGISTRY_IMAGE:4.0.2
+    - cd plumber && docker build --pull -t $CI_REGISTRY_IMAGE:4.0.3 -f 4.0.3.Dockerfile .
+    - docker push $CI_REGISTRY_IMAGE:4.0.3
   rules:
     - if: $CI_COMMIT_BRANCH == "freeze-version"
       changes:
-        - plumber/4.0.2.Dockerfile
+        - plumber/4.0.3.Dockerfile
