@@ -45,7 +45,7 @@ build:latest-linux-amd64:
     - os:linux
   script:
     - >
-      docker build --build-arg CRAN=$CRAN --pull -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
+      docker build --pull -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       -t $CI_APP_REPO:$VERSION_MAJ_MIN_PAT-linux-amd64
       -f geospatial/$CI_APP_TAG.Dockerfile .
     - |
@@ -63,7 +63,7 @@ build:latest-linux-arm64v8:
     - os:linux
   script:
     - >
-      docker build --build-arg CRAN=$CRAN --pull -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
+      docker build --pull -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
       -t $CI_APP_REPO:$VERSION_MAJ_MIN_PAT-linux-arm64v8
       -f geospatial/$CI_APP_TAG.Dockerfile .
     - |
@@ -81,7 +81,7 @@ build:version-linux-amd64:
     - os:linux
   script:
     - >
-      docker build --build-arg CRAN=$CRAN --pull -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
+      docker build --pull -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       -f geospatial/$CI_APP_TAG.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-amd64
   rules:
@@ -96,7 +96,7 @@ build:version-linux-arm64v8:
     - os:linux
   script:
     - >
-      docker build --build-arg CRAN=$CRAN --pull -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
+      docker build --pull -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
       -f geospatial/$CI_APP_TAG.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
   rules:
