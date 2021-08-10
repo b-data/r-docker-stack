@@ -1,4 +1,6 @@
-FROM registry.gitlab.b-data.ch/r/tidyverse:4.1.0
+FROM registry.gitlab.b-data.ch/r/tidyverse:4.1.1
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 ARG CTAN_REPO=${CTAN_REPO:-http://mirror.ctan.org/systems/texlive/tlnet}
 ENV CTAN_REPO=${CTAN_REPO}

@@ -1,10 +1,11 @@
-FROM registry.gitlab.b-data.ch/r/r-ver:4.1.0
+FROM registry.gitlab.b-data.ch/r/r-ver:4.1.1
 
 LABEL org.label-schema.vcs-url="https://gitlab.b-data.ch/r/yads"
 
+ARG DEBIAN_FRONTEND=noninteractive
 ARG PANDOC_VERSION
 
-ENV PANDOC_VERSION=${PANDOC_VERSION:-2.13}
+ENV PANDOC_VERSION=${PANDOC_VERSION:-2.14.1}
 
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \

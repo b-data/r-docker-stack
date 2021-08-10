@@ -1,6 +1,8 @@
-FROM registry.gitlab.b-data.ch/r/r-ver:4.1.0
+FROM registry.gitlab.b-data.ch/r/r-ver:4.1.1
 
 LABEL org.label-schema.vcs-url="https://gitlab.b-data.ch/r/yads"
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /usr/src
 
