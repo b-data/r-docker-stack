@@ -1,10 +1,10 @@
-FROM registry.gitlab.b-data.ch/r/r-ver:4.0.5
+FROM registry.gitlab.b-data.ch/r/r-ver:4.1.0
 
 LABEL org.label-schema.vcs-url="https://gitlab.b-data.ch/r/yads"
 
 ARG PANDOC_VERSION
 
-ENV PANDOC_VERSION=${PANDOC_VERSION:-2.10.1}
+ENV PANDOC_VERSION=${PANDOC_VERSION:-2.13}
 
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
@@ -48,6 +48,6 @@ RUN apt-get update \
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/* \
   ## Install pandoc
-  && curl -sLO https://dl.b-data.ch/pandoc/releases/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-$(dpkg --print-architecture).deb \
+  && curl -sLO https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-$(dpkg --print-architecture).deb \
   && dpkg -i pandoc-${PANDOC_VERSION}-1-$(dpkg --print-architecture).deb \
   && rm pandoc-${PANDOC_VERSION}-1-$(dpkg --print-architecture).deb
