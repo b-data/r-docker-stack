@@ -12,6 +12,7 @@ RUN apt-get update \
     libsodium-dev \
     libssl-dev \
     libxml2-dev \
+    zlib1g-dev \
   ## Install plumber
   && install2.r --error --deps TRUE plumber \
   ## Set up endpoint
