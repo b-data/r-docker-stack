@@ -1,6 +1,6 @@
 FROM registry.gitlab.b-data.ch/r/r-ver:4.1.1
 
-LABEL org.label-schema.vcs-url="https://gitlab.b-data.ch/r/yads"
+LABEL org.opencontainers.image.source="https://gitlab.b-data.ch/r/yads"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
