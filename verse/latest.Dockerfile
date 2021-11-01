@@ -1,4 +1,6 @@
-FROM registry.gitlab.b-data.ch/r/tidyverse:4.1.0
+FROM registry.gitlab.b-data.ch/r/tidyverse:4.1.1
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 ARG CTAN_REPO=${CTAN_REPO:-http://mirror.ctan.org/systems/texlive/tlnet}
 ENV CTAN_REPO=${CTAN_REPO}
@@ -11,36 +13,21 @@ RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
   && rm texlive-local.deb \
   && apt-get update \
   && apt-get install -y --no-install-recommends \
-    curl \
-    ## for rJava
     default-jdk \
-    ## Nice Google fonts
     fonts-roboto \
-    ## used by some base R plots
     ghostscript \
-    ## used to install PhantomJS
     lbzip2 \
-    ## used to build rJava and other packages
     libbz2-dev \
     libicu-dev \
     liblzma-dev \
     libpcre2-dev \
-    ## system dependency of hunspell (devtools)
     libhunspell-dev \
-    ## system dependency of hadley/pkgdown
     libmagick++-dev \
-    ## system dependency of pdftools
     libpoppler-cpp-dev \
-    ## rdf, for redland / linked data (depends on libcurl4-gnutls-dev)
     librdf0-dev \
-    ## for V8-based javascript wrappers
     libnode-dev \
-    ## R CMD Check wants qpdf to check pdf sizes, or throws a Warning
     qpdf \
-    ## For building PDF manuals
     texinfo \
-    ## parallelization
-    libzmq3-dev \
     libopenmpi-dev \
   ## Install R package redland
   && install2.r --error --skipinstalled redland \

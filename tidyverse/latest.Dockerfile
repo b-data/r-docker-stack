@@ -1,10 +1,11 @@
-FROM registry.gitlab.b-data.ch/r/r-ver:4.1.0
+FROM registry.gitlab.b-data.ch/r/r-ver:4.1.1
 
-LABEL org.label-schema.vcs-url="https://gitlab.b-data.ch/r/yads"
+LABEL org.opencontainers.image.source="https://gitlab.b-data.ch/r/yads"
 
-ARG PANDOC_VERSION
+ARG DEBIAN_FRONTEND=noninteractive
+ARG PANDOC_VERSION=2.14.2
 
-ENV PANDOC_VERSION=${PANDOC_VERSION:-2.13}
+ENV PANDOC_VERSION=${PANDOC_VERSION}
 
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
@@ -15,7 +16,6 @@ RUN apt-get update \
     libfribidi-dev \
     libgit2-dev \
     libharfbuzz-dev \
-    libmariadbclient-dev \
     libmariadbd-dev \
     libpq-dev \
     libsasl2-dev \
@@ -26,14 +26,6 @@ RUN apt-get update \
     libxml2-dev \
     unixodbc-dev \
     wget \
-  # Install patched version or RPostgreSQL
-  # Source: https://gitlab.b-data.ch/benz0li/rpostgresql
-  && install2.r --error DBI \
-  && curl -sSL https://gitlab.b-data.ch/benz0li/rpostgresql/-/package_files/6/download \
-    -o RPostgreSQL_0.6-2.tar.gz \
-  && R CMD INSTALL RPostgreSQL_0.6-2.tar.gz \
-  && rm RPostgreSQL_0.6-2.tar.gz \
-  # Install other packages in regular fashion
   && install2.r --error BiocManager \
   && install2.r --error \
     --deps TRUE \

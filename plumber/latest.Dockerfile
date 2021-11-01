@@ -1,6 +1,8 @@
-FROM registry.gitlab.b-data.ch/r/r-ver:4.1.0
+FROM registry.gitlab.b-data.ch/r/r-ver:4.1.1
 
-LABEL org.label-schema.vcs-url="https://gitlab.b-data.ch/r/yads"
+LABEL org.opencontainers.image.source="https://gitlab.b-data.ch/r/yads"
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /usr/src
 
@@ -10,6 +12,7 @@ RUN apt-get update \
     libsodium-dev \
     libssl-dev \
     libxml2-dev \
+    zlib1g-dev \
   ## Install plumber
   && install2.r --error --deps TRUE plumber \
   ## Set up endpoint
