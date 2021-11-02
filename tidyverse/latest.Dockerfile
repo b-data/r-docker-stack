@@ -1,9 +1,9 @@
-FROM registry.gitlab.b-data.ch/r/r-ver:4.1.1
+FROM registry.gitlab.b-data.ch/r/r-ver:4.1.2
 
 LABEL org.opencontainers.image.source="https://gitlab.b-data.ch/r/yads"
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG PANDOC_VERSION=2.14.2
+ARG PANDOC_VERSION=2.16
 
 ENV PANDOC_VERSION=${PANDOC_VERSION}
 
