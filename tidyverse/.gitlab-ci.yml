@@ -168,6 +168,7 @@ trigger-latest-build:
   extends: .build
   stage: .post
   before_script:
+    - apk upgrade --no-cache
     - apk add --update --no-cache curl
   script:
     - curl -X POST -F token=$R_VERSE -F ref=master https://gitlab.b-data.ch/api/v4/projects/174/trigger/pipeline
@@ -180,6 +181,7 @@ trigger-version-build:
   extends: .build
   stage: .post
   before_script:
+    - apk upgrade --no-cache
     - apk add --update --no-cache curl
   script:
     - curl -X POST -F token=$R_VERSE -F ref=freeze-version https://gitlab.b-data.ch/api/v4/projects/174/trigger/pipeline

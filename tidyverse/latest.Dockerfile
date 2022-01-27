@@ -16,26 +16,28 @@ RUN apt-get update \
     libfribidi-dev \
     libgit2-dev \
     libharfbuzz-dev \
-    libmariadbd-dev \
+    libmariadb-dev \
     libpq-dev \
     libsasl2-dev \
-    libssh2-1-dev \
     libsqlite3-dev \
+    libssh2-1-dev \
     libssl-dev \
     libtiff-dev \
     libxml2-dev \
+    libxtst6 \
     unixodbc-dev \
     wget \
   && install2.r --error BiocManager \
-  && install2.r --error \
-    --deps TRUE \
-    --skipinstalled \
+  && install2.r --error --deps TRUE --skipinstalled \
     tidyverse \
     dplyr \
     devtools \
     formatR \
-    selectr \
-    caTools \
+  ## dplyr database backends
+  && install2.r --error --skipinstalled \
+    arrow \
+    duckdb \
+    fst \
   ## Clean up
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/* \
