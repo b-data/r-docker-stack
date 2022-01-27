@@ -3,12 +3,13 @@ FROM registry.gitlab.b-data.ch/r/r-ver:4.1.2
 LABEL org.opencontainers.image.source="https://gitlab.b-data.ch/r/yads"
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG PANDOC_VERSION=2.16
+ARG PANDOC_VERSION=2.17.0.1
 
 ENV PANDOC_VERSION=${PANDOC_VERSION}
 
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
+    cmake \
     curl \
     libcairo2-dev \
     libclang-dev \
