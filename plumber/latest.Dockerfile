@@ -2,6 +2,8 @@ FROM registry.gitlab.b-data.ch/r/r-ver:4.1.2
 
 LABEL org.opencontainers.image.source="https://gitlab.b-data.ch/r/yads"
 
+ARG NCPUS=1
+
 ARG DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /usr/src
@@ -14,7 +16,7 @@ RUN apt-get update \
     libxml2-dev \
     zlib1g-dev \
   ## Install plumber
-  && install2.r --error --deps TRUE plumber \
+  && install2.r --error --deps TRUE  -n $NCPUS plumber \
   ## Set up endpoint
   && echo '#* Return "hello world"\n#* @get /hello\nfunction() {\n  "hello world"\n}' > hello-world.R \
   ## Clean up
