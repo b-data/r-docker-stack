@@ -1,5 +1,7 @@
 FROM registry.gitlab.b-data.ch/r/verse:4.1.2
 
+ARG NCPUS=1
+
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
@@ -21,7 +23,7 @@ RUN apt-get update \
     protobuf-compiler \
     sqlite3 \
     tk-dev \
-  && install2.r --error --skipinstalled \
+  && install2.r --error --skipinstalled -n $NCPUS \
     RandomFields \
     RNetCDF \
     classInt \

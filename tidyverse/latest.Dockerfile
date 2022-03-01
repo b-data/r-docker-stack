@@ -2,6 +2,8 @@ FROM registry.gitlab.b-data.ch/r/r-ver:4.1.2
 
 LABEL org.opencontainers.image.source="https://gitlab.b-data.ch/r/yads"
 
+ARG NCPUS=1
+
 ARG DEBIAN_FRONTEND=noninteractive
 ARG PANDOC_VERSION=2.17.1.1
 
@@ -28,15 +30,15 @@ RUN apt-get update \
     libxtst6 \
     unixodbc-dev \
     wget \
-  && install2.r --error BiocManager \
-  && install2.r --error --deps TRUE --skipinstalled \
+  && install2.r --error -n $NCPUS BiocManager \
+  && install2.r --error --deps TRUE --skipinstalled -n $NCPUS \
     tidyverse \
     dplyr \
     devtools \
     formatR \
   ## dplyr database backends
   && Rscript -e "devtools::install_version('duckdb', version = '0.3.1')" \
-  && install2.r --error --skipinstalled \
+  && install2.r --error --skipinstalled -n $NCPUS \
     arrow \
     fst \
   ## Clean up
