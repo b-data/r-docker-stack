@@ -98,7 +98,7 @@ build:version-linux-arm64v8:
     - os:linux
   script:
     - >
-      docker build --pull --build-arg $NCPUS=$((`nproc`/2+1))
+      docker build --pull --build-arg NCPUS=$((`nproc`/2+1))
       -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
       -f tidyverse/$CI_APP_TAG.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
