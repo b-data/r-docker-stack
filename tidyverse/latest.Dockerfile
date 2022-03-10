@@ -1,14 +1,17 @@
-FROM registry.gitlab.b-data.ch/r/r-ver:4.1.1
+FROM registry.gitlab.b-data.ch/r/r-ver:4.1.2
 
 LABEL org.opencontainers.image.source="https://gitlab.b-data.ch/r/yads"
 
+ARG NCPUS=1
+
 ARG DEBIAN_FRONTEND=noninteractive
-ARG PANDOC_VERSION=2.14.2
+ARG PANDOC_VERSION=2.17.1.1
 
 ENV PANDOC_VERSION=${PANDOC_VERSION}
 
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
+    cmake \
     curl \
     libcairo2-dev \
     libclang-dev \
@@ -16,26 +19,28 @@ RUN apt-get update \
     libfribidi-dev \
     libgit2-dev \
     libharfbuzz-dev \
-    libmariadbd-dev \
+    libmariadb-dev \
     libpq-dev \
     libsasl2-dev \
-    libssh2-1-dev \
     libsqlite3-dev \
+    libssh2-1-dev \
     libssl-dev \
     libtiff-dev \
     libxml2-dev \
+    libxtst6 \
     unixodbc-dev \
     wget \
-  && install2.r --error BiocManager \
-  && install2.r --error \
-    --deps TRUE \
-    --skipinstalled \
+  && install2.r --error -n $NCPUS BiocManager \
+  && install2.r --error --deps TRUE --skipinstalled -n $NCPUS \
     tidyverse \
     dplyr \
     devtools \
     formatR \
-    selectr \
-    caTools \
+  ## dplyr database backends
+  && Rscript -e "devtools::install_version('duckdb', version = '0.3.1', Ncpus = Sys.getenv('NCPUS'))" \
+  && install2.r --error --skipinstalled -n $NCPUS \
+    arrow \
+    fst \
   ## Clean up
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/* \

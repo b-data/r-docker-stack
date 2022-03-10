@@ -44,7 +44,8 @@ build:latest-linux-amd64:
     - os:linux
   script:
     - >
-      docker build --pull -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
+      docker build --pull --build-arg NCPUS=$((`nproc`/2+1))
+      -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       -t $CI_APP_REPO:$VERSION_MAJ_MIN_PAT-linux-amd64
       -f tidyverse/$CI_APP_TAG.Dockerfile .
     - |
@@ -62,7 +63,8 @@ build:latest-linux-arm64v8:
     - os:linux
   script:
     - >
-      docker build --pull -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
+      docker build --pull --build-arg NCPUS=$((`nproc`/2+1))
+      -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
       -t $CI_APP_REPO:$VERSION_MAJ_MIN_PAT-linux-arm64v8
       -f tidyverse/$CI_APP_TAG.Dockerfile .
     - |
@@ -80,7 +82,8 @@ build:version-linux-amd64:
     - os:linux
   script:
     - >
-      docker build --pull -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
+      docker build --pull --build-arg NCPUS=$((`nproc`/2+1))
+      -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       -f tidyverse/$CI_APP_TAG.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-amd64
   rules:
@@ -95,7 +98,8 @@ build:version-linux-arm64v8:
     - os:linux
   script:
     - >
-      docker build --pull -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
+      docker build --pull --build-arg $NCPUS=$((`nproc`/2+1))
+      -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
       -f tidyverse/$CI_APP_TAG.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
   rules:
@@ -168,6 +172,7 @@ trigger-latest-build:
   extends: .build
   stage: .post
   before_script:
+    - apk upgrade --no-cache
     - apk add --update --no-cache curl
   script:
     - curl -X POST -F token=$R_VERSE -F ref=master https://gitlab.b-data.ch/api/v4/projects/174/trigger/pipeline
@@ -180,6 +185,7 @@ trigger-version-build:
   extends: .build
   stage: .post
   before_script:
+    - apk upgrade --no-cache
     - apk add --update --no-cache curl
   script:
     - curl -X POST -F token=$R_VERSE -F ref=freeze-version https://gitlab.b-data.ch/api/v4/projects/174/trigger/pipeline
