@@ -9,7 +9,7 @@
     if [[ $CI_COMMIT_BRANCH == "master" ]]; then
       export CI_APP_TAG=${CI_APP_TAG:-latest}
     elif [[ $CI_COMMIT_BRANCH == "freeze-version" ]]; then
-      export CI_APP_TAG=${CI_APP_TAG:-4.1.1}
+      export CI_APP_TAG=${CI_APP_TAG:-4.1.2}
     else
       export CI_APP_TAG=${CI_APP_TAG:-$CI_COMMIT_SHA}
     fi
@@ -34,7 +34,7 @@
   variables:
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: "/certs"
-    R_VERSION_UPDATE: "false"
+    UPDATE_MODE: "true"
   before_script:
     - *before-script-build
 
@@ -53,7 +53,7 @@ build:latest-linux-amd64:
       docker push $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       docker push $CI_APP_REPO:$VERSION_MAJ_MIN_PAT-linux-amd64
   rules:
-    - if: $CI_COMMIT_BRANCH == "master" && $R_VERSION_UPDATE != "true" && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
+    - if: $CI_COMMIT_BRANCH == "master" && $UPDATE_MODE != "true" && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
       changes:
         - geospatial/latest.Dockerfile
 
@@ -72,7 +72,7 @@ build:latest-linux-arm64v8:
       docker push $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
       docker push $CI_APP_REPO:$VERSION_MAJ_MIN_PAT-linux-arm64v8
   rules:
-    - if: $CI_COMMIT_BRANCH == "master" && $R_VERSION_UPDATE != "true" && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
+    - if: $CI_COMMIT_BRANCH == "master" && $UPDATE_MODE != "true" && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
       changes:
         - geospatial/latest.Dockerfile
 
@@ -88,9 +88,9 @@ build:version-linux-amd64:
       -f geospatial/$CI_APP_TAG.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-amd64
   rules:
-    - if: $CI_COMMIT_BRANCH == "freeze-version" && $R_VERSION_UPDATE != "true" && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
+    - if: $CI_COMMIT_BRANCH == "freeze-version" && $UPDATE_MODE != "true" && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
       changes:
-        - geospatial/4.1.1.Dockerfile
+        - geospatial/4.1.2.Dockerfile
 
 build:version-linux-arm64v8:
   extends: .build
@@ -104,9 +104,9 @@ build:version-linux-arm64v8:
       -f geospatial/$CI_APP_TAG.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
   rules:
-    - if: $CI_COMMIT_BRANCH == "freeze-version" && $R_VERSION_UPDATE != "true" && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
+    - if: $CI_COMMIT_BRANCH == "freeze-version" && $UPDATE_MODE != "true" && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
       changes:
-        - geospatial/4.1.1.Dockerfile
+        - geospatial/4.1.2.Dockerfile
 
 build-manifest:latest-linux-multiarch:
   extends: .build
@@ -145,7 +145,7 @@ build-manifest:latest-linux-multiarch:
       fi
       docker manifest push $CI_APP_REPO:$VERSION_MAJ
   rules:
-    - if: $CI_COMMIT_BRANCH == "master" && $R_VERSION_UPDATE != "true"
+    - if: $CI_COMMIT_BRANCH == "master" && $UPDATE_MODE != "true"
       changes:
         - geospatial/latest.Dockerfile
 
@@ -165,6 +165,6 @@ build-manifest:version-linux-multiarch:
       fi
       docker manifest push $CI_APP_REPO:$CI_APP_TAG
   rules:
-    - if: $CI_COMMIT_BRANCH == "freeze-version" && $R_VERSION_UPDATE != "true"
+    - if: $CI_COMMIT_BRANCH == "freeze-version" && $UPDATE_MODE != "true"
       changes:
-        - geospatial/4.1.1.Dockerfile
+        - geospatial/4.1.2.Dockerfile
