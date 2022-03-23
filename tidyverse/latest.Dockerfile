@@ -9,7 +9,8 @@ ARG PANDOC_VERSION=2.17.1.1
 
 ENV PANDOC_VERSION=${PANDOC_VERSION}
 
-RUN apt-get update \
+RUN dpkgArch="$(dpkg --print-architecture)" \
+  && apt-get update \
   && apt-get -y install --no-install-recommends \
     cmake \
     curl \
@@ -37,7 +38,15 @@ RUN apt-get update \
     devtools \
     formatR \
   ## dplyr database backends
-  && Rscript -e "devtools::install_version('duckdb', version = '0.3.1')" \
+  && if [ ${dpkgArch} = "arm64" ]; then \
+    ## https://github.com/duckdb/duckdb/issues/3049
+    cp -a /usr/local/lib/R/etc/Makeconf /usr/local/lib/R/etc/Makeconf.bak; \
+    sed -i 's/fpic/fPIC/g' /usr/local/lib/R/etc/Makeconf; \
+    install2.r --error --skipinstalled -n $NCPUS duckdb; \
+    mv /usr/local/lib/R/etc/Makeconf.bak /usr/local/lib/R/etc/Makeconf; \
+  else \
+    install2.r --error --skipinstalled -n $NCPUS duckdb; \
+  fi \
   && install2.r --error --skipinstalled -n $NCPUS \
     arrow \
     fst \
@@ -45,6 +54,6 @@ RUN apt-get update \
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/* \
   ## Install pandoc
-  && curl -sLO https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-$(dpkg --print-architecture).deb \
-  && dpkg -i pandoc-${PANDOC_VERSION}-1-$(dpkg --print-architecture).deb \
-  && rm pandoc-${PANDOC_VERSION}-1-$(dpkg --print-architecture).deb
+  && curl -sLO https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-${dpkgArch}.deb \
+  && dpkg -i pandoc-${PANDOC_VERSION}-1-${dpkgArch}.deb \
+  && rm pandoc-${PANDOC_VERSION}-1-${dpkgArch}.deb
