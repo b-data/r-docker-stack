@@ -5,7 +5,7 @@ LABEL org.opencontainers.image.source="https://gitlab.b-data.ch/r/yads"
 ARG NCPUS=1
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG PANDOC_VERSION=2.17.1.1
+ARG PANDOC_VERSION=2.18
 
 ENV PANDOC_VERSION=${PANDOC_VERSION}
 
