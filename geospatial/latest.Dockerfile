@@ -23,7 +23,6 @@ RUN apt-get update \
     protobuf-compiler \
     sqlite3 \
     tk-dev \
-  && Rscript -e "devtools::install_version('RandomFieldsUtils', version = '1.2.2')" \
   && install2.r --error --skipinstalled -n $NCPUS \
     RandomFields \
     RNetCDF \
