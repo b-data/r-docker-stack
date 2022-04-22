@@ -1,4 +1,4 @@
-FROM registry.gitlab.b-data.ch/r/r-ver:4.1.3
+FROM registry.gitlab.b-data.ch/r/r-ver:4.2.0
 
 LABEL org.opencontainers.image.source="https://gitlab.b-data.ch/r/yads"
 
@@ -38,17 +38,9 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     devtools \
     formatR \
   ## dplyr database backends
-  && if [ ${dpkgArch} = "arm64" ]; then \
-    ## https://github.com/duckdb/duckdb/issues/3049
-    cp -a /usr/local/lib/R/etc/Makeconf /usr/local/lib/R/etc/Makeconf.bak; \
-    sed -i 's/fpic/fPIC/g' /usr/local/lib/R/etc/Makeconf; \
-    install2.r --error --skipinstalled -n $NCPUS duckdb; \
-    mv /usr/local/lib/R/etc/Makeconf.bak /usr/local/lib/R/etc/Makeconf; \
-  else \
-    install2.r --error --skipinstalled -n $NCPUS duckdb; \
-  fi \
   && install2.r --error --skipinstalled -n $NCPUS \
     arrow \
+    duckdb \
     fst \
   ## Clean up
   && rm -rf /tmp/* \
