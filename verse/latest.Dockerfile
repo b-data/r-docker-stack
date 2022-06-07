@@ -4,11 +4,10 @@ ARG NCPUS=1
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ARG TARGETARCH
 ARG CTAN_REPO=${CTAN_REPO:-https://mirror.ctan.org/systems/texlive/tlnet}
 ENV CTAN_REPO=${CTAN_REPO}
 
-ENV PATH=/opt/TinyTeX/bin/${TARGETARCH}-linux:$PATH
+ENV PATH=/opt/TinyTeX/bin/linux:$PATH
 
 ## Add LaTeX, rticles and bookdown support
 RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
@@ -55,8 +54,8 @@ RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
     | sh -s - --admin --no-path \
   && mv ~/.TinyTeX /opt/TinyTeX \
   && ln -rs /opt/TinyTeX/bin/$(uname -m)-linux \
-    /opt/TinyTeX/bin/${TARGETARCH}-linux \
-  && /opt/TinyTeX/bin/${TARGETARCH}-linux/tlmgr path add \
+    /opt/TinyTeX/bin/linux \
+  && /opt/TinyTeX/bin/linux/tlmgr path add \
   && tlmgr update --self \
   && tlmgr install \
     ae \
