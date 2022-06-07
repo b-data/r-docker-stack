@@ -4,10 +4,11 @@ ARG NCPUS=1
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+ARG TARGETARCH
 ARG CTAN_REPO=${CTAN_REPO:-https://mirror.ctan.org/systems/texlive/tlnet}
 ENV CTAN_REPO=${CTAN_REPO}
 
-ENV PATH=/opt/TinyTeX/bin/x86_64-linux:$PATH
+ENV PATH=/opt/TinyTeX/bin/${TARGETARCH}-linux:$PATH
 
 ## Add LaTeX, rticles and bookdown support
 RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
@@ -53,16 +54,19 @@ RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
   && wget -qO- "https://yihui.org/tinytex/install-unx.sh" \
     | sh -s - --admin --no-path \
   && mv ~/.TinyTeX /opt/TinyTeX \
-  && /opt/TinyTeX/bin/*/tlmgr path add \
+  && ln -rs /opt/TinyTeX/bin/$(uname -m)-linux \
+    /opt/TinyTeX/bin/${TARGETARCH}-linux \
+  && /opt/TinyTeX/bin/${TARGETARCH}-linux/tlmgr path add \
   && tlmgr update --self \
   && tlmgr install \
     ae \
+    cm-super \
+    context \
+    dvipng \
     listings \
     makeindex \
     parskip \
     pdfcrop \
-  ## context installs on aarch64 but returns non-zero exit code
-  && tlmgr install context || true \
   && tlmgr path add \
   && Rscript -e "tinytex::r_texmf()" \
   && chown -R root:users /opt/TinyTeX \
