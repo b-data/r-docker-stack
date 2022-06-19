@@ -1,6 +1,6 @@
-FROM registry.gitlab.b-data.ch/r/r-ver:4.2.0
+ARG R_VERSION=4.2.0
 
-LABEL org.opencontainers.image.source="https://gitlab.b-data.ch/r/yads"
+FROM registry.gitlab.b-data.ch/r/base:${R_VERSION}
 
 ARG NCPUS=1
 

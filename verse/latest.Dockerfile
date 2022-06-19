@@ -1,13 +1,16 @@
-FROM registry.gitlab.b-data.ch/r/tidyverse:4.2.0
+ARG R_VERSION=4.2.0
+ARG CTAN_REPO=https://mirror.ctan.org/systems/texlive/tlnet
+
+FROM registry.gitlab.b-data.ch/r/tidyverse:${R_VERSION}
 
 ARG NCPUS=1
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ARG CTAN_REPO=${CTAN_REPO:-https://mirror.ctan.org/systems/texlive/tlnet}
-ENV CTAN_REPO=${CTAN_REPO}
+ARG CTAN_REPO
 
-ENV PATH=/opt/TinyTeX/bin/linux:$PATH
+ENV CTAN_REPO=${CTAN_REPO} \
+    PATH=/opt/TinyTeX/bin/linux:$PATH
 
 ## Add LaTeX, rticles and bookdown support
 RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
@@ -32,8 +35,6 @@ RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
     libopenmpi-dev \
     libpoppler-cpp-dev \
     librdf0-dev \
-    libnode-dev \
-    libzmq3-dev \
     qpdf \
     texinfo \
   ## Install R package redland
