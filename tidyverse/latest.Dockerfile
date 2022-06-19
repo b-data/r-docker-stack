@@ -20,7 +20,7 @@ RUN apt-get update \
     libtiff-dev \
     libxtst6 \
     unixodbc-dev \
-  && install2.r --error -n --skipinstalled $NCPUS BiocManager \
+  && install2.r --error --skipinstalled -n $NCPUS BiocManager \
   && install2.r --error --deps TRUE --skipinstalled -n $NCPUS \
     tidyverse \
     dplyr \
