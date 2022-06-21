@@ -1,4 +1,4 @@
-ARG R_VERSION=4.2.0
+ARG R_VERSION
 ARG CTAN_REPO=https://mirror.ctan.org/systems/texlive/tlnet
 
 FROM registry.gitlab.b-data.ch/r/tidyverse:${R_VERSION}

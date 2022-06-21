@@ -1,6 +1,7 @@
 ARG BASE_IMAGE=debian:bullseye
 ARG BLAS=libopenblas-dev
-ARG R_VERSION=4.2.0
+ARG R_VERSION
+ARG CRAN=https://cran.rstudio.com
 
 FROM registry.gitlab.b-data.ch/r/rsi/${R_VERSION}/${BASE_IMAGE} as rsi
 
@@ -16,8 +17,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG BASE_IMAGE
 ARG BLAS
 ARG R_VERSION
+ARG CRAN
 ARG BUILD_DATE
-ARG CRAN=https://cran.rstudio.com
 ## Setting a BUILD_DATE will set CRAN to the matching MRAN date
 ## No BUILD_DATE means that CRAN will default to latest 
 ENV BASE_IMAGE=${BASE_IMAGE} \
