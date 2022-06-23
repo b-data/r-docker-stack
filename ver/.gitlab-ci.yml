@@ -34,7 +34,7 @@
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: "/certs"
     R_VERSION: "4.2.0"
-    UPDATE_MODE: "false"
+    CRAN: https://cloud.r-project.org
   before_script:
     - *before-script-build
 
@@ -46,16 +46,16 @@ build:latest-linux-amd64:
   script:
     - >
       docker build --pull
+      --build-arg CRAN
       --build-arg R_VERSION
-      --build-arg NCPUS=$((`nproc`/2+1))
       -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       -t $CI_APP_REPO:$VERSION_MAJ_MIN_PAT-linux-amd64
-      -f plumber/latest.Dockerfile .
+      -f ver/latest.Dockerfile .
     - docker push -a $CI_APP_REPO
   rules:
-    - if: $CI_COMMIT_BRANCH == "master" && $UPDATE_MODE != "true" && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
+    - if: $CI_COMMIT_BRANCH == "master" && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
       changes:
-        - plumber/latest.Dockerfile
+        - ver/latest.Dockerfile
 
 build:latest-linux-arm64v8:
   extends: .build
@@ -65,16 +65,16 @@ build:latest-linux-arm64v8:
   script:
     - >
       docker build --pull
+      --build-arg CRAN
       --build-arg R_VERSION
-      --build-arg NCPUS=$((`nproc`/2+1))
       -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
       -t $CI_APP_REPO:$VERSION_MAJ_MIN_PAT-linux-arm64v8
-      -f plumber/latest.Dockerfile .
+      -f ver/latest.Dockerfile .
     - docker push -a $CI_APP_REPO
   rules:
-    - if: $CI_COMMIT_BRANCH == "master" && $UPDATE_MODE != "true" && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
+    - if: $CI_COMMIT_BRANCH == "master" && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
       changes:
-        - plumber/latest.Dockerfile
+        - ver/latest.Dockerfile
 
 build:version-linux-amd64:
   extends: .build
@@ -84,15 +84,15 @@ build:version-linux-amd64:
   script:
     - >
       docker build --pull
+      --build-arg CRAN
       --build-arg R_VERSION
-      --build-arg NCPUS=$((`nproc`/2+1))
       -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
-      -f plumber/$R_VERSION.Dockerfile .
+      -f ver/$R_VERSION.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-amd64
   rules:
-    - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_PIPELINE_TRIGGERED && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
+    - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
       changes:
-        - plumber/$R_VERSION.Dockerfile
+        - ver/$R_VERSION.Dockerfile
 
 build:version-linux-arm64v8:
   extends: .build
@@ -102,15 +102,15 @@ build:version-linux-arm64v8:
   script:
     - >
       docker build --pull
+      --build-arg CRAN
       --build-arg R_VERSION
-      --build-arg NCPUS=$((`nproc`/2+1))
       -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
-      -f plumber/$R_VERSION.Dockerfile .
+      -f ver/$R_VERSION.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
   rules:
-    - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_PIPELINE_TRIGGERED && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
+    - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
       changes:
-        - plumber/$R_VERSION.Dockerfile
+        - ver/$R_VERSION.Dockerfile
 
 build-manifest:latest-linux-multiarch:
   extends: .build
@@ -149,9 +149,9 @@ build-manifest:latest-linux-multiarch:
       fi
       docker manifest push $CI_APP_REPO:$VERSION_MAJ
   rules:
-    - if: $CI_COMMIT_BRANCH == "master" && $UPDATE_MODE != "true"
+    - if: $CI_COMMIT_BRANCH == "master"
       changes:
-        - plumber/latest.Dockerfile
+        - ver/latest.Dockerfile
 
 build-manifest:version-linux-multiarch:
   extends: .build
@@ -169,6 +169,34 @@ build-manifest:version-linux-multiarch:
       fi
       docker manifest push $CI_APP_REPO:$CI_APP_TAG
   rules:
-    - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_PIPELINE_TRIGGERED
+    - if: $CI_COMMIT_BRANCH == "freeze-version"
       changes:
-        - plumber/$R_VERSION.Dockerfile
+        - ver/$R_VERSION.Dockerfile
+
+trigger-latest-build:
+  extends: .build
+  stage: .post
+  before_script:
+    - apk upgrade --no-cache
+    - apk add --update --no-cache curl
+  script:
+    - curl -X POST -F token=$R_BASE -F ref=master https://gitlab.b-data.ch/api/v4/projects/293/trigger/pipeline
+    - curl -X POST -F token=$R_PLUMBER -F ref=master https://gitlab.b-data.ch/api/v4/projects/176/trigger/pipeline
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+      changes:
+        - ver/latest.Dockerfile
+
+trigger-version-build:
+  extends: .build
+  stage: .post
+  before_script:
+    - apk upgrade --no-cache
+    - apk add --update --no-cache curl
+  script:
+    - curl -X POST -F token=$R_BASE -F ref=freeze-version https://gitlab.b-data.ch/api/v4/projects/293/trigger/pipeline
+    - curl -X POST -F token=$R_PLUMBER -F ref=freeze-version https://gitlab.b-data.ch/api/v4/projects/176/trigger/pipeline
+  rules:
+    - if: $CI_COMMIT_BRANCH == "freeze-version"
+      changes:
+        - ver/$R_VERSION.Dockerfile

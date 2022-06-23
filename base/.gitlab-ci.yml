@@ -50,12 +50,12 @@ build:latest-linux-amd64:
       --build-arg NCPUS=$((`nproc`/2+1))
       -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       -t $CI_APP_REPO:$VERSION_MAJ_MIN_PAT-linux-amd64
-      -f plumber/latest.Dockerfile .
+      -f base/latest.Dockerfile .
     - docker push -a $CI_APP_REPO
   rules:
     - if: $CI_COMMIT_BRANCH == "master" && $UPDATE_MODE != "true" && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
       changes:
-        - plumber/latest.Dockerfile
+        - base/latest.Dockerfile
 
 build:latest-linux-arm64v8:
   extends: .build
@@ -69,12 +69,12 @@ build:latest-linux-arm64v8:
       --build-arg NCPUS=$((`nproc`/2+1))
       -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
       -t $CI_APP_REPO:$VERSION_MAJ_MIN_PAT-linux-arm64v8
-      -f plumber/latest.Dockerfile .
+      -f base/latest.Dockerfile .
     - docker push -a $CI_APP_REPO
   rules:
     - if: $CI_COMMIT_BRANCH == "master" && $UPDATE_MODE != "true" && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
       changes:
-        - plumber/latest.Dockerfile
+        - base/latest.Dockerfile
 
 build:version-linux-amd64:
   extends: .build
@@ -87,12 +87,12 @@ build:version-linux-amd64:
       --build-arg R_VERSION
       --build-arg NCPUS=$((`nproc`/2+1))
       -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
-      -f plumber/$R_VERSION.Dockerfile .
+      -f base/$R_VERSION.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-amd64
   rules:
     - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_PIPELINE_TRIGGERED && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
       changes:
-        - plumber/$R_VERSION.Dockerfile
+        - base/$R_VERSION.Dockerfile
 
 build:version-linux-arm64v8:
   extends: .build
@@ -105,12 +105,12 @@ build:version-linux-arm64v8:
       --build-arg R_VERSION
       --build-arg NCPUS=$((`nproc`/2+1))
       -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
-      -f plumber/$R_VERSION.Dockerfile .
+      -f base/$R_VERSION.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
   rules:
     - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_PIPELINE_TRIGGERED && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
       changes:
-        - plumber/$R_VERSION.Dockerfile
+        - base/$R_VERSION.Dockerfile
 
 build-manifest:latest-linux-multiarch:
   extends: .build
@@ -151,7 +151,7 @@ build-manifest:latest-linux-multiarch:
   rules:
     - if: $CI_COMMIT_BRANCH == "master" && $UPDATE_MODE != "true"
       changes:
-        - plumber/latest.Dockerfile
+        - base/latest.Dockerfile
 
 build-manifest:version-linux-multiarch:
   extends: .build
@@ -171,4 +171,30 @@ build-manifest:version-linux-multiarch:
   rules:
     - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_PIPELINE_TRIGGERED
       changes:
-        - plumber/$R_VERSION.Dockerfile
+        - base/$R_VERSION.Dockerfile
+
+trigger-latest-build:
+  extends: .build
+  stage: .post
+  before_script:
+    - apk upgrade --no-cache
+    - apk add --update --no-cache curl
+  script:
+    - curl -X POST -F token=$R_TIDYVERSE -F ref=master https://gitlab.b-data.ch/api/v4/projects/173/trigger/pipeline
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master" && $UPDATE_MODE != "true"
+      changes:
+        - ver/latest.Dockerfile
+
+trigger-version-build:
+  extends: .build
+  stage: .post
+  before_script:
+    - apk upgrade --no-cache
+    - apk add --update --no-cache curl
+  script:
+    - curl -X POST -F token=$R_TIDYVERSE -F ref=freeze-version https://gitlab.b-data.ch/api/v4/projects/173/trigger/pipeline
+  rules:
+    - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_PIPELINE_TRIGGERED
+      changes:
+        - ver/$R_VERSION.Dockerfile
