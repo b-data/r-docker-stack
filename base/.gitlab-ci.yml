@@ -184,7 +184,7 @@ trigger-latest-build:
   rules:
     - if: $CI_COMMIT_BRANCH == "master" && $UPDATE_MODE != "true"
       changes:
-        - ver/latest.Dockerfile
+        - base/latest.Dockerfile
 
 trigger-version-build:
   extends: .build
@@ -197,4 +197,4 @@ trigger-version-build:
   rules:
     - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_PIPELINE_TRIGGERED
       changes:
-        - ver/$R_VERSION.Dockerfile
+        - base/$R_VERSION.Dockerfile
