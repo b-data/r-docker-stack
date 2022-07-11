@@ -10,10 +10,16 @@ WORKDIR /usr/src
 
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
+    cmake \
     libcurl4-openssl-dev \
+    libgdal-dev \
+    libgeos-dev \
+    libproj-dev \
     libsodium-dev \
     libssl-dev \
+    libudunits2-dev \
     libxml2-dev \
+    sqlite3 \
     zlib1g-dev \
   ## Install plumber
   && install2.r --error --deps TRUE  -n $NCPUS plumber \
