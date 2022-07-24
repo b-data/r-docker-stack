@@ -31,16 +31,18 @@ ENV BASE_IMAGE=${BASE_IMAGE} \
 COPY --from=rsi /usr/local /usr/local
 
 RUN apt-get update \
+  ## Copy script checkbashisms from package devscripts
+  && apt-get install -y --no-install-recommends devscripts \
+  && cp -a /usr/bin/checkbashisms /usr/local/bin/checkbashisms \
+  && apt-get remove -y --purge devscripts \
+  && apt-get autoremove -y \
+  ## Install R runtime dependencies
   && apt-get install -y --no-install-recommends \
-    bash-completion \
     build-essential \
     ca-certificates \
-    devscripts \
-    file \
     fonts-texgyre \
     g++ \
     gfortran \
-    gsfonts \
     libbz2-dev \
     '^libcurl[3|4]$' \
     libicu-dev \
@@ -54,11 +56,16 @@ RUN apt-get update \
     libpng-dev \
     libreadline-dev \
     libtiff5 \
-    locales \
     pkg-config \
     unzip \
     zip \
     zlib1g \
+  ## Additional packages
+  && apt-get install -y --no-install-recommends \
+    bash-completion \
+    file \
+    gsfonts \
+    locales \
   ## Switch BLAS/LAPACK (manual mode)
   && if [ ${BLAS} = "libopenblas-dev" ]; then \
     update-alternatives --set libblas.so.3-$(uname -m)-linux-gnu \
