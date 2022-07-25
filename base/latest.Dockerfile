@@ -47,7 +47,6 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     inkscape \
     jq \
     libclang-dev \
-    lsb-release \
     man-db \
     nano \
     procps \
