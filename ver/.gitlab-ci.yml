@@ -85,7 +85,6 @@ build:version-linux-amd64:
     - >
       docker build --pull
       --build-arg CRAN
-      --build-arg R_VERSION
       -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       -f ver/$R_VERSION.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-amd64
@@ -103,7 +102,6 @@ build:version-linux-arm64v8:
     - >
       docker build --pull
       --build-arg CRAN
-      --build-arg R_VERSION
       -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
       -f ver/$R_VERSION.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
