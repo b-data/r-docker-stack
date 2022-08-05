@@ -1,5 +1,5 @@
 ARG R_VERSION
-ARG QUARTO_VERSION=1.0.37
+ARG QUARTO_VERSION=1.0.38
 ARG CTAN_REPO=https://mirror.ctan.org/systems/texlive/tlnet
 
 FROM registry.gitlab.b-data.ch/r/tidyverse:${R_VERSION}
@@ -59,7 +59,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     mkdir -p /opt/quarto; \
     tar -xzf quarto-${QUARTO_VERSION}-linux-${dpkgArch}.tar.gz -C /opt/quarto --no-same-owner --strip-components=1; \
     rm quarto-${QUARTO_VERSION}-linux-${dpkgArch}.tar.gz; \
-    ## Remove qurto pandoc
+    ## Remove quarto pandoc
     rm /opt/quarto/bin/tools/pandoc; \
     ## Link to system pandoc
     ln -s /usr/bin/pandoc /opt/quarto/bin/tools/pandoc; \
