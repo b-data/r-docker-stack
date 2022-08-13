@@ -93,7 +93,6 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   && chown -R root:users /opt/TinyTeX \
   && chmod -R g+w /opt/TinyTeX \
   && chmod -R g+wx /opt/TinyTeX/bin \
-  && echo "PATH=${PATH}" >> /usr/local/lib/R/etc/Renviron \
   && install2.r --error --skipinstalled -n $NCPUS PKI \
   ## And some nice R packages for publishing-related stuff
   && install2.r --error --deps TRUE --skipinstalled -n $NCPUS \
