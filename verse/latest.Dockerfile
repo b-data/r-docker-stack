@@ -90,7 +90,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     titling \
   && tlmgr path add \
   && Rscript -e "tinytex::r_texmf()" \
-  && chown -R root:users /opt/TinyTeX \
+  && chown -R root:${NB_GID} /opt/TinyTeX \
   && chmod -R g+w /opt/TinyTeX \
   && chmod -R g+wx /opt/TinyTeX/bin \
   && install2.r --error --skipinstalled -n $NCPUS PKI \
