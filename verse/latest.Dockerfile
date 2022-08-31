@@ -1,5 +1,5 @@
 ARG R_VERSION
-ARG QUARTO_VERSION=1.1.163
+ARG QUARTO_VERSION=1.1.165
 ARG CTAN_REPO=https://mirror.ctan.org/systems/texlive/tlnet
 
 FROM registry.gitlab.b-data.ch/r/tidyverse:${R_VERSION}
