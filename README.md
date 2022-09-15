@@ -2,14 +2,15 @@
 
 # R docker stack
 
-Pre-built multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
+Multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
 
-*  `registry.gitlab.b-data.ch/r/ver`
-    *  `registry.gitlab.b-data.ch/r/r-ver` (4.0.4 ≤ version < 4.2.0)
-*  `registry.gitlab.b-data.ch/r/base`
-*  `registry.gitlab.b-data.ch/r/tidyverse`
-*  `registry.gitlab.b-data.ch/r/verse`
-*  `registry.gitlab.b-data.ch/r/geospatial`
+*  [`registry.gitlab.b-data.ch/r/ver`](https://gitlab.b-data.ch/r/ver/container_registry)
+    *  [`registry.gitlab.b-data.ch/r/r-ver`](https://gitlab.b-data.ch/r/r-ver/container_registry)
+       (4.0.4 ≤ version < 4.2.0)
+*  [`registry.gitlab.b-data.ch/r/base`](https://gitlab.b-data.ch/r/base/container_registry)
+*  [`registry.gitlab.b-data.ch/r/tidyverse`](https://gitlab.b-data.ch/r/tidyverse/container_registry)
+*  [`registry.gitlab.b-data.ch/r/verse`](https://gitlab.b-data.ch/r/verse/container_registry)
+*  [`registry.gitlab.b-data.ch/r/geospatial`](https://gitlab.b-data.ch/r/geospatial/container_registry)
 
 Images considered stable for R versions ≥ 4.2.0.  
 :point_right: The current state may eventually be backported to versions ≥
@@ -89,27 +90,27 @@ docker run -it --rm r-ver[:<major>.<minor>.<patch>]
 
 from the project's GitLab Container Registries:
 
-*  [r/ver](https://gitlab.b-data.ch/r/ver/container_registry)  
+*  [`r/ver`](https://gitlab.b-data.ch/r/ver/container_registry)  
     ```bash
     docker run -it --rm \
       registry.gitlab.b-data.ch/r/ver[:<major>[.<minor>[.<patch>]]]
     ```
-*  [r/base](https://gitlab.b-data.ch/r/base/container_registry)  
+*  [`r/base`](https://gitlab.b-data.ch/r/base/container_registry)  
     ```bash
     docker run -it --rm \
       registry.gitlab.b-data.ch/r/base[:<major>[.<minor>[.<patch>]]]
     ```
-*  [r/tidyverse](https://gitlab.b-data.ch/r/tidyverse/container_registry)  
+*  [`r/tidyverse`](https://gitlab.b-data.ch/r/tidyverse/container_registry)  
     ```bash
     docker run -it --rm \
       registry.gitlab.b-data.ch/r/tidyverse[:<major>[.<minor>[.<patch>]]]
     ```
-*  [r/verse](https://gitlab.b-data.ch/r/verse/container_registry)  
+*  [`r/verse`](https://gitlab.b-data.ch/r/verse/container_registry)  
     ```bash
     docker run -it --rm \
       registry.gitlab.b-data.ch/r/verse[:<major>[.<minor>[.<patch>]]]
     ```
-*  [r/geospatial](https://gitlab.b-data.ch/r/geospatial/container_registry)  
+*  [`r/geospatial`](https://gitlab.b-data.ch/r/geospatial/container_registry)  
     ```bash
     docker run -it --rm \
       registry.gitlab.b-data.ch/r/geospatial[:<major>[.<minor>[.<patch>]]]
