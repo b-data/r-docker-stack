@@ -1,13 +1,14 @@
 ARG BASE_IMAGE=debian:bullseye
+ARG BUILD_ON_IMAGE=registry.gitlab.b-data.ch/r/ver
 ARG R_VERSION
-ARG GIT_VERSION=2.36.1
+ARG GIT_VERSION=2.38.1
 ARG GIT_LFS_VERSION=3.2.0
-ARG PANDOC_VERSION=2.18
+ARG PANDOC_VERSION=2.19.2
 
 FROM registry.gitlab.b-data.ch/git/gsi/${GIT_VERSION}/${BASE_IMAGE} as gsi
 FROM registry.gitlab.b-data.ch/git-lfs/glfsi:${GIT_LFS_VERSION} as glfsi
 
-FROM registry.gitlab.b-data.ch/r/ver:${R_VERSION}
+FROM ${BUILD_ON_IMAGE}:${R_VERSION}
 
 ARG NCPUS=1
 
@@ -44,10 +45,8 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     gnupg \
     htop \
     info \
-    inkscape \
     jq \
     libclang-dev \
-    lsb-release \
     man-db \
     nano \
     procps \

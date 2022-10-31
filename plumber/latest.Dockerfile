@@ -1,6 +1,7 @@
+ARG BUILD_ON_IMAGE=registry.gitlab.b-data.ch/r/ver
 ARG R_VERSION
 
-FROM registry.gitlab.b-data.ch/r/ver:${R_VERSION}
+FROM ${BUILD_ON_IMAGE}:${R_VERSION}
 
 ARG NCPUS=1
 
@@ -10,10 +11,16 @@ WORKDIR /usr/src
 
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
+    cmake \
     libcurl4-openssl-dev \
+    libgdal-dev \
+    libgeos-dev \
+    libproj-dev \
     libsodium-dev \
     libssl-dev \
+    libudunits2-dev \
     libxml2-dev \
+    sqlite3 \
     zlib1g-dev \
   ## Install plumber
   && install2.r --error --deps TRUE  -n $NCPUS plumber \
