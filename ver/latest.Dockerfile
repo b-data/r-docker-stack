@@ -1,11 +1,15 @@
-ARG BASE_IMAGE=debian:bullseye
+ARG BASE_IMAGE=debian
+ARG BASE_IMAGE_TAG=11
 ARG BLAS=libopenblas-dev
 ARG R_VERSION
-ARG CRAN=https://cran.rstudio.com
+ARG CRAN=https://cloud.r-project.org
+ARG CUDA_IMAGE
+ARG CUDA_VERSION
+ARG CUDA_IMAGE_SUBTAG
 
-FROM registry.gitlab.b-data.ch/r/rsi/${R_VERSION}/${BASE_IMAGE} as rsi
+FROM registry.gitlab.b-data.ch/r/rsi/${R_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as rsi
 
-FROM ${BASE_IMAGE}
+FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_VERSION:-$BASE_IMAGE_TAG}${CUDA_IMAGE_SUBTAG:+-}${CUDA_IMAGE_SUBTAG}
 
 LABEL org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.source="https://gitlab.b-data.ch/r/docker-stack" \
@@ -15,15 +19,20 @@ LABEL org.opencontainers.image.licenses="MIT" \
 ARG DEBIAN_FRONTEND=noninteractive
 
 ARG BASE_IMAGE
+ARG BASE_IMAGE_TAG
 ARG BLAS
 ARG R_VERSION
 ARG CRAN
+ARG CUDA_IMAGE
+ARG CUDA_VERSION
+ARG CUDA_IMAGE_SUBTAG
 ARG BUILD_DATE
 ## Setting a BUILD_DATE will set CRAN to the matching MRAN date
 ## No BUILD_DATE means that CRAN will default to latest 
-ENV BASE_IMAGE=${BASE_IMAGE} \
+ENV BASE_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
     R_VERSION=${R_VERSION} \
-    CRAN=${CRAN} \ 
+    CRAN=${CRAN} \
+    CUDA_IMAGE=${CUDA_IMAGE}${CUDA_VERSION:+:}${CUDA_VERSION}${CUDA_IMAGE_SUBTAG:+-}${CUDA_IMAGE_SUBTAG} \
     LANG=en_US.UTF-8 \
     TERM=xterm \
     TZ=Etc/UTC
