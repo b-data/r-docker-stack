@@ -10,10 +10,10 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
     cmake \
+    default-libmysqlclient-dev \
     libfribidi-dev \
     libgit2-dev \
     libharfbuzz-dev \
-    libmariadb-dev \
     libpq-dev \
     libsasl2-dev \
     libsqlite3-dev \
