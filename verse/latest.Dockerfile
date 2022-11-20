@@ -9,10 +9,12 @@ ARG NCPUS=1
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+ARG BUILD_ON_IMAGE
 ARG QUARTO_VERSION
 ARG CTAN_REPO
 
-ENV CTAN_REPO=${CTAN_REPO} \
+ENV PARENT_IMAGE=${BUILD_ON_IMAGE}:${R_VERSION} \
+    CTAN_REPO=${CTAN_REPO} \
     PATH=/opt/TinyTeX/bin/linux:/opt/quarto/bin:$PATH
 
 ## Add LaTeX, rticles and bookdown support

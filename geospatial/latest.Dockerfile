@@ -7,6 +7,10 @@ ARG NCPUS=1
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+ARG BUILD_ON_IMAGE
+
+ENV PARENT_IMAGE=${BUILD_ON_IMAGE}:${R_VERSION}
+
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     gdal-bin \
