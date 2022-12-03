@@ -73,6 +73,7 @@ build:latest-linux-amd64:
     - if: $CI_COMMIT_BRANCH == "main" && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
       changes:
         - ver/latest.Dockerfile
+        - cuda/$CUDA_VERSION.Dockerfile
 
 build:latest-linux-arm64v8:
   extends: .build
@@ -104,6 +105,7 @@ build:latest-linux-arm64v8:
     - if: $CI_COMMIT_BRANCH == "main" && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
       changes:
         - ver/latest.Dockerfile
+        - cuda/$CUDA_VERSION.Dockerfile
 
 build:version-linux-amd64:
   extends: .build
@@ -199,6 +201,7 @@ build-manifest:latest-linux-multiarch:
     - if: $CI_COMMIT_BRANCH == "main"
       changes:
         - ver/latest.Dockerfile
+        - cuda/$CUDA_VERSION.Dockerfile
 
 build-manifest:version-linux-multiarch:
   extends: .build
@@ -234,6 +237,7 @@ trigger-latest-build:
     - if: $CI_COMMIT_BRANCH == "main"
       changes:
         - ver/latest.Dockerfile
+        - cuda/$CUDA_VERSION.Dockerfile
 
 trigger-version-build:
   extends: .post

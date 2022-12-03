@@ -22,7 +22,7 @@ RUN cpuBlasLib="$(update-alternatives --query \
   && echo "NVBLAS_LOGFILE /var/log/nvblas.log" > $NVBLAS_CONFIG_FILE \
   && echo "NVBLAS_CPU_BLAS_LIB $cpuBlasLib" >> $NVBLAS_CONFIG_FILE \
   && echo "NVBLAS_GPU_LIST ALL" >> $NVBLAS_CONFIG_FILE \
-  ## Provile NVBLAS-enabled R and Rscript
+  ## Provide NVBLAS-enabled R and Rscript
   ## Enabled at runtime and only if nvidia-smi and at least one GPU are present
   && nvblasLib="$(cd $CUDA_HOME/lib* && ls libnvblas.so* | head -n 1)" \
   && cp -a $(which R) $(which R)_ \
