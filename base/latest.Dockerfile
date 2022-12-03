@@ -120,6 +120,16 @@ RUN apt-get update \
     libxml2-dev \
   ## Install radian
   && pip install radian \
+  ## Provide NVBLAS-enabled radian
+  ## Enabled at runtime and only if nvidia-smi and at least one GPU are present
+  && if [ ! -z "$CUDA_IMAGE" ]; then \
+    nvblasLib="$(cd $CUDA_HOME/lib* && ls libnvblas.so* | head -n 1)"; \
+    cp -a $(which radian) $(which radian)_; \
+    echo '#!/bin/bash' > $(which radian); \
+    echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[[:space:]]\?[[:digit:]]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
+      >> $(which radian); \
+    echo "$(which radian)_ \"\${@}\"" >> $(which radian); \
+  fi \
   ## Install httpgd
   && install2.r --error --deps TRUE --skipinstalled -n $NCPUS \
     httpgd \
