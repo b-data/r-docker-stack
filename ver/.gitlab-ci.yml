@@ -60,6 +60,14 @@ build:latest-linux-amd64:
       -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       -t $CI_APP_REPO:latest-linux-amd64
       -f ver/latest.Dockerfile .
+    - |
+      if [[ ! -z "$CUDA_IMAGE" ]]; then
+        docker build \
+        --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG-linux-amd64 \
+        -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64 \
+        -t $CI_APP_REPO:latest-linux-amd64 \
+        -f cuda/$CUDA_VERSION.Dockerfile .
+      fi
     - docker push -a $CI_APP_REPO
   rules:
     - if: $CI_COMMIT_BRANCH == "main" && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
@@ -83,6 +91,14 @@ build:latest-linux-arm64v8:
       -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
       -t $CI_APP_REPO:latest-linux-arm64v8
       -f ver/latest.Dockerfile .
+    - |
+      if [[ ! -z "$CUDA_IMAGE" ]]; then
+        docker build \
+        --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG-linux-arm64v8 \
+        -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8 \
+        -t $CI_APP_REPO:latest-linux-arm64v8 \
+        -f cuda/$CUDA_VERSION.Dockerfile .
+      fi
     - docker push -a $CI_APP_REPO
   rules:
     - if: $CI_COMMIT_BRANCH == "main" && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
@@ -103,6 +119,13 @@ build:version-linux-amd64:
       --build-arg CUDA_IMAGE_SUBTAG
       -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       -f ver/$R_VERSION.Dockerfile .
+    - |
+      if [[ ! -z "$CUDA_IMAGE" ]]; then
+        docker build \
+        --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG-linux-amd64 \
+        -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64 \
+        -f cuda/$CUDA_VERSION.Dockerfile .
+      fi
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-amd64
   rules:
     - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
@@ -123,6 +146,13 @@ build:version-linux-arm64v8:
       --build-arg CUDA_IMAGE_SUBTAG
       -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
       -f ver/$R_VERSION.Dockerfile .
+    - |
+      if [[ ! -z "$CUDA_IMAGE" ]]; then
+        docker build \
+        --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG-linux-arm64v8 \
+        -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8 \
+        -f cuda/$CUDA_VERSION.Dockerfile .
+      fi
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
   rules:
     - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
