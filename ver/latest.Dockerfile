@@ -88,17 +88,17 @@ RUN apt-get update \
   && locale-gen \
   && update-locale LANG=$LANG \
   ## Add directory for site-library
-  && mkdir -p /usr/local/lib/R/site-library \
+  && mkdir -p $(R RHOME)/site-library \
   ## Set configured CRAN mirror
   && if [ -z "$BUILD_DATE" ]; then MRAN=$CRAN; \
    else MRAN=https://mran.microsoft.com/snapshot/${BUILD_DATE}; fi \
   && echo MRAN=$MRAN >> /etc/environment \
-  && echo "options(repos = c(CRAN='$MRAN'), download.file.method = 'libcurl')" >> /usr/local/lib/R/etc/Rprofile.site \
+  && echo "options(repos = c(CRAN='$MRAN'), download.file.method = 'libcurl')" >> $(R RHOME)/etc/Rprofile.site \
   ## Use littler installation scripts
   && Rscript -e "install.packages(c('littler', 'docopt'), repos = '$MRAN')" \
-  && ln -s /usr/local/lib/R/site-library/littler/examples/install2.r /usr/local/bin/install2.r \
-  && ln -s /usr/local/lib/R/site-library/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
-  && ln -s /usr/local/lib/R/site-library/littler/bin/r /usr/local/bin/r \
+  && ln -s $(R RHOME)/site-library/littler/examples/install2.r /usr/local/bin/install2.r \
+  && ln -s $(R RHOME)/site-library/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
+  && ln -s $(R RHOME)/site-library/littler/bin/r /usr/local/bin/r \
   ## Clean up
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/*
