@@ -59,6 +59,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     psmisc \
     screen \
     sudo \
+    swig \
     tmux \
     vim \
     wget \
