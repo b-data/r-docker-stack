@@ -2,18 +2,22 @@ ARG BUILD_ON_IMAGE
 
 ARG CUDA_HOME=/usr/local/cuda
 ARG NVBLAS_CONFIG_FILE=/etc/nvblas.conf
+ARG LIBNVINFER_MAJOR_VERSION=8
 
 FROM ${BUILD_ON_IMAGE}
 
 ARG CUDA_HOME
 ARG NVBLAS_CONFIG_FILE
+ARG LIBNVINFER_MAJOR_VERSION
+ARG CUPTI_AVAILABLE
 
 ENV CUDA_HOME=${CUDA_HOME} \
     NVBLAS_CONFIG_FILE=${NVBLAS_CONFIG_FILE} \
-    LD_LIBRARY_PATH=${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${CUDA_HOME}/lib:${CUDA_HOME}/lib64
+    LD_LIBRARY_PATH=${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${CUDA_HOME}/lib:${CUDA_HOME}/lib64${CUPTI_AVAILABLE:+:${CUDA_HOME}/extras/CUPTI/lib64}
 
 RUN cpuBlasLib="$(update-alternatives --query \
   libblas.so.3-$(uname -m)-linux-gnu | grep Value | cut -f2 -d' ')" \
+  && dpkgArch="$(dpkg --print-architecture)" \
   ## NVBLAS log configuration
   && touch /var/log/nvblas.log \
   && chown :users /var/log/nvblas.log \
@@ -34,4 +38,14 @@ RUN cpuBlasLib="$(update-alternatives --query \
   && echo '#!/bin/bash' > $(which Rscript) \
   && echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[[:space:]]\?[[:digit:]]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
     >> $(which Rscript) \
-  && echo "$(which Rscript)_ \"\${@}\"" >> $(which Rscript)
+  && echo "$(which Rscript)_ \"\${@}\"" >> $(which Rscript) \
+  ## libnvinfer is not yet available for Ubuntu 22.04 on sbsa (arm64)
+  && if [ ${dpkgArch} = "amd64" -o ! ${BASE_IMAGE} = "ubuntu:22.04" ]; then \
+    ## Install TensorRT
+    apt-get update; \
+    apt-get -y install --no-install-recommends \
+      libnvinfer${LIBNVINFER_MAJOR_VERSION} \
+      libnvinfer-plugin${LIBNVINFER_MAJOR_VERSION}; \
+  fi \
+  ## Clean up
+  && rm -rf /var/lib/apt/lists/*
