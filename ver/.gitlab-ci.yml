@@ -278,6 +278,35 @@ build-manifest:version-linux-multiarch:
       changes:
         - ver/$R_VERSION.Dockerfile
 
+trigger-latest-devel-build:
+  extends: .post
+  stage: .post
+  needs: ["build-manifest:latest-linux-multiarch"]
+  before_script:
+    - apk upgrade --no-cache
+    - apk add --update --no-cache curl
+  script:
+    - curl -X POST -F token=$CUDA_R_VER -F ref=main -F "variables[CUDA_IMAGE_SUBTAG]=cudnn8-devel-$BASE_IMAGE$BASE_IMAGE_TAG" https://gitlab.b-data.ch/api/v4/projects/302/trigger/pipeline
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main" && $CUDA_IMAGE_FLAVOR == "runtime"
+      changes:
+        - ver/latest.Dockerfile
+        - cuda/$CUDA_VERSION.Dockerfile
+
+trigger-version-devel-build:
+  extends: .post
+  stage: .post
+  needs: ["build-manifest:version-linux-multiarch"]
+  before_script:
+    - apk upgrade --no-cache
+    - apk add --update --no-cache curl
+  script:
+    - curl -X POST -F token=$CUDA_R_VER -F ref=freeze-version -F "variables[CUDA_IMAGE_SUBTAG]=cudnn8-devel-$BASE_IMAGE$BASE_IMAGE_TAG" https://gitlab.b-data.ch/api/v4/projects/302/trigger/pipeline
+  rules:
+    - if: $CI_COMMIT_BRANCH == "freeze-version" && $CUDA_IMAGE_FLAVOR == "runtime"
+      changes:
+        - ver/$R_VERSION.Dockerfile
+
 trigger-latest-build:
   extends: .post
   stage: .post
