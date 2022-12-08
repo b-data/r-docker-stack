@@ -6,6 +6,8 @@ ARG LIBNVINFER_MAJOR_VERSION=8
 
 FROM ${BUILD_ON_IMAGE}
 
+ARG CUDA_IMAGE_FLAVOR
+
 ARG CUDA_HOME
 ARG NVBLAS_CONFIG_FILE
 ARG LIBNVINFER_MAJOR_VERSION
@@ -39,13 +41,16 @@ RUN cpuBlasLib="$(update-alternatives --query \
   && echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[[:space:]]\?[[:digit:]]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
     >> $(which Rscript) \
   && echo "$(which Rscript)_ \"\${@}\"" >> $(which Rscript) \
+  ## Install TensorRT
   ## libnvinfer is not yet available for Ubuntu 22.04 on sbsa (arm64)
   && if [ ${dpkgArch} = "amd64" -o ! ${BASE_IMAGE} = "ubuntu:22.04" ]; then \
-    ## Install TensorRT
+    ## Install development libraries and headers
+    ## if devel-flavor of CUDA image is used
+    if [ ${CUDA_IMAGE_FLAVOR} = "devel" ]; then dev="-dev"; fi; \
     apt-get update; \
     apt-get -y install --no-install-recommends \
-      libnvinfer${LIBNVINFER_MAJOR_VERSION} \
-      libnvinfer-plugin${LIBNVINFER_MAJOR_VERSION}; \
+      libnvinfer${dev:-$LIBNVINFER_MAJOR_VERSION} \
+      libnvinfer-plugin${dev:-$LIBNVINFER_MAJOR_VERSION}; \
   fi \
   ## Clean up
   && rm -rf /var/lib/apt/lists/*

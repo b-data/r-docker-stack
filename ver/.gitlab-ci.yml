@@ -76,6 +76,7 @@ build:latest-linux-amd64:
       if [[ ! -z "$CUDA_IMAGE" ]]; then
         docker build \
         --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-amd64 \
+        --build-arg CUDA_IMAGE_FLAVOR \
         --build-arg CUPTI_AVAILABLE \
         -t $CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-amd64 \
         -t $CI_APP_REPO:latest${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-amd64 \
@@ -109,6 +110,7 @@ build:latest-linux-arm64v8:
       if [[ ! -z "$CUDA_IMAGE" ]]; then
         docker build \
         --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-arm64v8 \
+        --build-arg CUDA_IMAGE_FLAVOR \
         --build-arg CUPTI_AVAILABLE \
         -t $CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-arm64v8 \
         -t $CI_APP_REPO:latest${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-arm64v8 \
@@ -139,6 +141,7 @@ build:version-linux-amd64:
       if [[ ! -z "$CUDA_IMAGE" ]]; then
         docker build \
         --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-amd64 \
+        --build-arg CUDA_IMAGE_FLAVOR \
         --build-arg CUPTI_AVAILABLE \
         -t $CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-amd64 \
         -f cuda/$CUDA_VERSION.Dockerfile .
@@ -167,6 +170,7 @@ build:version-linux-arm64v8:
       if [[ ! -z "$CUDA_IMAGE" ]]; then
         docker build \
         --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-arm64v8 \
+        --build-arg CUDA_IMAGE_FLAVOR \
         --build-arg CUPTI_AVAILABLE \
         -t $CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-arm64v8 \
         -f cuda/$CUDA_VERSION.Dockerfile .
