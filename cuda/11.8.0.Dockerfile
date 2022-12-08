@@ -2,7 +2,6 @@ ARG BUILD_ON_IMAGE
 
 ARG CUDA_HOME=/usr/local/cuda
 ARG NVBLAS_CONFIG_FILE=/etc/nvblas.conf
-ARG LIBNVINFER_MAJOR_VERSION=8
 
 FROM ${BUILD_ON_IMAGE}
 
@@ -10,7 +9,6 @@ ARG CUDA_IMAGE_FLAVOR
 
 ARG CUDA_HOME
 ARG NVBLAS_CONFIG_FILE
-ARG LIBNVINFER_MAJOR_VERSION
 ARG CUPTI_AVAILABLE
 
 ENV CUDA_HOME=${CUDA_HOME} \
@@ -49,8 +47,8 @@ RUN cpuBlasLib="$(update-alternatives --query \
     if [ ${CUDA_IMAGE_FLAVOR} = "devel" ]; then dev="-dev"; fi; \
     apt-get update; \
     apt-get -y install --no-install-recommends \
-      libnvinfer${dev:-$LIBNVINFER_MAJOR_VERSION} \
-      libnvinfer-plugin${dev:-$LIBNVINFER_MAJOR_VERSION}; \
+      libnvinfer${dev:-[[:digit:]]} \
+      libnvinfer-plugin${dev:-[[:digit:]]}; \
   fi \
   ## Clean up
   && rm -rf /var/lib/apt/lists/*
