@@ -2,6 +2,7 @@
   variables:
     R_VERSION: "4.2.2"
     CUDA_VERSION: "11.8.0"
+    PYTHON_VERSION: "3.10.8"
 
 .before-script-all: &before-script-all
   - |
@@ -75,7 +76,10 @@ build:latest-linux-amd64:
     - |
       if [[ ! -z "$CUDA_IMAGE" ]]; then
         docker build \
+        --build-arg BASE_IMAGE \
+        --build-arg BASE_IMAGE_TAG \
         --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-amd64 \
+        --build-arg PYTHON_VERSION \
         --build-arg CUDA_IMAGE_FLAVOR \
         --build-arg CUPTI_AVAILABLE \
         -t $CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-amd64 \
@@ -109,7 +113,10 @@ build:latest-linux-arm64v8:
     - |
       if [[ ! -z "$CUDA_IMAGE" ]]; then
         docker build \
+        --build-arg BASE_IMAGE \
+        --build-arg BASE_IMAGE_TAG \
         --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-arm64v8 \
+        --build-arg PYTHON_VERSION \
         --build-arg CUDA_IMAGE_FLAVOR \
         --build-arg CUPTI_AVAILABLE \
         -t $CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-arm64v8 \
@@ -140,6 +147,8 @@ build:version-linux-amd64:
     - |
       if [[ ! -z "$CUDA_IMAGE" ]]; then
         docker build \
+        --build-arg BASE_IMAGE \
+        --build-arg BASE_IMAGE_TAG \
         --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-amd64 \
         --build-arg CUDA_IMAGE_FLAVOR \
         --build-arg CUPTI_AVAILABLE \
@@ -169,6 +178,8 @@ build:version-linux-arm64v8:
     - |
       if [[ ! -z "$CUDA_IMAGE" ]]; then
         docker build \
+        --build-arg BASE_IMAGE \
+        --build-arg BASE_IMAGE_TAG \
         --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-arm64v8 \
         --build-arg CUDA_IMAGE_FLAVOR \
         --build-arg CUPTI_AVAILABLE \

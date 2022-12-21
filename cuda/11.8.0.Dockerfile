@@ -1,19 +1,28 @@
+ARG BASE_IMAGE
+ARG BASE_IMAGE_TAG
 ARG BUILD_ON_IMAGE
+ARG PYTHON_VERSION
 
 ARG CUDA_HOME=/usr/local/cuda
 ARG NVBLAS_CONFIG_FILE=/etc/nvblas.conf
 
+FROM registry.gitlab.b-data.ch/python/psi${PYTHON_VERSION:+/}${PYTHON_VERSION:-:none}${PYTHON_VERSION:+/$BASE_IMAGE}${PYTHON_VERSION:+:$BASE_IMAGE_TAG} as psi
+
 FROM ${BUILD_ON_IMAGE}
 
+ARG PYTHON_VERSION
 ARG CUDA_IMAGE_FLAVOR
 
 ARG CUDA_HOME
 ARG NVBLAS_CONFIG_FILE
 ARG CUPTI_AVAILABLE
 
-ENV CUDA_HOME=${CUDA_HOME} \
+ENV PYTHON_VERSION=${PYTHON_VERSION} \
+    CUDA_HOME=${CUDA_HOME} \
     NVBLAS_CONFIG_FILE=${NVBLAS_CONFIG_FILE} \
     LD_LIBRARY_PATH=${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${CUDA_HOME}/lib:${CUDA_HOME}/lib64${CUPTI_AVAILABLE:+:${CUDA_HOME}/extras/CUPTI/lib64}
+
+COPY --from=psi /usr/local /usr/local
 
 RUN cpuBlasLib="$(update-alternatives --query \
   libblas.so.3-$(uname -m)-linux-gnu | grep Value | cut -f2 -d' ')" \
