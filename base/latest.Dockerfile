@@ -61,7 +61,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     sudo \
     swig \
     tmux \
-    vim \
+    vim-tiny \
     wget \
     zsh \
     ## Additional git runtime dependencies
@@ -114,7 +114,6 @@ RUN apt-get update \
     ## Current ZeroMQ library for R pbdZMQ
     libzmq3-dev \
     ## Required for R extension
-    libcairo2-dev \
     libcurl4-openssl-dev \
     libfontconfig1-dev \
     libssl-dev \
