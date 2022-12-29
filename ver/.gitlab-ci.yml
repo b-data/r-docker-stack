@@ -2,7 +2,7 @@
   variables:
     R_VERSION: "4.2.2"
     CUDA_VERSION: "11.8.0"
-    PYTHON_VERSION: "3.10.8"
+    PYTHON_VERSION: "3.10.9"
 
 .before-script-all: &before-script-all
   - |
