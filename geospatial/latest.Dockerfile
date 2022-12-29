@@ -13,7 +13,6 @@ ENV PARENT_IMAGE=${BUILD_ON_IMAGE}:${R_VERSION}
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
-    gdal-bin \
     libfftw3-dev \
     libgdal-dev \
     libgeos-dev \
