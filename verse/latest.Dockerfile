@@ -34,6 +34,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     libgmp3-dev \
     libgl1-mesa-dev \
     libglu1-mesa-dev \
+    libharfbuzz-dev \
     libhunspell-dev \
     libicu-dev \
     liblzma-dev \
@@ -47,15 +48,14 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   && install2.r --error --skipinstalled -n $NCPUS redland \
   ## Explicitly install runtime library sub-deps of librdf0-dev
   && apt-get install -y \
-	  libcurl4-openssl-dev \
-	  libxslt-dev \
-	  librdf0 \
-	  redland-utils \
-	  rasqal-utils \
-	  raptor2-utils \
+    libcurl4-openssl-dev \
+    libxslt-dev \
+    librdf0 \
+    redland-utils \
+    rasqal-utils \
+    raptor2-utils \
   ## Get rid of librdf0-dev and its dependencies (incl. libcurl4-gnutls-dev)
-	&& apt-get -y autoremove \
-  && rm -rf /var/lib/apt/lists/* \
+  && apt-get -y autoremove \
   && if [ ${dpkgArch} = "amd64" ]; then \
     ## Install quarto
     curl -sLO https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-${dpkgArch}.tar.gz; \
@@ -114,5 +114,19 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     rmdshower \
     rJava \
     xaringan \
+  ## Install Cairo: R Graphics Device using Cairo Graphics Library
+  ## Install magick: Advanced Graphics and Image-Processing in R
+  && install2.r --error --skipinstalled -n $NCPUS \
+    Cairo \
+    magick \
+  ## Get rid of libharfbuzz-dev
+  && apt-get -y purge libharfbuzz-dev \
+  ## Get rid of libmagick++-dev
+  && apt-get -y purge libmagick++-dev \
+  ## and their dependencies (incl. python3)
+  && apt-get -y autoremove \
+  && apt-get -y install --no-install-recommends \
+    '^libmagick\+\+-6.q16-[0-9]+$' \
   ## Clean up
-  && rm -rf /tmp/*
+  && rm -rf /tmp/* \
+  && rm -rf /var/lib/apt/lists/*
