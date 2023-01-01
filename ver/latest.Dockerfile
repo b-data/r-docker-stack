@@ -5,9 +5,11 @@ ARG CUDA_VERSION
 ARG CUDA_IMAGE_SUBTAG
 ARG BLAS=libopenblas-dev
 ARG R_VERSION
+ARG PYTHON_VERSION
 ARG CRAN=https://cloud.r-project.org
 
 FROM registry.gitlab.b-data.ch/r/rsi/${R_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as rsi
+FROM registry.gitlab.b-data.ch/python/psi${PYTHON_VERSION:+/}${PYTHON_VERSION:-:none}${PYTHON_VERSION:+/$BASE_IMAGE}${PYTHON_VERSION:+:$BASE_IMAGE_TAG} as psi
 
 FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG}
 
@@ -22,6 +24,7 @@ ARG BASE_IMAGE
 ARG BASE_IMAGE_TAG
 ARG BLAS
 ARG R_VERSION
+ARG PYTHON_VERSION
 ARG CRAN
 ARG CUDA_IMAGE
 ARG CUDA_VERSION
@@ -31,6 +34,7 @@ ARG BUILD_DATE
 ## No BUILD_DATE means that CRAN will default to latest 
 ENV BASE_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
     R_VERSION=${R_VERSION} \
+    PYTHON_VERSION=${PYTHON_VERSION} \
     CRAN=${CRAN} \
     CUDA_IMAGE=${CUDA_IMAGE}${CUDA_IMAGE:+:}${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG} \
     PARENT_IMAGE=${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} \
@@ -38,7 +42,10 @@ ENV BASE_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
     TERM=xterm \
     TZ=Etc/UTC
 
+## Install R
 COPY --from=rsi /usr/local /usr/local
+## Install Python
+COPY --from=psi /usr/local /usr/local
 
 RUN apt-get update \
   ## Copy script checkbashisms from package devscripts
