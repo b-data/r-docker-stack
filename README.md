@@ -65,8 +65,8 @@ latest:
 
 ```bash
 cd ver && docker build \
-  --build-arg R_VERSION=4.2.1 \
-  -t r-ver \
+  --build-arg R_VERSION=4.2.2 \
+  -t r/ver \
   -f latest.Dockerfile .
 ```
 
@@ -74,18 +74,18 @@ version:
 
 ```bash
 cd ver && docker build \
-  -t r-ver:<major>.<minor>.<patch> \
-  -f <major>.<minor>.<patch>.Dockerfile .
+  -t r/ver:MAJOR.MINOR.PATCH \
+  -f MAJOR.MINOR.PATCH.Dockerfile .
 ```
 
-For `<major>.<minor>.<patch>` ≥ `4.2.0`.
+For `MAJOR.MINOR.PATCH` ≥ `4.2.0`.
 
 ### Run container
 
 self built:
 
 ```bash
-docker run -it --rm r-ver[:<major>.<minor>.<patch>]
+docker run -it --rm r/ver[:MAJOR.MINOR.PATCH]
 ```
 
 from the project's GitLab Container Registries:
@@ -93,27 +93,27 @@ from the project's GitLab Container Registries:
 *  [`r/ver`](https://gitlab.b-data.ch/r/ver/container_registry)  
     ```bash
     docker run -it --rm \
-      registry.gitlab.b-data.ch/r/ver[:<major>[.<minor>[.<patch>]]]
+      registry.gitlab.b-data.ch/r/ver[:MAJOR[.MINOR[.PATCH]]]
     ```
 *  [`r/base`](https://gitlab.b-data.ch/r/base/container_registry)  
     ```bash
     docker run -it --rm \
-      registry.gitlab.b-data.ch/r/base[:<major>[.<minor>[.<patch>]]]
+      registry.gitlab.b-data.ch/r/base[:MAJOR[.MINOR[.PATCH]]]
     ```
 *  [`r/tidyverse`](https://gitlab.b-data.ch/r/tidyverse/container_registry)  
     ```bash
     docker run -it --rm \
-      registry.gitlab.b-data.ch/r/tidyverse[:<major>[.<minor>[.<patch>]]]
+      registry.gitlab.b-data.ch/r/tidyverse[:MAJOR[.MINOR[.PATCH]]]
     ```
 *  [`r/verse`](https://gitlab.b-data.ch/r/verse/container_registry)  
     ```bash
     docker run -it --rm \
-      registry.gitlab.b-data.ch/r/verse[:<major>[.<minor>[.<patch>]]]
+      registry.gitlab.b-data.ch/r/verse[:MAJOR[.MINOR[.PATCH]]]
     ```
 *  [`r/geospatial`](https://gitlab.b-data.ch/r/geospatial/container_registry)  
     ```bash
     docker run -it --rm \
-      registry.gitlab.b-data.ch/r/geospatial[:<major>[.<minor>[.<patch>]]]
+      registry.gitlab.b-data.ch/r/geospatial[:MAJOR[.MINOR[.PATCH]]]
     ```
 
 ## Contributing
