@@ -66,6 +66,7 @@ latest:
 ```bash
 cd ver && docker build \
   --build-arg R_VERSION=4.2.2 \
+  --build-arg PYTHON_VERSION=3.10.9 \
   -t r/ver \
   -f latest.Dockerfile .
 ```
