@@ -12,8 +12,10 @@ Images available for R versions ≥ 4.2.2.
 
 **Features**
 
-The same as the [R images](README.md#r-docker-stack)
-plus
+`registry.gitlab.b-data.ch/cuda/r/ver:*-devel` serves as base image for
+`registry.gitlab.b-data.ch/jupyterlab/cuda/r/base`.
+
+Otherwise the same as the [R images](README.md#r-docker-stack) plus
 
 * CUDA runtime,
   [CUDA math libraries](https://developer.nvidia.com/gpu-accelerated-libraries),
