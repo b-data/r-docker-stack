@@ -77,21 +77,19 @@ build:latest-linux-amd64:
     - |
       if [[ ! -z "$CUDA_IMAGE" ]]; then
         docker build \
-        --build-arg BASE_IMAGE \
-        --build-arg BASE_IMAGE_TAG \
         --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-amd64 \
         --build-arg CUDA_IMAGE_FLAVOR \
         --build-arg CUPTI_AVAILABLE \
         -t $CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-amd64 \
         -t $CI_APP_REPO:latest${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-amd64 \
-        -f cuda/$CUDA_VERSION.Dockerfile .
+        -f cuda/latest.Dockerfile .
       fi
     - docker push -a $CI_APP_REPO
   rules:
     - if: $CI_COMMIT_BRANCH == "main" && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
       changes:
         - ver/latest.Dockerfile
-        - cuda/$CUDA_VERSION.Dockerfile
+        - cuda/latest.Dockerfile
 
 build:latest-linux-arm64v8:
   extends: .build
@@ -114,21 +112,19 @@ build:latest-linux-arm64v8:
     - |
       if [[ ! -z "$CUDA_IMAGE" ]]; then
         docker build \
-        --build-arg BASE_IMAGE \
-        --build-arg BASE_IMAGE_TAG \
         --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-arm64v8 \
         --build-arg CUDA_IMAGE_FLAVOR \
         --build-arg CUPTI_AVAILABLE \
         -t $CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-arm64v8 \
         -t $CI_APP_REPO:latest${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-arm64v8 \
-        -f cuda/$CUDA_VERSION.Dockerfile .
+        -f cuda/latest.Dockerfile .
       fi
     - docker push -a $CI_APP_REPO
   rules:
     - if: $CI_COMMIT_BRANCH == "main" && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
       changes:
         - ver/latest.Dockerfile
-        - cuda/$CUDA_VERSION.Dockerfile
+        - cuda/latest.Dockerfile
 
 build:version-linux-amd64:
   extends: .build
@@ -147,13 +143,11 @@ build:version-linux-amd64:
     - |
       if [[ ! -z "$CUDA_IMAGE" ]]; then
         docker build \
-        --build-arg BASE_IMAGE \
-        --build-arg BASE_IMAGE_TAG \
         --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-amd64 \
         --build-arg CUDA_IMAGE_FLAVOR \
         --build-arg CUPTI_AVAILABLE \
         -t $CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-amd64 \
-        -f cuda/$CUDA_VERSION.Dockerfile .
+        -f cuda/$R_VERSION.Dockerfile .
       fi
     - docker push $CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-amd64
   rules:
@@ -178,13 +172,11 @@ build:version-linux-arm64v8:
     - |
       if [[ ! -z "$CUDA_IMAGE" ]]; then
         docker build \
-        --build-arg BASE_IMAGE \
-        --build-arg BASE_IMAGE_TAG \
         --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-arm64v8 \
         --build-arg CUDA_IMAGE_FLAVOR \
         --build-arg CUPTI_AVAILABLE \
         -t $CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-arm64v8 \
-        -f cuda/$CUDA_VERSION.Dockerfile .
+        -f cuda/$R_VERSION.Dockerfile .
       fi
     - docker push $CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-arm64v8
   rules:
@@ -262,7 +254,7 @@ build-manifest:latest-linux-multiarch:
     - if: $CI_COMMIT_BRANCH == "main"
       changes:
         - ver/latest.Dockerfile
-        - cuda/$CUDA_VERSION.Dockerfile
+        - cuda/latest.Dockerfile
 
 build-manifest:version-linux-multiarch:
   extends: .build
@@ -309,7 +301,7 @@ trigger-latest-build:
     - if: $CI_COMMIT_BRANCH == "main"
       changes:
         - ver/latest.Dockerfile
-        - cuda/$CUDA_VERSION.Dockerfile
+        - cuda/latest.Dockerfile
 
 trigger-version-build:
   extends: .post
@@ -341,7 +333,7 @@ trigger-latest-cuda-build:
     - if: $CI_COMMIT_BRANCH == "main" && $CUDA_IMAGE_SUBTAG =~ /runtime/
       changes:
         - ver/latest.Dockerfile
-        - cuda/$CUDA_VERSION.Dockerfile
+        - cuda/latest.Dockerfile
 
 trigger-version-cuda-build:
   extends: .post
@@ -370,7 +362,7 @@ trigger-latest-cuda-devel-build:
     - if: $CI_COMMIT_BRANCH == "main" && $CUDA_IMAGE_SUBTAG =~ /runtime/
       changes:
         - ver/latest.Dockerfile
-        - cuda/$CUDA_VERSION.Dockerfile
+        - cuda/latest.Dockerfile
 
 trigger-version-cuda-devel-build:
   extends: .post
