@@ -10,6 +10,10 @@ GPU-accelerated, multi-arch (`linux/amd64`, `linux/arm64/v8`) images:
 
 Images available for R versions ≥ 4.2.2.
 
+**Build chain**
+
+The same as the [R images](README.md#r-docker-stack).
+
 **Features**
 
 `registry.gitlab.b-data.ch/cuda/r/ver:*-devel` serves as base image for
@@ -147,3 +151,5 @@ from the project's GitLab Container Registries:
     --gpus '"device=all"' \
     registry.gitlab.b-data.ch/cuda/r/geospatial[:MAJOR[.MINOR[.PATCH]]]
   ```
+
+See [NOTES](NOTES.md) for tweaks.
