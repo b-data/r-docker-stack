@@ -19,6 +19,11 @@ Images considered stable for R versions ≥ 4.2.0.
 :point_right: The current state may eventually be backported to versions ≥
 4.0.4.
 
+**Build chain**
+
+ver → base → tidyverse → verse → geospatial  
+:information_source: The term base+ means *base or later* in the build chain.
+
 **Features**
 
 `registry.gitlab.b-data.ch/r/ver` serves as base image for
@@ -119,6 +124,8 @@ from the project's GitLab Container Registries:
   docker run -it --rm \
     registry.gitlab.b-data.ch/r/geospatial[:MAJOR[.MINOR[.PATCH]]]
   ```
+
+See [NOTES](NOTES.md) for tweaks.
 
 ## Contributing
 
