@@ -131,7 +131,7 @@ RUN apt-get update \
     nvblasLib="$(cd $CUDA_HOME/lib* && ls libnvblas.so* | head -n 1)"; \
     cp -a $(which radian) $(which radian)_; \
     echo '#!/bin/bash' > $(which radian); \
-    echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[ \t\r\n\v\f]\?[0-9]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
+    echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[[:space:]]\?[[:digit:]]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
       >> $(which radian); \
     echo "$(which radian)_ \"\${@}\"" >> $(which radian); \
   fi \

@@ -33,12 +33,12 @@ RUN cpuBlasLib="$(update-alternatives --query \
   && nvblasLib="$(cd $CUDA_HOME/lib* && ls libnvblas.so* | head -n 1)" \
   && cp -a $(which R) $(which R)_ \
   && echo '#!/bin/bash' > $(which R) \
-  && echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[ \t\r\n\v\f]\?[0-9]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
+  && echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[[:space:]]\?[[:digit:]]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
     >> $(which R) \
   && echo "$(which R)_ \"\${@}\"" >> $(which R) \
   && cp -a $(which Rscript) $(which Rscript)_ \
   && echo '#!/bin/bash' > $(which Rscript) \
-  && echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[ \t\r\n\v\f]\?[0-9]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
+  && echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[[:space:]]\?[[:digit:]]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
     >> $(which Rscript) \
   && echo "$(which Rscript)_ \"\${@}\"" >> $(which Rscript) \
   ## Install TensorRT
