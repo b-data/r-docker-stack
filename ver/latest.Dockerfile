@@ -22,22 +22,22 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 ARG BASE_IMAGE
 ARG BASE_IMAGE_TAG
+ARG CUDA_IMAGE
+ARG CUDA_VERSION
+ARG CUDA_IMAGE_SUBTAG
 ARG BLAS
 ARG R_VERSION
 ARG PYTHON_VERSION
 ARG CRAN
-ARG CUDA_IMAGE
-ARG CUDA_VERSION
-ARG CUDA_IMAGE_SUBTAG
-ARG BUILD_DATE
-## Setting a BUILD_DATE will set CRAN to the matching MRAN date
-## No BUILD_DATE means that CRAN will default to latest 
+ARG BUILD_START
+
 ENV BASE_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
+    CUDA_IMAGE=${CUDA_IMAGE}${CUDA_IMAGE:+:}${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG} \
+    PARENT_IMAGE=${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} \
     R_VERSION=${R_VERSION} \
     PYTHON_VERSION=${PYTHON_VERSION} \
     CRAN=${CRAN} \
-    CUDA_IMAGE=${CUDA_IMAGE}${CUDA_IMAGE:+:}${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG} \
-    PARENT_IMAGE=${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} \
+    BUILD_DATE=${BUILD_START} \
     LANG=en_US.UTF-8 \
     TERM=xterm \
     TZ=Etc/UTC
@@ -97,12 +97,9 @@ RUN apt-get update \
   ## Add directory for site-library
   && mkdir -p $(R RHOME)/site-library \
   ## Set configured CRAN mirror
-  && if [ -z "$BUILD_DATE" ]; then MRAN=$CRAN; \
-   else MRAN=https://mran.microsoft.com/snapshot/${BUILD_DATE}; fi \
-  && echo MRAN=$MRAN >> /etc/environment \
-  && echo "options(repos = c(CRAN='$MRAN'), download.file.method = 'libcurl')" >> $(R RHOME)/etc/Rprofile.site \
+  && echo "options(repos = c(CRAN='$CRAN'), download.file.method = 'libcurl')" >> $(R RHOME)/etc/Rprofile.site \
   ## Use littler installation scripts
-  && Rscript -e "install.packages(c('littler', 'docopt'), repos = '$MRAN')" \
+  && Rscript -e "install.packages(c('littler', 'docopt'), repos = '$CRAN')" \
   && ln -s $(R RHOME)/site-library/littler/examples/install2.r /usr/local/bin/install2.r \
   && ln -s $(R RHOME)/site-library/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
   && ln -s $(R RHOME)/site-library/littler/bin/r /usr/local/bin/r \

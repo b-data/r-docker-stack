@@ -10,10 +10,12 @@ ARG CUDA_IMAGE_FLAVOR
 ARG CUDA_HOME
 ARG NVBLAS_CONFIG_FILE
 ARG CUPTI_AVAILABLE
+ARG BUILD_START
 
 ENV CUDA_HOME=${CUDA_HOME} \
     NVBLAS_CONFIG_FILE=${NVBLAS_CONFIG_FILE} \
-    LD_LIBRARY_PATH=${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${CUDA_HOME}/lib:${CUDA_HOME}/lib64${CUPTI_AVAILABLE:+:${CUDA_HOME}/extras/CUPTI/lib64}
+    LD_LIBRARY_PATH=${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${CUDA_HOME}/lib:${CUDA_HOME}/lib64${CUPTI_AVAILABLE:+:${CUDA_HOME}/extras/CUPTI/lib64} \
+    BUILD_DATE=${BUILD_START}
 
 RUN cpuBlasLib="$(update-alternatives --query \
   libblas.so.3-$(uname -m)-linux-gnu | grep Value | cut -f2 -d' ')" \
@@ -31,12 +33,12 @@ RUN cpuBlasLib="$(update-alternatives --query \
   && nvblasLib="$(cd $CUDA_HOME/lib* && ls libnvblas.so* | head -n 1)" \
   && cp -a $(which R) $(which R)_ \
   && echo '#!/bin/bash' > $(which R) \
-  && echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[[:space:]]\?[[:digit:]]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
+  && echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[ \t\r\n\v\f]\?[0-9]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
     >> $(which R) \
   && echo "$(which R)_ \"\${@}\"" >> $(which R) \
   && cp -a $(which Rscript) $(which Rscript)_ \
   && echo '#!/bin/bash' > $(which Rscript) \
-  && echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[[:space:]]\?[[:digit:]]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
+  && echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[ \t\r\n\v\f]\?[0-9]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
     >> $(which Rscript) \
   && echo "$(which Rscript)_ \"\${@}\"" >> $(which Rscript) \
   ## Install TensorRT

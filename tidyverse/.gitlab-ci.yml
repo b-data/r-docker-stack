@@ -53,6 +53,7 @@ build:latest-linux-amd64:
       --build-arg BUILD_ON_IMAGE
       --build-arg R_VERSION
       --build-arg NCPUS=$((`nproc`/2+1))
+      --build-arg BUILD_START=$(date -uIseconds)
       -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       -t $CI_APP_REPO:latest-linux-amd64
       -f tidyverse/latest.Dockerfile .
@@ -73,6 +74,7 @@ build:latest-linux-arm64v8:
       --build-arg BUILD_ON_IMAGE
       --build-arg R_VERSION
       --build-arg NCPUS=$((`nproc`/2+1))
+      --build-arg BUILD_START=$(date -uIseconds)
       -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
       -t $CI_APP_REPO:latest-linux-arm64v8
       -f tidyverse/latest.Dockerfile .
@@ -92,6 +94,7 @@ build:version-linux-amd64:
       docker build --pull
       --build-arg BUILD_ON_IMAGE
       --build-arg NCPUS=$((`nproc`/2+1))
+      --build-arg BUILD_START=$(date -uIseconds)
       -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       -f tidyverse/$R_VERSION.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-amd64
@@ -110,6 +113,7 @@ build:version-linux-arm64v8:
       docker build --pull
       --build-arg BUILD_ON_IMAGE
       --build-arg NCPUS=$((`nproc`/2+1))
+      --build-arg BUILD_START=$(date -uIseconds)
       -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
       -f tidyverse/$R_VERSION.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8

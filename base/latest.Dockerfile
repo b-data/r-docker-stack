@@ -19,11 +19,13 @@ ARG BUILD_ON_IMAGE
 ARG GIT_VERSION
 ARG GIT_LFS_VERSION
 ARG PANDOC_VERSION
+ARG BUILD_START
 
 ENV PARENT_IMAGE=${BUILD_ON_IMAGE}:${R_VERSION} \
     GIT_VERSION=${GIT_VERSION} \
     GIT_LFS_VERSION=${GIT_LFS_VERSION} \
-    PANDOC_VERSION=${PANDOC_VERSION}
+    PANDOC_VERSION=${PANDOC_VERSION} \
+    BUILD_DATE=${BUILD_START}
 
 ## Installing V8 on Linux, the alternative way
 ## https://ropensci.org/blog/2020/11/12/installing-v8
@@ -129,7 +131,7 @@ RUN apt-get update \
     nvblasLib="$(cd $CUDA_HOME/lib* && ls libnvblas.so* | head -n 1)"; \
     cp -a $(which radian) $(which radian)_; \
     echo '#!/bin/bash' > $(which radian); \
-    echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[[:space:]]\?[[:digit:]]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
+    echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[ \t\r\n\v\f]\?[0-9]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
       >> $(which radian); \
     echo "$(which radian)_ \"\${@}\"" >> $(which radian); \
   fi \
