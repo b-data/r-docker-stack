@@ -1,6 +1,6 @@
-# CUDA-enabled R images
+# CUDA-enabled R docker stack
 
-GPU-accelerated, multi-arch (`linux/amd64`, `linux/arm64/v8`) images:
+GPU accelerated, multi-arch (`linux/amd64`, `linux/arm64/v8`) images:
 
 * [`registry.gitlab.b-data.ch/cuda/r/ver`](https://gitlab.b-data.ch/cuda/r/ver/container_registry)
 * [`registry.gitlab.b-data.ch/cuda/r/base`](https://gitlab.b-data.ch/cuda/r/base/container_registry)
@@ -12,14 +12,14 @@ Images available for R versions ≥ 4.2.2.
 
 **Build chain**
 
-The same as the [R images](README.md#r-docker-stack).
+The same as the [R docker stack](README.md#r-docker-stack).
 
 **Features**
 
-`registry.gitlab.b-data.ch/cuda/r/ver:*-devel` serves as base image for
+`registry.gitlab.b-data.ch/cuda/r/ver:*-devel` serves as parent image for
 `registry.gitlab.b-data.ch/jupyterlab/cuda/r/base`.
 
-Otherwise the same as the [R images](README.md#r-docker-stack) plus
+Otherwise the same as the [R docker stack](README.md#r-docker-stack) plus
 
 * CUDA runtime,
   [CUDA math libraries](https://developer.nvidia.com/gpu-accelerated-libraries),
@@ -36,14 +36,14 @@ Otherwise the same as the [R images](README.md#r-docker-stack) plus
 
 ## Prerequisites
 
-The same as the [R images](README.md#prerequisites) plus
+The same as the [R docker stack](README.md#prerequisites) plus
 
 * NVIDIA GPU
 * NVIDIA Linux driver
 * NVIDIA Container Toolkit
 
-:information_source: The host running the CUDA-enabled images only requires the
-NVIDIA driver, the CUDA toolkit does not have to be installed.
+:information_source: The host running the GPU accelerated images only requires
+the NVIDIA driver, the CUDA toolkit does not have to be installed.
 
 ## Install
 
@@ -152,4 +152,4 @@ from the project's GitLab Container Registries:
     registry.gitlab.b-data.ch/cuda/r/geospatial[:MAJOR[.MINOR[.PATCH]]]
   ```
 
-See [NOTES](NOTES.md) for tweaks.
+See [Notes](NOTES.md) for tweaks.
