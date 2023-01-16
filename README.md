@@ -1,7 +1,7 @@
 [![minimal-readme compliant](https://img.shields.io/badge/readme%20style-minimal-brightgreen.svg)](https://github.com/RichardLitt/standard-readme/blob/master/example-readmes/minimal-readme.md) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) <a href="https://liberapay.com/benz0li/donate"><img src="https://liberapay.com/assets/widgets/donate.svg" alt="Donate using Liberapay" height="20"></a>
 
-| See [CUDA](CUDA.md) for GPU-accelerated images. |
-|-------------------------------------------------|
+| See the [CUDA-enabled R docker stack](CUDA.md) for GPU accelerated images. |
+|----------------------------------------------------------------------------|
 
 # R docker stack
 
@@ -26,7 +26,7 @@ ver → base → tidyverse → verse → geospatial
 
 **Features**
 
-`registry.gitlab.b-data.ch/r/ver` serves as base image for
+`registry.gitlab.b-data.ch/r/ver` serves as parent image for
 `registry.gitlab.b-data.ch/jupyterlab/r/base`.
 
 The other images are counterparts to the JupyterLab images but **without**
@@ -125,7 +125,7 @@ from the project's GitLab Container Registries:
     registry.gitlab.b-data.ch/r/geospatial[:MAJOR[.MINOR[.PATCH]]]
   ```
 
-See [NOTES](NOTES.md) for tweaks.
+See [Notes](NOTES.md) for tweaks.
 
 ## Contributing
 
