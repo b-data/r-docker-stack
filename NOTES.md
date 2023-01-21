@@ -26,7 +26,7 @@ These images are tweaked as follows:
 * `PARENT_IMAGE`: The image it was built on.
 * `BUILD_DATE`: The date it was built (ISO 8601 format).
 * `CRAN`: The CRAN mirror URL.
-* `CTAN_REPO`: The CTAN mirror URL.
+* `CTAN_REPO`: The CTAN mirror URL. (verse+ images)
 
 **`MRAN`**
 
@@ -42,7 +42,7 @@ snapshot in `$(R RHOME)/etc/Rprofile.site`.
 **r**eproducible **env**ironments for your R projects as these will also work
 without the images of this docker stack.
 
-### TeX packages
+### TeX packages (verse+ images)
 
 In addition to the TeX packages used in
 [rocker/verse](https://github.com/rocker-org/rocker-versioned2/blob/master/scripts/install_texlive.sh),

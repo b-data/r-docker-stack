@@ -6,11 +6,11 @@ ARG NVBLAS_CONFIG_FILE=/etc/nvblas.conf
 FROM ${BUILD_ON_IMAGE}
 
 ARG CUDA_IMAGE_FLAVOR
+ARG CUPTI_AVAILABLE
+ARG BUILD_START
 
 ARG CUDA_HOME
 ARG NVBLAS_CONFIG_FILE
-ARG CUPTI_AVAILABLE
-ARG BUILD_START
 
 ENV CUDA_HOME=${CUDA_HOME} \
     NVBLAS_CONFIG_FILE=${NVBLAS_CONFIG_FILE} \
@@ -24,7 +24,7 @@ RUN cpuBlasLib="$(update-alternatives --query \
   && touch /var/log/nvblas.log \
   && chown :users /var/log/nvblas.log \
   && chmod g+rw /var/log/nvblas.log \
-  ## Allow R to use NVBLAS, with fallback on OpenBLAS
+  ## NVBLAS configuration using all compute-capable GPUs
   && echo "NVBLAS_LOGFILE /var/log/nvblas.log" > $NVBLAS_CONFIG_FILE \
   && echo "NVBLAS_CPU_BLAS_LIB $cpuBlasLib" >> $NVBLAS_CONFIG_FILE \
   && echo "NVBLAS_GPU_LIST ALL" >> $NVBLAS_CONFIG_FILE \
