@@ -57,7 +57,7 @@ The Python version is selected as follows:
 
 * The latest [Python version numba is compatible with](https://numba.readthedocs.io/en/stable/user/installing.html#compatibility).
 
-This Python version is installed at `/user/local/bin`.
+This Python version is installed at `/usr/local/bin`.
 
 # Notes on CUDA
 
