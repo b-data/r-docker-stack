@@ -138,7 +138,8 @@ RUN apt-get update \
   fi \
   ## Install httpgd
   ## Archived on 2023-01-24 as issues were not corrected in time.
-  && install2.r --error --skipinstalled \
+  && cd /tmp \
+  && install2.r --error --skipinstalled -n $NCPUS \
     later \
     systemfonts \
     cpp11 \
