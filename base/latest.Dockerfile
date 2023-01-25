@@ -137,8 +137,19 @@ RUN apt-get update \
     echo "$(which radian)_ \"\${@}\"" >> $(which radian); \
   fi \
   ## Install httpgd
-  && install2.r --error --deps TRUE --skipinstalled -n $NCPUS \
-    httpgd \
+  ## Archived on 2023-01-24 as issues were not corrected in time.
+  && install2.r --error --skipinstalled \
+    later \
+    systemfonts \
+    cpp11 \
+    testthat \
+    xml2 \
+    fontquiver \
+    knitr \
+    rmarkdown \
+  && curl -sLO https://cran.r-project.org/src/contrib/Archive/BH/BH_1.78.0-0.tar.gz \
+  && curl -sLO https://cran.r-project.org/src/contrib/Archive/httpgd/httpgd_1.3.0.tar.gz \
+  && R CMD INSTALL BH_1.78.0-0.tar.gz httpgd_1.3.0.tar.gz \
   ## Get rid of libcairo2-dev and its dependencies (incl. python3)
   && apt-get -y purge libcairo2-dev \
   && apt-get -y autoremove \
