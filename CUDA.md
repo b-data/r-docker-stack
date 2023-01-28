@@ -26,7 +26,7 @@ Otherwise the same as the [R docker stack](README.md#r-docker-stack) plus
   [NCCL](https://developer.nvidia.com/nccl) and
   [cuDNN](https://developer.nvidia.com/cudnn)
 * TensortRT and TensorRT plugin libraries
-* R configured to use NVBLAS, with fallback on OpenBLAS
+* NVBLAS-enabled `R_` and `Rscript_`
 
 ## Table of Contents
 

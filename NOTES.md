@@ -59,7 +59,7 @@ The Python version is selected as follows:
 
 This Python version is installed at `/usr/local/bin`.
 
-# Notes on CUDA
+# Additional notes on CUDA
 
 The CUDA and OS versions are selected as follows:
 
@@ -86,3 +86,24 @@ The CUDA and OS versions are selected as follows:
 **Miscellaneous**
 
 * `CUDA_IMAGE`: The CUDA image it is derived from.
+
+## Basic Linear Algebra Subprograms (BLAS)
+
+These images use OpenBLAS by default.
+
+To have `R` and `Rscript` use NVBLAS instead, copy the NVBLAS-enabled
+executables to `~/.local/bin`:
+
+```bash
+mkdir -p $HOME/.local/bin;
+for file in $(which {R,Rscript}); do
+  cp "$file"_ "$HOME/.local/bin/$(basename $file)";
+done
+```
+
+and restart the terminal.
+
+:information_source: The
+[xgboost](https://cran.r-project.org/package=xgboost) package benefits greatly
+from NVBLAS, if it is
+[installed correctly](https://xgboost.readthedocs.io/en/stable/build.html).
