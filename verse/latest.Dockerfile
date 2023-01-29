@@ -1,6 +1,6 @@
 ARG BUILD_ON_IMAGE=registry.gitlab.b-data.ch/r/tidyverse
 ARG R_VERSION
-ARG QUARTO_VERSION=1.2.329
+ARG QUARTO_VERSION=1.2.313
 ARG CTAN_REPO=https://mirror.ctan.org/systems/texlive/tlnet
 
 FROM ${BUILD_ON_IMAGE}:${R_VERSION}
