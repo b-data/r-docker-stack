@@ -1,7 +1,7 @@
 .env:
   variables:
     R_VERSION: "4.2.2"
-    PYTHON_VERSION: "3.10.9"
+    PYTHON_VERSION: "3.10.10"
     CUDA_VERSION: "11.8.0"
 
 .before-script-all: &before-script-all
