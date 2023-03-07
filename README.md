@@ -1,11 +1,11 @@
 [![minimal-readme compliant](https://img.shields.io/badge/readme%20style-minimal-brightgreen.svg)](https://github.com/RichardLitt/standard-readme/blob/master/example-readmes/minimal-readme.md) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) <a href="https://liberapay.com/benz0li/donate"><img src="https://liberapay.com/assets/widgets/donate.svg" alt="Donate using Liberapay" height="20"></a>
 
-| See the [CUDA-enabled R docker stack](CUDA.md) for GPU accelerated images. |
-|----------------------------------------------------------------------------|
+| See the [CUDA-enabled R docker stack](CUDA.md) for GPU accelerated docker images. |
+|-----------------------------------------------------------------------------------|
 
 # R docker stack
 
-Multi-arch (`linux/amd64`, `linux/arm64/v8`) images:
+Multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
 
 * [`registry.gitlab.b-data.ch/r/ver`](https://gitlab.b-data.ch/r/ver/container_registry)
   * [`registry.gitlab.b-data.ch/r/r-ver`](https://gitlab.b-data.ch/r/r-ver/container_registry)
@@ -69,7 +69,7 @@ To install docker, follow the instructions for your platform:
 
 ### Build image (ver)
 
-latest:
+*latest*:
 
 ```bash
 docker build \
@@ -79,7 +79,7 @@ docker build \
   -f ver/latest.Dockerfile .
 ```
 
-version:
+*version*:
 
 ```bash
 docker build \
