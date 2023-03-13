@@ -39,5 +39,5 @@ RUN apt-get update \
 EXPOSE 8000
 
 ## Configure container startup
-ENTRYPOINT ["R", "-e", "pr <- plumber::plumb(commandArgs()[6]); pr$run(host = '0.0.0.0', port = 8000)"]
+ENTRYPOINT ["R", "-e", "pr <- plumber::plumb(rev(commandArgs())[1]); pr$run(host = '0.0.0.0', port = 8000)"]
 CMD ["hello-world.R"]
