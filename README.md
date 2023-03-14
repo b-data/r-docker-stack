@@ -7,13 +7,13 @@
 
 Multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
 
-* [`registry.gitlab.b-data.ch/r/ver`](https://gitlab.b-data.ch/r/ver/container_registry)
-  * [`registry.gitlab.b-data.ch/r/r-ver`](https://gitlab.b-data.ch/r/r-ver/container_registry)
+* [`glcr.b-data.ch/r/ver`](https://gitlab.b-data.ch/r/ver/container_registry)
+  * [`glcr.b-data.ch/r/r-ver`](https://gitlab.b-data.ch/r/r-ver/container_registry)
     (4.0.4 ≤ version < 4.2.0)
-* [`registry.gitlab.b-data.ch/r/base`](https://gitlab.b-data.ch/r/base/container_registry)
-* [`registry.gitlab.b-data.ch/r/tidyverse`](https://gitlab.b-data.ch/r/tidyverse/container_registry)
-* [`registry.gitlab.b-data.ch/r/verse`](https://gitlab.b-data.ch/r/verse/container_registry)
-* [`registry.gitlab.b-data.ch/r/geospatial`](https://gitlab.b-data.ch/r/geospatial/container_registry)
+* [`glcr.b-data.ch/r/base`](https://gitlab.b-data.ch/r/base/container_registry)
+* [`glcr.b-data.ch/r/tidyverse`](https://gitlab.b-data.ch/r/tidyverse/container_registry)
+* [`glcr.b-data.ch/r/verse`](https://gitlab.b-data.ch/r/verse/container_registry)
+* [`glcr.b-data.ch/r/geospatial`](https://gitlab.b-data.ch/r/geospatial/container_registry)
 
 Images considered stable for R versions ≥ 4.2.0.  
 :point_right: The current state may eventually be backported to versions ≥
@@ -26,8 +26,8 @@ ver → base → tidyverse → verse → geospatial
 
 **Features**
 
-`registry.gitlab.b-data.ch/r/ver` serves as parent image for
-`registry.gitlab.b-data.ch/jupyterlab/r/base`.
+`glcr.b-data.ch/r/ver` serves as parent image for
+`glcr.b-data.ch/jupyterlab/r/base`.
 
 The other images are counterparts to the JupyterLab images but **without**
 
@@ -74,7 +74,7 @@ To install docker, follow the instructions for your platform:
 ```bash
 docker build \
   --build-arg R_VERSION=4.2.2 \
-  --build-arg PYTHON_VERSION=3.10.9 \
+  --build-arg PYTHON_VERSION=3.10.10 \
   -t r/ver \
   -f ver/latest.Dockerfile .
 ```
@@ -102,27 +102,27 @@ from the project's GitLab Container Registries:
 * [`r/ver`](https://gitlab.b-data.ch/r/ver/container_registry)  
   ```bash
   docker run -it --rm \
-    registry.gitlab.b-data.ch/r/ver[:MAJOR[.MINOR[.PATCH]]]
+    glcr.b-data.ch/r/ver[:MAJOR[.MINOR[.PATCH]]]
   ```
 * [`r/base`](https://gitlab.b-data.ch/r/base/container_registry)  
   ```bash
   docker run -it --rm \
-    registry.gitlab.b-data.ch/r/base[:MAJOR[.MINOR[.PATCH]]]
+    glcr.b-data.ch/r/base[:MAJOR[.MINOR[.PATCH]]]
   ```
 * [`r/tidyverse`](https://gitlab.b-data.ch/r/tidyverse/container_registry)  
   ```bash
   docker run -it --rm \
-    registry.gitlab.b-data.ch/r/tidyverse[:MAJOR[.MINOR[.PATCH]]]
+    glcr.b-data.ch/r/tidyverse[:MAJOR[.MINOR[.PATCH]]]
   ```
 * [`r/verse`](https://gitlab.b-data.ch/r/verse/container_registry)  
   ```bash
   docker run -it --rm \
-    registry.gitlab.b-data.ch/r/verse[:MAJOR[.MINOR[.PATCH]]]
+    glcr.b-data.ch/r/verse[:MAJOR[.MINOR[.PATCH]]]
   ```
 * [`r/geospatial`](https://gitlab.b-data.ch/r/geospatial/container_registry)  
   ```bash
   docker run -it --rm \
-    registry.gitlab.b-data.ch/r/geospatial[:MAJOR[.MINOR[.PATCH]]]
+    glcr.b-data.ch/r/geospatial[:MAJOR[.MINOR[.PATCH]]]
   ```
 
 See [Notes](NOTES.md) for tweaks.

@@ -2,11 +2,11 @@
 
 GPU accelerated, multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
 
-* [`registry.gitlab.b-data.ch/cuda/r/ver`](https://gitlab.b-data.ch/cuda/r/ver/container_registry)
-* [`registry.gitlab.b-data.ch/cuda/r/base`](https://gitlab.b-data.ch/cuda/r/base/container_registry)
-* [`registry.gitlab.b-data.ch/cuda/r/tidyverse`](https://gitlab.b-data.ch/cuda/r/tidyverse/container_registry)
-* [`registry.gitlab.b-data.ch/cuda/r/verse`](https://gitlab.b-data.ch/cuda/r/verse/container_registry)
-* [`registry.gitlab.b-data.ch/cuda/r/geospatial`](https://gitlab.b-data.ch/cuda/r/geospatial/container_registry)
+* [`glcr.b-data.ch/cuda/r/ver`](https://gitlab.b-data.ch/cuda/r/ver/container_registry)
+* [`glcr.b-data.ch/cuda/r/base`](https://gitlab.b-data.ch/cuda/r/base/container_registry)
+* [`glcr.b-data.ch/cuda/r/tidyverse`](https://gitlab.b-data.ch/cuda/r/tidyverse/container_registry)
+* [`glcr.b-data.ch/cuda/r/verse`](https://gitlab.b-data.ch/cuda/r/verse/container_registry)
+* [`glcr.b-data.ch/cuda/r/geospatial`](https://gitlab.b-data.ch/cuda/r/geospatial/container_registry)
 
 Images available for R versions ≥ 4.2.2.
 
@@ -16,8 +16,8 @@ The same as the [R docker stack](README.md#r-docker-stack).
 
 **Features**
 
-`registry.gitlab.b-data.ch/cuda/r/ver:*-devel` serves as parent image for
-`registry.gitlab.b-data.ch/jupyterlab/cuda/r/base`.
+`glcr.b-data.ch/cuda/r/ver:*-devel` serves as parent image for
+`glcr.b-data.ch/jupyterlab/cuda/r/base`.
 
 Otherwise the same as the [R docker stack](README.md#r-docker-stack) plus
 
@@ -68,7 +68,7 @@ docker build \
   --build-arg CUDA_VERSION=11.8.0 \
   --build-arg CUDA_IMAGE_SUBTAG=cudnn8-runtime-ubuntu22.04 \
   --build-arg R_VERSION=4.2.2 \
-  --build-arg PYTHON_VERSION=3.10.9 \
+  --build-arg PYTHON_VERSION=3.10.10 \
   -t cuda/r/ver \
   -f ver/latest.Dockerfile .
 ```
@@ -125,31 +125,31 @@ from the project's GitLab Container Registries:
   ```bash
   docker run -it --rm \
     --gpus '"device=all"' \
-    registry.gitlab.b-data.ch/cuda/r/ver[:MAJOR[.MINOR[.PATCH]]]
+    glcr.b-data.ch/cuda/r/ver[:MAJOR[.MINOR[.PATCH]]]
   ```
 * [`cuda/r/base`](https://gitlab.b-data.ch/cuda/r/base/container_registry)  
   ```bash
   docker run -it --rm \
     --gpus '"device=all"' \
-    registry.gitlab.b-data.ch/cuda/r/base[:MAJOR[.MINOR[.PATCH]]]
+    glcr.b-data.ch/cuda/r/base[:MAJOR[.MINOR[.PATCH]]]
   ```
 * [`cuda/r/tidyverse`](https://gitlab.b-data.ch/cuda/r/tidyverse/container_registry)  
   ```bash
   docker run -it --rm \
     --gpus '"device=all"' \
-    registry.gitlab.b-data.ch/cuda/r/tidyverse[:MAJOR[.MINOR[.PATCH]]]
+    glcr.b-data.ch/cuda/r/tidyverse[:MAJOR[.MINOR[.PATCH]]]
   ```
 * [`cuda/r/verse`](https://gitlab.b-data.ch/cuda/r/verse/container_registry)  
   ```bash
   docker run -it --rm \
     --gpus '"device=all"' \
-    registry.gitlab.b-data.ch/cuda/r/verse[:MAJOR[.MINOR[.PATCH]]]
+    glcr.b-data.ch/cuda/r/verse[:MAJOR[.MINOR[.PATCH]]]
   ```
 * [`cuda/r/geospatial`](https://gitlab.b-data.ch/cuda/r/geospatial/container_registry)  
   ```bash
   docker run -it --rm \
     --gpus '"device=all"' \
-    registry.gitlab.b-data.ch/cuda/r/geospatial[:MAJOR[.MINOR[.PATCH]]]
+    glcr.b-data.ch/cuda/r/geospatial[:MAJOR[.MINOR[.PATCH]]]
   ```
 
 See [Notes](NOTES.md) for tweaks.
