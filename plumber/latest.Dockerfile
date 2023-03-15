@@ -28,11 +28,8 @@ RUN apt-get update \
     libxml2-dev \
     sqlite3 \
     zlib1g-dev \
-  ## sf: Installation fails on Debian 11 (bullseye) for v1.0-10
-  ## https://github.com/r-spatial/sf/issues/2118
-  && R -e "devtools::install_version('sf', version = '1.0-9')" \
   ## Install plumber
-  && install2.r --error --deps TRUE -n $NCPUS plumber \
+  && install2.r --error --deps TRUE  -n $NCPUS plumber \
   ## Set up endpoint
   && echo '#* Return "hello world"\n#* @get /hello\nfunction() {\n  "hello world"\n}' > hello-world.R \
   ## Clean up
