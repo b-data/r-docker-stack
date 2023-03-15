@@ -1,12 +1,13 @@
-ARG BASE_IMAGE=debian:bullseye
-ARG BUILD_ON_IMAGE=registry.gitlab.b-data.ch/r/ver
+ARG BASE_IMAGE=debian
+ARG BASE_IMAGE_TAG=11
+ARG BUILD_ON_IMAGE=glcr.b-data.ch/r/ver
 ARG R_VERSION
-ARG GIT_VERSION=2.38.1
-ARG GIT_LFS_VERSION=3.2.0
+ARG GIT_VERSION=2.40.0
+ARG GIT_LFS_VERSION=3.3.0
 ARG PANDOC_VERSION=2.19.2
 
-FROM registry.gitlab.b-data.ch/git/gsi/${GIT_VERSION}/${BASE_IMAGE} as gsi
-FROM registry.gitlab.b-data.ch/git-lfs/glfsi:${GIT_LFS_VERSION} as glfsi
+FROM glcr.b-data.ch/git/gsi/${GIT_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as gsi
+FROM glcr.b-data.ch/git-lfs/glfsi:${GIT_LFS_VERSION} as glfsi
 
 FROM ${BUILD_ON_IMAGE}:${R_VERSION}
 
@@ -14,17 +15,24 @@ ARG NCPUS=1
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+ARG BUILD_ON_IMAGE
 ARG GIT_VERSION
 ARG GIT_LFS_VERSION
 ARG PANDOC_VERSION
+ARG BUILD_START
 
-ENV GIT_VERSION=${GIT_VERSION} \
+ENV PARENT_IMAGE=${BUILD_ON_IMAGE}:${R_VERSION} \
+    GIT_VERSION=${GIT_VERSION} \
     GIT_LFS_VERSION=${GIT_LFS_VERSION} \
-    PANDOC_VERSION=${PANDOC_VERSION}
+    PANDOC_VERSION=${PANDOC_VERSION} \
+    BUILD_DATE=${BUILD_START}
 
 ## Installing V8 on Linux, the alternative way
 ## https://ropensci.org/blog/2020/11/12/installing-v8
 ENV DOWNLOAD_STATIC_LIBV8=1
+
+## Disable prompt to install miniconda
+ENV RETICULATE_MINICONDA_ENABLED=0
 
 ## Install Git
 COPY --from=gsi /usr/local /usr/local
@@ -53,8 +61,9 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     psmisc \
     screen \
     sudo \
+    swig \
     tmux \
-    vim \
+    vim-tiny \
     wget \
     zsh \
     ## Additional git runtime dependencies
@@ -67,7 +76,11 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   && if [ -z "$PYTHON_VERSION" ]; then \
     apt-get -y install --no-install-recommends \
       python3-dev \
-      python3-distutils; \
+      ## Install Python package installer
+      ## (dep: python3-distutils, python3-setuptools and python3-wheel)
+      python3-pip \
+      ## Install venv module for python3
+      python3-venv; \
     ## make some useful symlinks that are expected to exist
     ## ("/usr/bin/python" and friends)
     for src in pydoc3 python3 python3-config; do \
@@ -76,14 +89,15 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
       [ ! -e "/usr/bin/$dst" ]; \
       ln -svT "$src" "/usr/bin/$dst"; \
     done; \
+  else \
+    ## Force update pip, setuptools and wheel
+    curl -sLO https://bootstrap.pypa.io/get-pip.py; \
+    python get-pip.py \
+      pip \
+      setuptools \
+      wheel; \
+    rm get-pip.py; \
   fi \
-  ## Install/update pip, setuptools and wheel
-  && curl -sLO https://bootstrap.pypa.io/get-pip.py \
-  && python get-pip.py \
-    pip \
-    setuptools \
-    wheel \
-  && rm get-pip.py \
   ## Set default branch name to main
   && git config --system init.defaultBranch main \
   ## Store passwords for one hour in memory
@@ -112,9 +126,22 @@ RUN apt-get update \
     libxml2-dev \
   ## Install radian
   && pip install radian \
+  ## Provide NVBLAS-enabled radian_
+  ## Enabled at runtime and only if nvidia-smi and at least one GPU are present
+  && if [ ! -z "$CUDA_IMAGE" ]; then \
+    nvblasLib="$(cd $CUDA_HOME/lib* && ls libnvblas.so* | head -n 1)"; \
+    cp -a $(which radian) $(which radian)_; \
+    echo '#!/bin/bash' > $(which radian)_; \
+    echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[[:space:]]\?[[:digit:]]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
+      >> $(which radian)_; \
+    echo "$(which radian) \"\${@}\"" >> $(which radian)_; \
+  fi \
   ## Install httpgd
   && install2.r --error --deps TRUE --skipinstalled -n $NCPUS \
     httpgd \
+  ## Get rid of libcairo2-dev and its dependencies (incl. python3)
+  && apt-get -y purge libcairo2-dev \
+  && apt-get -y autoremove \
   ## Clean up
   && rm -rf /tmp/* \
     /var/lib/apt/lists/* \

@@ -1,11 +1,17 @@
-ARG BASE_IMAGE=debian:bullseye
+ARG BASE_IMAGE=debian
+ARG BASE_IMAGE_TAG=11
+ARG CUDA_IMAGE
+ARG CUDA_IMAGE_SUBTAG
 ARG BLAS=libopenblas-dev
+ARG CUDA_VERSION
 ARG R_VERSION
-ARG CRAN=https://cran.rstudio.com
+ARG PYTHON_VERSION
+ARG CRAN=https://cloud.r-project.org
 
-FROM registry.gitlab.b-data.ch/r/rsi/${R_VERSION}/${BASE_IMAGE} as rsi
+FROM glcr.b-data.ch/r/rsi/${R_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as rsi
+FROM glcr.b-data.ch/python/psi${PYTHON_VERSION:+/}${PYTHON_VERSION:-:none}${PYTHON_VERSION:+/$BASE_IMAGE}${PYTHON_VERSION:+:$BASE_IMAGE_TAG} as psi
 
-FROM ${BASE_IMAGE}
+FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG}
 
 LABEL org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.source="https://gitlab.b-data.ch/r/docker-stack" \
@@ -15,20 +21,32 @@ LABEL org.opencontainers.image.licenses="MIT" \
 ARG DEBIAN_FRONTEND=noninteractive
 
 ARG BASE_IMAGE
+ARG BASE_IMAGE_TAG
+ARG CUDA_IMAGE
+ARG CUDA_IMAGE_SUBTAG
 ARG BLAS
+ARG CUDA_VERSION
 ARG R_VERSION
+ARG PYTHON_VERSION
 ARG CRAN
-ARG BUILD_DATE
-## Setting a BUILD_DATE will set CRAN to the matching MRAN date
-## No BUILD_DATE means that CRAN will default to latest 
-ENV BASE_IMAGE=${BASE_IMAGE} \
+ARG BUILD_START
+
+ENV BASE_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
+    CUDA_IMAGE=${CUDA_IMAGE}${CUDA_IMAGE:+:}${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG} \
+    PARENT_IMAGE=${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} \
     R_VERSION=${R_VERSION} \
-    CRAN=${CRAN} \ 
-    LANG=en_US.UTF-8 \
+    PYTHON_VERSION=${PYTHON_VERSION} \
+    CRAN=${CRAN} \
+    BUILD_DATE=${BUILD_START}
+
+ENV LANG=en_US.UTF-8 \
     TERM=xterm \
     TZ=Etc/UTC
 
+## Install R
 COPY --from=rsi /usr/local /usr/local
+## Install Python
+COPY --from=psi /usr/local /usr/local
 
 RUN apt-get update \
   ## Copy script checkbashisms from package devscripts
@@ -78,17 +96,14 @@ RUN apt-get update \
   && locale-gen \
   && update-locale LANG=$LANG \
   ## Add directory for site-library
-  && mkdir -p /usr/local/lib/R/site-library \
+  && mkdir -p $(R RHOME)/site-library \
   ## Set configured CRAN mirror
-  && if [ -z "$BUILD_DATE" ]; then MRAN=$CRAN; \
-   else MRAN=https://mran.microsoft.com/snapshot/${BUILD_DATE}; fi \
-  && echo MRAN=$MRAN >> /etc/environment \
-  && echo "options(repos = c(CRAN='$MRAN'), download.file.method = 'libcurl')" >> /usr/local/lib/R/etc/Rprofile.site \
+  && echo "options(repos = c(CRAN='$CRAN'), download.file.method = 'libcurl')" >> $(R RHOME)/etc/Rprofile.site \
   ## Use littler installation scripts
-  && Rscript -e "install.packages(c('littler', 'docopt'), repos = '$MRAN')" \
-  && ln -s /usr/local/lib/R/site-library/littler/examples/install2.r /usr/local/bin/install2.r \
-  && ln -s /usr/local/lib/R/site-library/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
-  && ln -s /usr/local/lib/R/site-library/littler/bin/r /usr/local/bin/r \
+  && Rscript -e "install.packages(c('littler', 'docopt'), repos = '$CRAN')" \
+  && ln -s $(R RHOME)/site-library/littler/examples/install2.r /usr/local/bin/install2.r \
+  && ln -s $(R RHOME)/site-library/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
+  && ln -s $(R RHOME)/site-library/littler/bin/r /usr/local/bin/r \
   ## Clean up
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/*
