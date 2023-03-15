@@ -30,7 +30,17 @@ RUN apt-get update \
     zlib1g-dev \
   ## sf: Installation fails on Debian 11 (bullseye) for v1.0-10
   ## https://github.com/r-spatial/sf/issues/2118
-  && R -e "devtools::install_version('sf', version = '1.0-9')" \
+    curl \
+  && install2.r --error -n $NCPUS \
+    classInt \
+    DBI \
+    magrittr \
+    Rcpp \
+    s2 \
+    units \
+  && curl -sLO https://cran.r-project.org/src/contrib/Archive/sf/sf_1.0-9.tar.gz \
+  && R CMD INSTALL sf_1.0-9.tar.gz \
+  && rm sf_1.0-9.tar.gz \
   ## Install plumber
   && install2.r --error --deps TRUE -n $NCPUS plumber \
   ## Set up endpoint
