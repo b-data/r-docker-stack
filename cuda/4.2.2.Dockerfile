@@ -62,10 +62,5 @@ RUN cpuBlasLib="$(update-alternatives --query \
       ln -rs $trtPluLib /usr/lib/$(uname -m)-linux-gnu/libnvinfer_plugin.so.7; \
     fi \
   fi \
-  ## Install CUDA 11.8 Runtime native dev links, headers
-  ## for legacy reasons if CUDA version 12 is used
-  && if [ "$(echo $CUDA_VERSION | cut -c 1-2)" = "12" ]; then \
-    apt-get -y install --no-install-recommends cuda-cudart-dev-11-8; \
-  fi \
   ## Clean up
   && rm -rf /var/lib/apt/lists/*

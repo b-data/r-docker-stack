@@ -57,7 +57,7 @@ RUN cpuBlasLib="$(update-alternatives --query \
       grep 'libnvinfer.so.[0-9]\+$'); \
     trtPluLib=$(ls -d /usr/lib/$(uname -m)-linux-gnu/* | \
       grep 'libnvinfer_plugin.so.[0-9]\+$'); \
-    if [ "$(echo $trtRunLib | sed -n 's/.*\([0-9]\+\)/\1/p')" -gt "7" ]; then \
+    if [ "$(echo $trtRunLib | sed -n 's/.*.so.\([0-9]\+\)/\1/p')" -gt "7" ]; then \
       ln -rs $trtRunLib /usr/lib/$(uname -m)-linux-gnu/libnvinfer.so.7; \
       ln -rs $trtPluLib /usr/lib/$(uname -m)-linux-gnu/libnvinfer_plugin.so.7; \
     fi \
