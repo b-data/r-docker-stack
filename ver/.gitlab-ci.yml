@@ -3,6 +3,7 @@
     R_VERSION: "4.2.2"
     PYTHON_VERSION: "3.10.10"
     CUDA_VERSION: "11.8.0"
+    LIBNVINFER_VERSION: "8.5.3-1"
 
 .before-script-all: &before-script-all
   - |
@@ -80,6 +81,7 @@ build:latest-linux-amd64:
       if [[ ! -z "$CUDA_IMAGE" ]]; then
         docker build \
         --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-amd64 \
+        --build-arg LIBNVINFER_VERSION \
         --build-arg CUDA_IMAGE_FLAVOR \
         --build-arg CUPTI_AVAILABLE \
         --build-arg BUILD_START=$(date -uIseconds) \
@@ -117,6 +119,7 @@ build:latest-linux-arm64v8:
       if [[ ! -z "$CUDA_IMAGE" ]]; then
         docker build \
         --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-arm64v8 \
+        --build-arg LIBNVINFER_VERSION \
         --build-arg CUDA_IMAGE_FLAVOR \
         --build-arg CUPTI_AVAILABLE \
         --build-arg BUILD_START=$(date -uIseconds) \
@@ -150,6 +153,7 @@ build:version-linux-amd64:
       if [[ ! -z "$CUDA_IMAGE" ]]; then
         docker build \
         --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-amd64 \
+        --build-arg LIBNVINFER_VERSION \
         --build-arg CUDA_IMAGE_FLAVOR \
         --build-arg CUPTI_AVAILABLE \
         --build-arg BUILD_START=$(date -uIseconds) \
@@ -181,6 +185,7 @@ build:version-linux-arm64v8:
       if [[ ! -z "$CUDA_IMAGE" ]]; then
         docker build \
         --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG${CUDA_IMAGE_FLAVOR:+-}$CUDA_IMAGE_FLAVOR-linux-arm64v8 \
+        --build-arg LIBNVINFER_VERSION \
         --build-arg CUDA_IMAGE_FLAVOR \
         --build-arg CUPTI_AVAILABLE \
         --build-arg BUILD_START=$(date -uIseconds) \
