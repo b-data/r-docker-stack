@@ -6,6 +6,7 @@ ARG NVBLAS_CONFIG_FILE=/etc/nvblas.conf
 FROM ${BUILD_ON_IMAGE}
 
 ARG LIBNVINFER_VERSION
+ARG LIBNVINFER_VERSION_MAJ
 
 ARG CUDA_IMAGE_FLAVOR
 ARG CUPTI_AVAILABLE
@@ -49,7 +50,6 @@ RUN cpuBlasLib="$(update-alternatives --query \
     ## Install development libraries and headers
     ## if devel-flavor of CUDA image is used
     if [ ${CUDA_IMAGE_FLAVOR} = "devel" ]; then dev="-dev"; fi; \
-    LIBNVINFER_VERSION_MAJ=$(echo ${LIBNVINFER_VERSION} | cut -c 1); \
     CUDA_VERSION_MAJ_MIN=$(echo ${CUDA_VERSION} | cut -c 1-4); \
     apt-get update; \
     apt-get -y install --no-install-recommends \
