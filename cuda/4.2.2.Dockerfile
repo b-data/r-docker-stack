@@ -5,8 +5,11 @@ ARG NVBLAS_CONFIG_FILE=/etc/nvblas.conf
 
 FROM ${BUILD_ON_IMAGE}
 
-ARG LIBNVINFER_VERSION
-ARG LIBNVINFER_VERSION_MAJ
+## CUDA_IMAGE
+## ├── nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04
+## └── nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04
+ARG LIBNVINFER_VERSION=8.5.3-1
+ARG LIBNVINFER_VERSION_MAJ=8
 
 ARG CUDA_IMAGE_FLAVOR
 ARG CUPTI_AVAILABLE
@@ -57,10 +60,10 @@ RUN cpuBlasLib="$(update-alternatives --query \
       libnvinfer-plugin${dev:-${LIBNVINFER_VERSION_MAJ}}=${LIBNVINFER_VERSION}+cuda${CUDA_VERSION_MAJ_MIN} \
       libnvinfer${LIBNVINFER_VERSION_MAJ}=${LIBNVINFER_VERSION}+cuda${CUDA_VERSION_MAJ_MIN} \
       libnvinfer-plugin${LIBNVINFER_VERSION_MAJ}=${LIBNVINFER_VERSION}+cuda${CUDA_VERSION_MAJ_MIN}; \
-      echo "Package: libnvinfer*" >> /etc/apt/preferences.d/libnvinfer; \
-      echo "Pin: version ${LIBNVINFER_VERSION}+cuda${CUDA_VERSION_MAJ_MIN}" \
-        >> /etc/apt/preferences.d/libnvinfer; \
-      echo "Pin-Priority: 501" >> /etc/apt/preferences.d/libnvinfer; \
+    echo "Package: libnvinfer*" >> /etc/apt/preferences.d/libnvinfer; \
+    echo "Pin: version ${LIBNVINFER_VERSION}+cuda${CUDA_VERSION_MAJ_MIN}" \
+      >> /etc/apt/preferences.d/libnvinfer; \
+    echo "Pin-Priority: 501" >> /etc/apt/preferences.d/libnvinfer; \
     ## TensorFlow versions < 2.12 expect TensorRT libraries version 7
     ## Create symlink when only TensorRT libraries version > 7 are available
     trtRunLib=$(ls -d /usr/lib/$(uname -m)-linux-gnu/* | \
