@@ -99,31 +99,18 @@ docker run -it --rm r/ver[:MAJOR.MINOR.PATCH]
 
 from the project's GitLab Container Registries:
 
-* [`r/ver`](https://gitlab.b-data.ch/r/ver/container_registry)  
-  ```bash
-  docker run -it --rm \
-    glcr.b-data.ch/r/ver[:MAJOR[.MINOR[.PATCH]]]
-  ```
-* [`r/base`](https://gitlab.b-data.ch/r/base/container_registry)  
-  ```bash
-  docker run -it --rm \
-    glcr.b-data.ch/r/base[:MAJOR[.MINOR[.PATCH]]]
-  ```
-* [`r/tidyverse`](https://gitlab.b-data.ch/r/tidyverse/container_registry)  
-  ```bash
-  docker run -it --rm \
-    glcr.b-data.ch/r/tidyverse[:MAJOR[.MINOR[.PATCH]]]
-  ```
-* [`r/verse`](https://gitlab.b-data.ch/r/verse/container_registry)  
-  ```bash
-  docker run -it --rm \
-    glcr.b-data.ch/r/verse[:MAJOR[.MINOR[.PATCH]]]
-  ```
-* [`r/geospatial`](https://gitlab.b-data.ch/r/geospatial/container_registry)  
-  ```bash
-  docker run -it --rm \
-    glcr.b-data.ch/r/geospatial[:MAJOR[.MINOR[.PATCH]]]
-  ```
+```bash
+docker run -it --rm \
+  IMAGE[:MAJOR[.MINOR[.PATCH]]]
+```
+
+`IMAGE` being one of
+
+* [`glcr.b-data.ch/r/ver`](https://gitlab.b-data.ch/r/ver/container_registry)
+* [`glcr.b-data.ch/r/base`](https://gitlab.b-data.ch/r/base/container_registry)
+* [`glcr.b-data.ch/r/tidyverse`](https://gitlab.b-data.ch/r/tidyverse/container_registry)
+* [`glcr.b-data.ch/r/verse`](https://gitlab.b-data.ch/r/verse/container_registry)
+* [`glcr.b-data.ch/r/geospatial`](https://gitlab.b-data.ch/r/geospatial/container_registry)
 
 See [Notes](NOTES.md) for tweaks.
 
