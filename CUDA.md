@@ -68,7 +68,7 @@ docker build \
   --build-arg CUDA_VERSION=11.8.0 \
   --build-arg CUDA_IMAGE_SUBTAG=cudnn8-runtime-ubuntu22.04 \
   --build-arg R_VERSION=4.2.3 \
-  --build-arg PYTHON_VERSION=3.10.10 \
+  --build-arg PYTHON_VERSION=3.10.11 \
   -t cuda/r/ver \
   -f ver/latest.Dockerfile .
 ```
