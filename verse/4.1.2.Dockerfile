@@ -10,10 +10,7 @@ ENV CTAN_REPO=${CTAN_REPO}
 ENV PATH=/opt/TinyTeX/bin/x86_64-linux:$PATH
 
 ## Add LaTeX, rticles and bookdown support
-RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
-  && dpkg -i texlive-local.deb \
-  && rm texlive-local.deb \
-  && apt-get update \
+RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     default-jdk \
     fonts-roboto \
@@ -49,6 +46,16 @@ RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
   ## Get rid of librdf0-dev and its dependencies (incl. libcurl4-gnutls-dev)
 	&& apt-get -y autoremove \
   && rm -rf /var/lib/apt/lists/* \
+  ## Tell APT about the TeX Live installation
+  ## by building a dummy package using equivs
+  && apt-get install -y --no-install-recommends equivs \
+  && cd /tmp \
+  && wget https://github.com/scottkosty/install-tl-ubuntu/raw/master/debian-control-texlive-in.txt \
+  && equivs-build debian-* \
+  && mv texlive-local*.deb texlive-local.deb \
+  && dpkg -i texlive-local.deb \
+  && apt-get -y purge equivs \
+  && apt-get -y autoremove \
   ## Admin-based install of TinyTeX:
   && wget -qO- "https://yihui.org/tinytex/install-unx.sh" \
     | sh -s - --admin --no-path \
