@@ -1,7 +1,7 @@
 .env:
   variables:
-    R_VERSION: "4.2.2"
-    PYTHON_VERSION: "3.10.10"
+    R_VERSION: "4.2.3"
+    PYTHON_VERSION: "3.10.11"
     CUDA_VERSION: "11.8.0"
     LIBNVINFER_VERSION: "8.5.3-1"
     LIBNVINFER_VERSION_MAJ: "8"
@@ -39,21 +39,23 @@
     sed -n "s|\([[:digit:]]\+\).*|\1|p"`
 
 .build:
-  image: glcr.b-data.ch/docker/docker-buildx:latest
+  image: glcr.b-data.ch/docker/docker:latest
   stage: build
   extends: .env
   services:
-    - docker:dind
+    - name: glcr.b-data.ch/docker/docker:dind
+      alias: docker
   variables:
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: "/certs"
+    BUILDX_NO_DEFAULT_ATTESTATIONS: "true"
   before_script:
     - *before-script-all
     - *before-script-build
   retry: 2
 
 .post:
-  image: glcr.b-data.ch/docker/docker-buildx:latest
+  image: glcr.b-data.ch/docker/docker:latest
   stage: .post
   extends: .env
   before_script:

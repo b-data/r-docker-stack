@@ -67,8 +67,8 @@ docker build \
   --build-arg CUDA_IMAGE=nvidia/cuda \
   --build-arg CUDA_VERSION=11.8.0 \
   --build-arg CUDA_IMAGE_SUBTAG=cudnn8-runtime-ubuntu22.04 \
-  --build-arg R_VERSION=4.2.2 \
-  --build-arg PYTHON_VERSION=3.10.10 \
+  --build-arg R_VERSION=4.2.3 \
+  --build-arg PYTHON_VERSION=3.10.11 \
   -t cuda/r/ver \
   -f ver/latest.Dockerfile .
 ```
@@ -78,6 +78,8 @@ docker build \
 ```bash
 docker build \
   --build-arg BUILD_ON_IMAGE=cuda/r/ver \
+  --build-arg LIBNVINFER_VERSION=8.5.3-1 \
+  --build-arg LIBNVINFER_VERSION_MAJ=8 \
   --build-arg CUDA_IMAGE_FLAVOR=runtime \
   -t cuda/r/ver \
   -f cuda/latest.Dockerfile .
@@ -101,7 +103,7 @@ docker build \
 
 ```bash
 docker build \
-  --build-arg BUILD_ON_IMAGE=cuda/r/ver \
+  --build-arg BUILD_ON_IMAGE=cuda/r/ver:MAJOR.MINOR.PATCH \
   --build-arg CUDA_IMAGE_FLAVOR=runtime \
   -t cuda/r/ver:MAJOR.MINOR.PATCH \
   -f cuda/MAJOR.MINOR.PATCH.Dockerfile .
@@ -121,35 +123,18 @@ docker run -it --rm \
 
 from the project's GitLab Container Registries:
 
-* [`cuda/r/ver`](https://gitlab.b-data.ch/cuda/r/ver/container_registry)  
-  ```bash
-  docker run -it --rm \
-    --gpus '"device=all"' \
-    glcr.b-data.ch/cuda/r/ver[:MAJOR[.MINOR[.PATCH]]]
-  ```
-* [`cuda/r/base`](https://gitlab.b-data.ch/cuda/r/base/container_registry)  
-  ```bash
-  docker run -it --rm \
-    --gpus '"device=all"' \
-    glcr.b-data.ch/cuda/r/base[:MAJOR[.MINOR[.PATCH]]]
-  ```
-* [`cuda/r/tidyverse`](https://gitlab.b-data.ch/cuda/r/tidyverse/container_registry)  
-  ```bash
-  docker run -it --rm \
-    --gpus '"device=all"' \
-    glcr.b-data.ch/cuda/r/tidyverse[:MAJOR[.MINOR[.PATCH]]]
-  ```
-* [`cuda/r/verse`](https://gitlab.b-data.ch/cuda/r/verse/container_registry)  
-  ```bash
-  docker run -it --rm \
-    --gpus '"device=all"' \
-    glcr.b-data.ch/cuda/r/verse[:MAJOR[.MINOR[.PATCH]]]
-  ```
-* [`cuda/r/geospatial`](https://gitlab.b-data.ch/cuda/r/geospatial/container_registry)  
-  ```bash
-  docker run -it --rm \
-    --gpus '"device=all"' \
-    glcr.b-data.ch/cuda/r/geospatial[:MAJOR[.MINOR[.PATCH]]]
-  ```
+```bash
+docker run -it --rm \
+  --gpus '"device=all"' \
+  IMAGE[:MAJOR[.MINOR[.PATCH]]]
+```
+
+`IMAGE` being one of
+
+* [`glcr.b-data.ch/cuda/r/ver`](https://gitlab.b-data.ch/cuda/r/ver/container_registry)
+* [`glcr.b-data.ch/cuda/r/base`](https://gitlab.b-data.ch/cuda/r/base/container_registry)
+* [`glcr.b-data.ch/cuda/r/tidyverse`](https://gitlab.b-data.ch/cuda/r/tidyverse/container_registry)
+* [`glcr.b-data.ch/cuda/r/verse`](https://gitlab.b-data.ch/cuda/r/verse/container_registry)
+* [`glcr.b-data.ch/cuda/r/geospatial`](https://gitlab.b-data.ch/cuda/r/geospatial/container_registry)
 
 See [Notes](NOTES.md) for tweaks.
