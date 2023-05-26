@@ -111,7 +111,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   ## Clean up
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/* \
-    $HOME/.cache
+    ${HOME}/.cache
 
 ## Install R related stuff
 RUN apt-get update \
@@ -145,7 +145,7 @@ RUN apt-get update \
   ## Clean up
   && rm -rf /tmp/* \
     /var/lib/apt/lists/* \
-    $HOME/.cache \
-    $HOME/.config \
-    $HOME/.ipython \
-    $HOME/.local
+    ${HOME}/.cache \
+    ${HOME}/.config \
+    ${HOME}/.ipython \
+    ${HOME}/.local

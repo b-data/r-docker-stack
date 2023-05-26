@@ -79,8 +79,8 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   ## Admin-based install of TinyTeX:
   && wget -qO- "https://yihui.org/tinytex/install-unx.sh" \
     | sh -s - --admin --no-path \
-  && mv ~/.TinyTeX /opt/TinyTeX \
-  && sed -i 's/\/root\/.TinyTeX/\/opt\/TinyTeX/g' \
+  && mv ${HOME}/.TinyTeX /opt/TinyTeX \
+  && sed -i "s|${HOME}/.TinyTeX|/opt/TinyTeX|g" \
     /opt/TinyTeX/texmf-var/fonts/conf/texlive-fontconfig.conf \
   && ln -rs /opt/TinyTeX/bin/$(uname -m)-linux \
     /opt/TinyTeX/bin/linux \
@@ -137,4 +137,5 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     '^libmagick\+\+-6.q16-[0-9]+$' \
   ## Clean up
   && rm -rf /tmp/* \
-  && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/* \
+    ${HOME}/.wget-hsts
