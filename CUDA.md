@@ -7,6 +7,8 @@ GPU accelerated, multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
 * [`glcr.b-data.ch/cuda/r/tidyverse`](https://gitlab.b-data.ch/cuda/r/tidyverse/container_registry)
 * [`glcr.b-data.ch/cuda/r/verse`](https://gitlab.b-data.ch/cuda/r/verse/container_registry)
 * [`glcr.b-data.ch/cuda/r/geospatial`](https://gitlab.b-data.ch/cuda/r/geospatial/container_registry)
+* [`glcr.b-data.ch/cuda/r/qgisprocess`](https://gitlab.b-data.ch/cuda/r/qgisprocess/container_registry)
+  (versions ≥ 4.3.0)
 
 Images available for R versions ≥ 4.2.2.
 
@@ -136,5 +138,6 @@ docker run -it --rm \
 * [`glcr.b-data.ch/cuda/r/tidyverse`](https://gitlab.b-data.ch/cuda/r/tidyverse/container_registry)
 * [`glcr.b-data.ch/cuda/r/verse`](https://gitlab.b-data.ch/cuda/r/verse/container_registry)
 * [`glcr.b-data.ch/cuda/r/geospatial`](https://gitlab.b-data.ch/cuda/r/geospatial/container_registry)
+* [`glcr.b-data.ch/cuda/r/qgisprocess`](https://gitlab.b-data.ch/cuda/r/qgisprocess/container_registry)
 
 See [Notes](NOTES.md) for tweaks.

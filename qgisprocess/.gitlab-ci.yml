@@ -1,6 +1,8 @@
 .env:
   variables:
     R_VERSION: "4.3.0"
+    QGIS_VERSION: "3.30.3"
+    OTB_VERSION: "8.1.1"
 
 .before-script-build: &before-script-build
   - |
@@ -53,18 +55,22 @@ build:latest-linux-amd64:
   script:
     - >
       docker build --pull
+      --build-arg BASE_IMAGE
+      --build-arg BASE_IMAGE_TAG
       --build-arg BUILD_ON_IMAGE
       --build-arg R_VERSION
+      --build-arg QGIS_VERSION
+      --build-arg OTB_VERSION
       --build-arg NCPUS=$((`nproc`/2+1))
       --build-arg BUILD_START=$(date -uIseconds)
       -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       -t $CI_APP_REPO:latest-linux-amd64
-      -f geospatial/latest.Dockerfile .
+      -f qgisprocess/latest.Dockerfile .
     - docker push -a $CI_APP_REPO
   rules:
     - if: $CI_COMMIT_BRANCH == "main" && $UPDATE_MODE != "true" && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
       changes:
-        - geospatial/latest.Dockerfile
+        - qgisprocess/latest.Dockerfile
 
 build:latest-linux-arm64v8:
   extends: .build
@@ -74,18 +80,21 @@ build:latest-linux-arm64v8:
   script:
     - >
       docker build --pull
+      --build-arg BASE_IMAGE
+      --build-arg BASE_IMAGE_TAG
       --build-arg BUILD_ON_IMAGE
       --build-arg R_VERSION
+      --build-arg QGIS_VERSION
       --build-arg NCPUS=$((`nproc`/2+1))
       --build-arg BUILD_START=$(date -uIseconds)
       -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
       -t $CI_APP_REPO:latest-linux-arm64v8
-      -f geospatial/latest.Dockerfile .
+      -f qgisprocess/latest.Dockerfile .
     - docker push -a $CI_APP_REPO
   rules:
     - if: $CI_COMMIT_BRANCH == "main" && $UPDATE_MODE != "true" && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
       changes:
-        - geospatial/latest.Dockerfile
+        - qgisprocess/latest.Dockerfile
 
 build:version-linux-amd64:
   extends: .build
@@ -95,16 +104,19 @@ build:version-linux-amd64:
   script:
     - >
       docker build --pull
+      --build-arg BASE_IMAGE
+      --build-arg BASE_IMAGE_TAG
       --build-arg BUILD_ON_IMAGE
+      --build-arg OTB_VERSION
       --build-arg NCPUS=$((`nproc`/2+1))
       --build-arg BUILD_START=$(date -uIseconds)
       -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
-      -f geospatial/$R_VERSION.Dockerfile .
+      -f qgisprocess/$R_VERSION.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-amd64
   rules:
     - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_PIPELINE_TRIGGERED && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
       changes:
-        - geospatial/$R_VERSION.Dockerfile
+        - qgisprocess/$R_VERSION.Dockerfile
 
 build:version-linux-arm64v8:
   extends: .build
@@ -114,16 +126,18 @@ build:version-linux-arm64v8:
   script:
     - >
       docker build --pull
+      --build-arg BASE_IMAGE
+      --build-arg BASE_IMAGE_TAG
       --build-arg BUILD_ON_IMAGE
       --build-arg NCPUS=$((`nproc`/2+1))
       --build-arg BUILD_START=$(date -uIseconds)
       -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
-      -f geospatial/$R_VERSION.Dockerfile .
+      -f qgisprocess/$R_VERSION.Dockerfile .
     - docker push $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
   rules:
     - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_PIPELINE_TRIGGERED && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
       changes:
-        - geospatial/$R_VERSION.Dockerfile
+        - qgisprocess/$R_VERSION.Dockerfile
 
 build-manifest:latest-linux-multiarch:
   extends: .build
@@ -164,7 +178,7 @@ build-manifest:latest-linux-multiarch:
   rules:
     - if: $CI_COMMIT_BRANCH == "main" && $UPDATE_MODE != "true"
       changes:
-        - geospatial/latest.Dockerfile
+        - qgisprocess/latest.Dockerfile
 
 build-manifest:version-linux-multiarch:
   extends: .build
@@ -184,64 +198,4 @@ build-manifest:version-linux-multiarch:
   rules:
     - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_PIPELINE_TRIGGERED
       changes:
-        - geospatial/$R_VERSION.Dockerfile
-
-trigger-latest-build:
-  extends: .post
-  stage: .post
-  needs: ["build-manifest:latest-linux-multiarch"]
-  before_script:
-    - apk upgrade --no-cache
-    - apk add --update --no-cache curl
-  script:
-    - curl -X POST -F token=$R_QGISPROCESS -F ref=main https://gitlab.b-data.ch/api/v4/projects/334/trigger/pipeline
-  rules:
-    - if: $CUDA_IMAGE
-      when: never
-    - if: $CI_COMMIT_BRANCH == "main" && $UPDATE_MODE != "true"
-      changes:
-        - geospatial/latest.Dockerfile
-
-trigger-version-build:
-  extends: .post
-  stage: .post
-  needs: ["build-manifest:version-linux-multiarch"]
-  before_script:
-    - apk upgrade --no-cache
-    - apk add --update --no-cache curl
-  script:
-    - curl -X POST -F token=$R_QGISPROCESS -F ref=freeze-version https://gitlab.b-data.ch/api/v4/projects/334/trigger/pipeline
-  rules:
-    - if: $CUDA_IMAGE
-      when: never
-    - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_PIPELINE_TRIGGERED
-      changes:
-        - geospatial/$R_VERSION.Dockerfile
-
-trigger-latest-cuda-build:
-  extends: .post
-  stage: .post
-  needs: ["build-manifest:latest-linux-multiarch"]
-  before_script:
-    - apk upgrade --no-cache
-    - apk add --update --no-cache curl
-  script:
-    - curl -X POST -F token=$CUDA_R_QGISPROCESS -F ref=main https://gitlab.b-data.ch/api/v4/projects/335/trigger/pipeline
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main" && $UPDATE_MODE != "true" && $CUDA_IMAGE
-      changes:
-        - geospatial/latest.Dockerfile
-
-trigger-version-cuda-build:
-  extends: .post
-  stage: .post
-  needs: ["build-manifest:version-linux-multiarch"]
-  before_script:
-    - apk upgrade --no-cache
-    - apk add --update --no-cache curl
-  script:
-    - curl -X POST -F token=$CUDA_R_QGISPROCESS -F ref=freeze-version https://gitlab.b-data.ch/api/v4/projects/335/trigger/pipeline
-  rules:
-    - if: $CI_COMMIT_BRANCH == "freeze-version" && $CI_PIPELINE_TRIGGERED && $CUDA_IMAGE
-      changes:
-        - geospatial/$R_VERSION.Dockerfile
+        - qgisprocess/$R_VERSION.Dockerfile

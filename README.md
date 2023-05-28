@@ -14,6 +14,8 @@ Multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
 * [`glcr.b-data.ch/r/tidyverse`](https://gitlab.b-data.ch/r/tidyverse/container_registry)
 * [`glcr.b-data.ch/r/verse`](https://gitlab.b-data.ch/r/verse/container_registry)
 * [`glcr.b-data.ch/r/geospatial`](https://gitlab.b-data.ch/r/geospatial/container_registry)
+* [`glcr.b-data.ch/r/qgisprocess`](https://gitlab.b-data.ch/r/qgisprocess/container_registry)
+  (versions ≥ 4.3.0)
 
 Images considered stable for R versions ≥ 4.2.0.  
 :point_right: The current state may eventually be backported to versions ≥
@@ -21,7 +23,7 @@ Images considered stable for R versions ≥ 4.2.0.
 
 **Build chain**
 
-ver → base → tidyverse → verse → geospatial  
+ver → base → tidyverse → verse → geospatial → qgisprocess  
 :information_source: The term base+ means *base or later* in the build chain.
 
 **Features**
@@ -111,6 +113,7 @@ docker run -it --rm \
 * [`glcr.b-data.ch/r/tidyverse`](https://gitlab.b-data.ch/r/tidyverse/container_registry)
 * [`glcr.b-data.ch/r/verse`](https://gitlab.b-data.ch/r/verse/container_registry)
 * [`glcr.b-data.ch/r/geospatial`](https://gitlab.b-data.ch/r/geospatial/container_registry)
+* [`glcr.b-data.ch/r/qgisprocess`](https://gitlab.b-data.ch/r/qgisprocess/container_registry)
 
 See [Notes](NOTES.md) for tweaks.
 
