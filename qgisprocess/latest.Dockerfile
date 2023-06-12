@@ -30,9 +30,7 @@ ENV PARENT_IMAGE=${BUILD_ON_IMAGE}:${R_VERSION} \
     BUILD_DATE=${BUILD_START}
 
     ## GRASS GIS: Make sure the distro's python is used
-ENV GRASS_PYTHON=/usr/bin/python3 \
-    ## Qt: Support running on headless computer
-    QT_QPA_PLATFORM=offscreen
+ENV GRASS_PYTHON=/usr/bin/python3
 
 ## Install QGIS
 COPY --from=qgissi /usr /usr
@@ -154,12 +152,17 @@ RUN apt-get update \
   ## Install qgisprocess, the R interface to QGIS
   && R -e "devtools::install_github('r-spatial/qgisprocess')" \
   ## Clean up
-  && apt-get -y purge python3-pip \
-  && apt-get -y autoremove \
+  && if [ ! -z "$PYTHON_VERSION" ]; then \
+    apt-get -y purge python3-pip; \
+    apt-get -y autoremove; \
+  fi \
   && rm -rf /var/lib/apt/lists/* \
     ${HOME}/.cache \
     ${HOME}/.config \
     ${HOME}/.local
+
+    ## Qt: Support running on headless computer
+ENV QT_QPA_PLATFORM=offscreen
 
   ## QGIS: Install plugin 'Processing Saga NextGen Provider'
 RUN mkdir -p ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
