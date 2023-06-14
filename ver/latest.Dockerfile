@@ -1,5 +1,5 @@
 ARG BASE_IMAGE=debian
-ARG BASE_IMAGE_TAG=11
+ARG BASE_IMAGE_TAG=12
 ARG CUDA_IMAGE
 ARG CUDA_IMAGE_SUBTAG
 ARG BLAS=libopenblas-dev
@@ -73,7 +73,7 @@ RUN apt-get update \
     '^libpcre[2|3]-dev$' \
     libpng-dev \
     libreadline-dev \
-    libtiff5 \
+    '^libtiff[5|6]$' \
     pkg-config \
     unzip \
     zip \
