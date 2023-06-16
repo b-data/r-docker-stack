@@ -1,10 +1,10 @@
 ARG BASE_IMAGE=debian
-ARG BASE_IMAGE_TAG=11
+ARG BASE_IMAGE_TAG=12
 ARG BUILD_ON_IMAGE=glcr.b-data.ch/r/ver
 ARG R_VERSION
-ARG GIT_VERSION=2.40.0
+ARG GIT_VERSION=2.41.0
 ARG GIT_LFS_VERSION=3.3.0
-ARG PANDOC_VERSION=2.19.2
+ARG PANDOC_VERSION=3.1.1
 
 FROM glcr.b-data.ch/git/gsi/${GIT_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as gsi
 FROM glcr.b-data.ch/git-lfs/glfsi:${GIT_LFS_VERSION} as glfsi
@@ -66,13 +66,13 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     vim-tiny \
     wget \
     zsh \
-    ## Additional git runtime dependencies
+    ## Git: Additional runtime dependencies
     libcurl3-gnutls \
     liberror-perl \
-    ## Additional git runtime recommendations
+    ## Git: Additional runtime recommendations
     less \
     ssh-client \
-  ## Additional python-dev dependencies
+  ## Python: Additional dev dependencies
   && if [ -z "$PYTHON_VERSION" ]; then \
     apt-get -y install --no-install-recommends \
       python3-dev \
@@ -98,11 +98,11 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
       wheel; \
     rm get-pip.py; \
   fi \
-  ## Set default branch name to main
+  ## Git: Set default branch name to main
   && git config --system init.defaultBranch main \
-  ## Store passwords for one hour in memory
+  ## Git: Store passwords for one hour in memory
   && git config --system credential.helper "cache --timeout=3600" \
-  ## Merge the default branch from the default remote when "git pull" is run
+  ## Git: Merge the default branch from the default remote when "git pull" is run
   && git config --system pull.rebase false \
   ## Install pandoc
   && curl -sLO https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-${dpkgArch}.deb \
@@ -111,7 +111,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   ## Clean up
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/* \
-    $HOME/.cache
+    ${HOME}/.cache
 
 ## Install R related stuff
 RUN apt-get update \
@@ -125,6 +125,7 @@ RUN apt-get update \
     libssl-dev \
     libxml2-dev \
   ## Install radian
+  && export PIP_BREAK_SYSTEM_PACKAGES=1 \
   && pip install radian \
   ## Provide NVBLAS-enabled radian_
   ## Enabled at runtime and only if nvidia-smi and at least one GPU are present
@@ -145,7 +146,7 @@ RUN apt-get update \
   ## Clean up
   && rm -rf /tmp/* \
     /var/lib/apt/lists/* \
-    $HOME/.cache \
-    $HOME/.config \
-    $HOME/.ipython \
-    $HOME/.local
+    ${HOME}/.cache \
+    ${HOME}/.config \
+    ${HOME}/.ipython \
+    ${HOME}/.local
