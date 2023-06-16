@@ -5,7 +5,7 @@ ARG CUDA_IMAGE_SUBTAG
 ARG BLAS=libopenblas-dev
 ARG CUDA_VERSION=11.8.0
 ARG R_VERSION=4.3.0
-ARG PYTHON_VERSION=3.10.11
+ARG PYTHON_VERSION=3.11.4
 ARG CRAN=https://cloud.r-project.org
 
 FROM glcr.b-data.ch/r/rsi/${R_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as rsi
