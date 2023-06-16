@@ -75,7 +75,7 @@ To install docker, follow the instructions for your platform:
 
 ```bash
 docker build \
-  --build-arg R_VERSION=4.3.0 \
+  --build-arg R_VERSION=4.3.1 \
   --build-arg PYTHON_VERSION=3.11.4 \
   -t r/ver \
   -f ver/latest.Dockerfile .
