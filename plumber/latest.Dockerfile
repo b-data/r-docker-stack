@@ -28,6 +28,11 @@ RUN apt-get update \
     libxml2-dev \
     sqlite3 \
     zlib1g-dev \
+  ## digest: Installation fails on arm64 for v0.6.32
+  ## https://github.com/eddelbuettel/digest/issues/189
+  && curl -sSLO https://eddelbuettel.r-universe.dev/src/contrib/digest_0.6.32.1.tar.gz \
+  && R CMD INSTALL digest_0.6.32.1.tar.gz \
+  && rm digest_0.6.32.1.tar.gz \
   ## Install plumber
   && install2.r --error --deps TRUE  -n $NCPUS plumber \
   ## Set up endpoint
