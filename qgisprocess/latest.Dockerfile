@@ -40,6 +40,7 @@ COPY --from=saga-gissi /usr/local /usr/local
 COPY --from=otbsi /usr/local /usr/local
 ENV GDAL_DRIVER_PATH=${OTB_VERSION:+disable} \
     OTB_APPLICATION_PATH=${OTB_VERSION:+/usr/local/lib/otb/applications}
+ENV OTB_APPLICATION_PATH=${OTB_APPLICATION_PATH:-/usr/lib/otb/applications}
 
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
@@ -118,13 +119,17 @@ RUN apt-get update \
       '^libopencv-core[0-9][0-9.][0-9][a-z]?$' \
       '^libopencv-ml[0-9][0-9.][0-9][a-z]?$' \
       libtinyxml-dev \
-      $(test -z "${OTB_VERSION}" && echo "otb-*"); \
+      $(test -z "${OTB_VERSION}" && echo "otb-* monteverdi"); \
     if [ ! -z "${OTB_VERSION}" ]; then \
       if [ "$(echo ${OTB_VERSION} | cut -c 1)" -lt "8" ]; then \
         apt-get -y install --no-install-recommends \
           '^libopenthreads[0-9]+$' \
           libossim1; \
       fi \
+    else \
+      mkdir -p /usr/lib/otb; \
+      ln -rs /usr/lib/$(uname -m)-linux-gnu/otb/applications \
+        /usr/lib/otb/applications; \
     fi \
   fi \
   ## GRASS GIS: Configure dynamic linker run time bindings
