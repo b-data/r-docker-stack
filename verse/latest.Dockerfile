@@ -43,6 +43,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     libopenmpi-dev \
     libpoppler-cpp-dev \
     librdf0-dev \
+    librsvg2-bin \
     qpdf \
     texinfo \
   ## Install R package redland
