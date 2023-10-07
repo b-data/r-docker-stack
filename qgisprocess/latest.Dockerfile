@@ -6,6 +6,7 @@ ARG QGIS_VERSION
 
 ARG SAGA_VERSION
 ARG OTB_VERSION
+ARG PROC_SAGA_NG_VERSION
 
 FROM glcr.b-data.ch/qgis/qgissi/${QGIS_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as qgissi
 FROM glcr.b-data.ch/saga-gis/saga-gissi${SAGA_VERSION:+/}${SAGA_VERSION:-:none}${SAGA_VERSION:+/$BASE_IMAGE}${SAGA_VERSION:+:$BASE_IMAGE_TAG} as saga-gissi
@@ -21,6 +22,7 @@ ARG BUILD_ON_IMAGE
 ARG QGIS_VERSION
 ARG SAGA_VERSION
 ARG OTB_VERSION
+ARG PROC_SAGA_NG_VERSION
 ARG BUILD_START
 
 ENV PARENT_IMAGE=${BUILD_ON_IMAGE}:${R_VERSION} \
@@ -35,7 +37,7 @@ ENV GRASS_PYTHON=/usr/bin/python3
 ## Install QGIS
 COPY --from=qgissi /usr /usr
 ## Install SAGA GIS
-COPY --from=saga-gissi /usr/local /usr/local
+COPY --from=saga-gissi /usr /usr
 ## Install Orfeo Toolbox
 COPY --from=otbsi /usr/local /usr/local
 ENV GDAL_DRIVER_PATH=${OTB_VERSION:+disable} \
@@ -184,7 +186,7 @@ RUN mkdir -p ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
   && cd ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
   && qgis-plugin-manager init \
   && qgis-plugin-manager update \
-  && qgis-plugin-manager install 'Processing Saga NextGen Provider'==0.0.7 \
+  && qgis-plugin-manager install 'Processing Saga NextGen Provider'=="${PROC_SAGA_NG_VERSION:-0.0.7}" \
   && rm -rf .cache_qgis_plugin_manager \
   ## QGIS: Enable plugins
   && qgis_process plugins enable processing_saga_nextgen \
