@@ -26,6 +26,7 @@ RUN apt-get update \
     libprotobuf-dev \
     libnetcdf-dev \
     libudunits2-dev \
+    nco \
     netcdf-bin \
     postgis \
     protobuf-compiler \
