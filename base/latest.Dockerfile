@@ -144,7 +144,7 @@ RUN apt-get update \
   && apt-get -y purge libcairo2-dev \
   && apt-get -y autoremove \
   ## Strip libraries of binary packages installed from PPM
-  strip $(R RHOME)/site-library/*/libs/*.so \
+  && strip $(R RHOME)/site-library/*/libs/*.so \
   ## Clean up
   && rm -rf /tmp/* \
     /var/lib/apt/lists/* \

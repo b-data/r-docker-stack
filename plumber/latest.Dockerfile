@@ -34,7 +34,7 @@ RUN apt-get update \
   ## Set up endpoint
   && echo '#* Return "hello world"\n#* @get /hello\nfunction() {\n  "hello world"\n}' > hello-world.R \
   ## Strip libraries of binary packages installed from PPM
-  strip $(R RHOME)/site-library/*/libs/*.so \
+  && strip $(R RHOME)/site-library/*/libs/*.so \
   ## Clean up
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/*

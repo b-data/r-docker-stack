@@ -169,7 +169,7 @@ RUN apt-get update \
   ## Install qgisprocess, the R interface to QGIS
   && install2.r --error --skipinstalled -n $NCPUS qgisprocess \
   ## Strip libraries of binary packages installed from PPM
-  strip $(R RHOME)/site-library/*/libs/*.so \
+  && strip $(R RHOME)/site-library/*/libs/*.so \
   ## Clean up
   && if [ ! -z "$PYTHON_VERSION" ]; then \
     apt-get -y purge python3-pip; \
