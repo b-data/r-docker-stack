@@ -143,6 +143,8 @@ RUN apt-get update \
   ## Get rid of libcairo2-dev and its dependencies (incl. python3)
   && apt-get -y purge libcairo2-dev \
   && apt-get -y autoremove \
+  ## Strip libraries of binary packages installed from PPM
+  strip $(R RHOME)/site-library/*/libs/*.so \
   ## Clean up
   && rm -rf /tmp/* \
     /var/lib/apt/lists/* \

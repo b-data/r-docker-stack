@@ -139,6 +139,8 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   && apt-get -y autoremove \
   && apt-get -y install --no-install-recommends \
     '^libmagick\+\+-6.q16-[0-9]+$' \
+  ## Strip libraries of binary packages installed from PPM
+  strip $(R RHOME)/site-library/*/libs/*.so \
   ## Clean up
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/* \

@@ -6,7 +6,7 @@ ARG BLAS=libopenblas-dev
 ARG CUDA_VERSION
 ARG R_VERSION
 ARG PYTHON_VERSION
-ARG CRAN=https://cloud.r-project.org
+ARG CRAN=https://packagemanager.posit.co/cran/latest
 
 FROM glcr.b-data.ch/r/rsi/${R_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as rsi
 FROM glcr.b-data.ch/python/psi${PYTHON_VERSION:+/}${PYTHON_VERSION:-:none}${PYTHON_VERSION:+/$BASE_IMAGE}${PYTHON_VERSION:+:$BASE_IMAGE_TAG} as psi
