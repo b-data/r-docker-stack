@@ -2,8 +2,8 @@ ARG BASE_IMAGE=debian
 ARG BASE_IMAGE_TAG=12
 ARG BUILD_ON_IMAGE=glcr.b-data.ch/r/ver
 ARG R_VERSION
-ARG GIT_VERSION=2.41.0
-ARG GIT_LFS_VERSION=3.3.0
+ARG GIT_VERSION=2.42.0
+ARG GIT_LFS_VERSION=3.4.0
 ARG PANDOC_VERSION=3.1.1
 
 FROM glcr.b-data.ch/git/gsi/${GIT_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as gsi
@@ -143,6 +143,8 @@ RUN apt-get update \
   ## Get rid of libcairo2-dev and its dependencies (incl. python3)
   && apt-get -y purge libcairo2-dev \
   && apt-get -y autoremove \
+  ## Strip libraries of binary packages installed from PPM
+  && strip $(R RHOME)/site-library/*/libs/*.so \
   ## Clean up
   && rm -rf /tmp/* \
     /var/lib/apt/lists/* \
