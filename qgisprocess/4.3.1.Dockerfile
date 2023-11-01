@@ -1,12 +1,12 @@
 ARG BASE_IMAGE=debian
 ARG BASE_IMAGE_TAG=12
 ARG BUILD_ON_IMAGE=glcr.b-data.ch/r/geospatial
-ARG R_VERSION=4.3.0
-ARG QGIS_VERSION=3.30.3
+ARG R_VERSION=4.3.1
+ARG QGIS_VERSION=3.34.0
 
 ARG SAGA_VERSION
 ARG OTB_VERSION
-## OTB_VERSION=8.1.1
+## OTB_VERSION=8.1.2
 ARG PROC_SAGA_NG_VERSION
 
 FROM glcr.b-data.ch/qgis/qgissi/${QGIS_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as qgissi
@@ -47,6 +47,8 @@ ENV OTB_APPLICATION_PATH=${OTB_APPLICATION_PATH:-/usr/lib/otb/applications}
 
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
+    ## Multimedia files trancoding
+    ffmpeg \
     ## QGIS: Additional runtime dependencies
     '^libexiv2-[0-9]+$' \
     '^libgdal[0-9]+$' \
@@ -168,7 +170,9 @@ RUN apt-get update \
   && echo "PYTHONPATH=/usr/lib/python3/dist-packages $(which qgis_process)_ \"\${@}\"" >> \
     $(which qgis_process) \
   ## Install qgisprocess, the R interface to QGIS
-  && R -e "devtools::install_github('r-spatial/qgisprocess')" \
+  && install2.r --error --skipinstalled -n $NCPUS qgisprocess \
+  ## Strip libraries of binary packages installed from PPM
+  && strip $(R RHOME)/site-library/*/libs/*.so \
   ## Clean up
   && if [ ! -z "$PYTHON_VERSION" ]; then \
     apt-get -y purge python3-pip; \
