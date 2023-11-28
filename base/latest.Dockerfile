@@ -127,8 +127,6 @@ RUN apt-get update \
     libxml2-dev \
   ## Install radian
   && export PIP_BREAK_SYSTEM_PACKAGES=1 \
-  ## Fix https://github.com/randy3k/radian/issues/446
-  && pip install prompt-toolkit==3.0.39 \
   && pip install radian \
   ## Provide NVBLAS-enabled radian_
   ## Enabled at runtime and only if nvidia-smi and at least one GPU are present
