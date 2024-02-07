@@ -6,6 +6,7 @@ ARG QGIS_VERSION
 
 ARG SAGA_VERSION
 ARG OTB_VERSION
+
 ARG PROC_SAGA_NG_VERSION
 
 FROM glcr.b-data.ch/qgis/qgissi/${QGIS_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as qgissi
@@ -205,9 +206,15 @@ RUN mkdir -p ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
   && if [ "$(uname -m)" = "x86_64" ]; then \
     ## QGIS: Set OTB application folder and OTB folder
     echo "\n[Processing]" >> ${qgis3Ini}; \
-    echo "Configuration\OTB_APP_FOLDER=/usr/local/lib/otb/applications" >> \
-      ${qgis3Ini}; \
-    echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgis3Ini}; \
+    if [ -z "${OTB_VERSION}" ]; then \
+      echo "Configuration\OTB_APP_FOLDER=/usr/lib/otb/applications" >> \
+        ${qgis3Ini}; \
+      echo "Configuration\OTB_FOLDER=/usr\n" >> ${qgis3Ini}; \
+    else \
+      echo "Configuration\OTB_APP_FOLDER=/usr/local/lib/otb/applications" >> \
+        ${qgis3Ini}; \
+      echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgis3Ini}; \
+    fi \
     ## QGIS: Enable OTB plugin
     qgis_process plugins enable otbprovider; \
   fi \
