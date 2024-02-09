@@ -214,7 +214,7 @@ RUN mkdir -p ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
       echo "Configuration\OTB_APP_FOLDER=/usr/local/lib/otb/applications" >> \
         ${qgis3Ini}; \
       echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgis3Ini}; \
-    fi \
+    fi; \
     ## QGIS: Enable OTB plugin
     qgis_process plugins enable otbprovider; \
   fi \
