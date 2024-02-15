@@ -2,7 +2,7 @@ ARG BASE_IMAGE=debian
 ARG BASE_IMAGE_TAG=12
 ARG BUILD_ON_IMAGE=glcr.b-data.ch/r/ver
 ARG R_VERSION
-ARG GIT_VERSION=2.43.1
+ARG GIT_VERSION=2.43.2
 ARG GIT_LFS_VERSION=3.4.1
 ARG PANDOC_VERSION=3.1.11
 
@@ -124,6 +124,7 @@ RUN apt-get update \
     libcurl4-openssl-dev \
     libfontconfig1-dev \
     libssl-dev \
+    libtiff-dev \
     libxml2-dev \
   ## Install radian
   && export PIP_BREAK_SYSTEM_PACKAGES=1 \
@@ -148,8 +149,11 @@ RUN apt-get update \
   && curl -sLO https://cran.r-project.org/src/contrib/Archive/httpgd/httpgd_1.3.1.tar.gz \
   && R CMD INSTALL httpgd_1.3.1.tar.gz \
   && rm httpgd_1.3.1.tar.gz \
-  ## Get rid of libcairo2-dev and its dependencies (incl. python3)
+  ## Get rid of libcairo2-dev
   && apt-get -y purge libcairo2-dev \
+  ## Get rid of libtiff-dev
+  && apt-get -y purge libtiff-dev \
+  ## and their dependencies (incl. python3)
   && apt-get -y autoremove \
   ## Strip libraries of binary packages installed from PPM
   && strip $(R RHOME)/site-library/*/libs/*.so \
