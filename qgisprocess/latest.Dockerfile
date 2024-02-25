@@ -204,19 +204,6 @@ RUN mkdir -p ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
   && echo 'customEnvVars="append|PYTHONPATH=:/usr/lib/python3/dist-packages"' >> \
     ${qgis3Ini} \
   && echo "customEnvVarsUse=true\n" >> ${qgis3Ini} \
-  && if [ "$(uname -m)" = "x86_64" ]; then \
-    ## QGIS: Set OTB application folder and OTB folder
-    echo "\n[Processing]" >> ${qgis3Ini}; \
-    if [ -z "${OTB_VERSION}" ]; then \
-      echo "Configuration\OTB_APP_FOLDER=/usr/lib/otb/applications" >> \
-        ${qgis3Ini}; \
-      echo "Configuration\OTB_FOLDER=/usr\n" >> ${qgis3Ini}; \
-    else \
-      echo "Configuration\OTB_APP_FOLDER=/usr/local/lib/otb/applications" >> \
-        ${qgis3Ini}; \
-      echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgis3Ini}; \
-    fi \
-  fi \
   ## Clean up
   && rm -rf \
     ${HOME}/.cache \
