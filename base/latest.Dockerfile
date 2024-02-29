@@ -2,9 +2,9 @@ ARG BASE_IMAGE=debian
 ARG BASE_IMAGE_TAG=12
 ARG BUILD_ON_IMAGE=glcr.b-data.ch/r/ver
 ARG R_VERSION
-ARG GIT_VERSION=2.42.0
-ARG GIT_LFS_VERSION=3.4.0
-ARG PANDOC_VERSION=3.1.1
+ARG GIT_VERSION=2.44.0
+ARG GIT_LFS_VERSION=3.4.1
+ARG PANDOC_VERSION=3.1.11
 
 FROM glcr.b-data.ch/git/gsi/${GIT_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as gsi
 FROM glcr.b-data.ch/git-lfs/glfsi:${GIT_LFS_VERSION} as glfsi
@@ -57,6 +57,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     libclang-dev \
     man-db \
     nano \
+    ncdu \
     procps \
     psmisc \
     screen \
@@ -85,9 +86,9 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     ## ("/usr/bin/python" and friends)
     for src in pydoc3 python3 python3-config; do \
       dst="$(echo "$src" | tr -d 3)"; \
-      [ -s "/usr/bin/$src" ]; \
-      [ ! -e "/usr/bin/$dst" ]; \
-      ln -svT "$src" "/usr/bin/$dst"; \
+      if [ -s "/usr/bin/$src" ] && [ ! -e "/usr/bin/$dst" ]; then \
+        ln -svT "$src" "/usr/bin/$dst"; \
+      fi \
     done; \
   else \
     ## Force update pip, setuptools and wheel
@@ -123,6 +124,7 @@ RUN apt-get update \
     libcurl4-openssl-dev \
     libfontconfig1-dev \
     libssl-dev \
+    libtiff-dev \
     libxml2-dev \
   ## Install radian
   && export PIP_BREAK_SYSTEM_PACKAGES=1 \
@@ -138,10 +140,20 @@ RUN apt-get update \
     echo "$(which radian) \"\${@}\"" >> $(which radian)_; \
   fi \
   ## Install httpgd
-  && install2.r --error --deps TRUE --skipinstalled -n $NCPUS \
-    httpgd \
-  ## Get rid of libcairo2-dev and its dependencies (incl. python3)
+  ## Archived on 2024-01-24 as check problems were not corrected in time.
+  && install2.r --error --skipinstalled -n $NCPUS \
+    later \
+    systemfonts \
+    cpp11 \
+    BH \
+  && curl -sLO https://cran.r-project.org/src/contrib/Archive/httpgd/httpgd_1.3.1.tar.gz \
+  && R CMD INSTALL httpgd_1.3.1.tar.gz \
+  && rm httpgd_1.3.1.tar.gz \
+  ## Get rid of libcairo2-dev
   && apt-get -y purge libcairo2-dev \
+  ## Get rid of libtiff-dev
+  && apt-get -y purge libtiff-dev \
+  ## and their dependencies (incl. python3)
   && apt-get -y autoremove \
   ## Strip libraries of binary packages installed from PPM
   && strip $(R RHOME)/site-library/*/libs/*.so \

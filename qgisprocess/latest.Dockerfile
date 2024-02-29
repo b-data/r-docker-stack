@@ -6,6 +6,7 @@ ARG QGIS_VERSION
 
 ARG SAGA_VERSION
 ARG OTB_VERSION
+
 ARG PROC_SAGA_NG_VERSION
 
 FROM glcr.b-data.ch/qgis/qgissi/${QGIS_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as qgissi
@@ -95,6 +96,7 @@ RUN apt-get update \
     python3-pyqt5.qsci \
     python3-pyqt5.qtmultimedia \
     python3-pyqt5.qtpositioning \
+    python3-pyqt5.qtserialport \
     python3-pyqt5.qtsql \
     python3-pyqt5.qtsvg \
     python3-pyqt5.qtwebkit \
@@ -202,15 +204,6 @@ RUN mkdir -p ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
   && echo 'customEnvVars="append|PYTHONPATH=:/usr/lib/python3/dist-packages"' >> \
     ${qgis3Ini} \
   && echo "customEnvVarsUse=true\n" >> ${qgis3Ini} \
-  && if [ "$(uname -m)" = "x86_64" ]; then \
-    ## QGIS: Set OTB application folder and OTB folder
-    echo "\n[Processing]" >> ${qgis3Ini}; \
-    echo "Configuration\OTB_APP_FOLDER=/usr/local/lib/otb/applications" >> \
-      ${qgis3Ini}; \
-    echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgis3Ini}; \
-    ## QGIS: Enable OTB plugin
-    qgis_process plugins enable otbprovider; \
-  fi \
   ## Clean up
   && rm -rf \
     ${HOME}/.cache \

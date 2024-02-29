@@ -84,6 +84,7 @@ RUN apt-get update \
     file \
     gsfonts \
     locales \
+    tzdata \
   ## Switch BLAS/LAPACK (manual mode)
   && if [ ${BLAS} = "libopenblas-dev" ]; then \
     update-alternatives --set libblas.so.3-$(uname -m)-linux-gnu \

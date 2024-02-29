@@ -1,6 +1,6 @@
 ARG BUILD_ON_IMAGE=glcr.b-data.ch/r/tidyverse
 ARG R_VERSION
-ARG QUARTO_VERSION=1.3.450
+ARG QUARTO_VERSION=1.4.550
 ARG CTAN_REPO=https://mirror.ctan.org/systems/texlive/tlnet
 
 FROM ${BUILD_ON_IMAGE}:${R_VERSION}
@@ -64,9 +64,9 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   && tar -xzf quarto-${QUARTO_VERSION}-linux-${dpkgArch}.tar.gz -C /opt/quarto --no-same-owner --strip-components=1 \
   && rm quarto-${QUARTO_VERSION}-linux-${dpkgArch}.tar.gz \
   ## Remove quarto pandoc
-  && rm /opt/quarto/bin/tools/pandoc \
+  && rm /opt/quarto/bin/tools/$(uname -m)/pandoc \
   ## Link to system pandoc
-  && ln -s /usr/bin/pandoc /opt/quarto/bin/tools/pandoc \
+  && ln -s /usr/bin/pandoc /opt/quarto/bin/tools/$(uname -m)/pandoc \
   ## Tell APT about the TeX Live installation
   ## by building a dummy package using equivs
   && apt-get install -y --no-install-recommends equivs \
