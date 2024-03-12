@@ -58,7 +58,6 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     build-essential \
     ca-certificates \
-    fonts-texgyre \
     g++ \
     gfortran \
     libbz2-dev \
@@ -82,6 +81,7 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     bash-completion \
     file \
+    fonts-texgyre \
     gsfonts \
     locales \
     tzdata \
