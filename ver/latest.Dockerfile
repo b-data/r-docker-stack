@@ -97,14 +97,15 @@ RUN apt-get update \
   && locale-gen \
   && update-locale LANG=$LANG \
   ## Add directory for site-library
-  && mkdir -p $(R RHOME)/site-library \
+  && RLS=$(Rscript -e "cat(Sys.getenv('R_LIBS_SITE'))") \
+  && mkdir -p ${RLS} \
   ## Set configured CRAN mirror
   && echo "options(repos = c(CRAN='$CRAN'), download.file.method = 'libcurl')" >> $(R RHOME)/etc/Rprofile.site \
   ## Use littler installation scripts
   && Rscript -e "install.packages(c('littler', 'docopt'), repos = '$CRAN')" \
-  && ln -s $(R RHOME)/site-library/littler/examples/install2.r /usr/local/bin/install2.r \
-  && ln -s $(R RHOME)/site-library/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
-  && ln -s $(R RHOME)/site-library/littler/bin/r /usr/local/bin/r \
+  && ln -s ${RLS}/littler/examples/install2.r /usr/local/bin/install2.r \
+  && ln -s ${RLS}/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
+  && ln -s ${RLS}/littler/bin/r /usr/local/bin/r \
   ## Clean up
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/*
