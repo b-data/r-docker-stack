@@ -68,6 +68,7 @@ RUN apt-get update \
     gfortran \
     libbz2-dev \
     '^libcurl[3|4]$' \
+    libdeflate-dev \
     libicu-dev \
     '^libjpeg.*-turbo.*-dev$' \
     liblapack-dev \
