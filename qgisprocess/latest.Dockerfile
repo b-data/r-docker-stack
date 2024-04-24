@@ -42,8 +42,10 @@ COPY --from=saga-gissi /usr /usr
 ## Install Orfeo Toolbox
 COPY --from=otbsi /usr/local /usr/local
 ENV GDAL_DRIVER_PATH=${OTB_VERSION:+disable} \
-    OTB_APPLICATION_PATH=${OTB_VERSION:+/usr/local/lib/otb/applications}
-ENV OTB_APPLICATION_PATH=${OTB_APPLICATION_PATH:-/usr/lib/otb/applications}
+    OTB_APPLICATION_PATH=${OTB_VERSION:+/usr/local/lib/otb/applications} \
+    OTB_INSTALL_DIR=${OTB_VERSION:+/usr/local}
+ENV OTB_APPLICATION_PATH=${OTB_APPLICATION_PATH:-/usr/lib/otb/applications} \
+    OTB_INSTALL_DIR=${OTB_INSTALL_DIR:-/usr}
 
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
@@ -131,6 +133,14 @@ RUN apt-get update \
         apt-get -y install --no-install-recommends \
           '^libopenthreads[0-9]+$' \
           libossim1; \
+      fi; \
+      ## Orfeo Toolbox: Clean up installation
+      bash -c 'rm -rf /usr/local/{otbenv.profile,recompile_bindings.sh,tools}'; \
+      if [ -f /usr/local/README ]; then \
+        mv /usr/local/README /usr/local/share/doc/otb; \
+      fi; \
+      if [ -f /usr/local/LICENSE ]; then \
+        mv /usr/local/LICENSE /usr/local/share/doc/otb; \
       fi \
     else \
       mkdir -p /usr/lib/otb; \
@@ -172,8 +182,9 @@ RUN apt-get update \
     $(which qgis_process) \
   ## Install qgisprocess, the R interface to QGIS
   && install2.r --error --skipinstalled -n $NCPUS qgisprocess \
-  ## Strip libraries of binary packages installed from PPM
-  && strip $(R RHOME)/site-library/*/libs/*.so \
+  ## Strip libraries of binary packages installed from PPPM
+  && RLS=$(Rscript -e "cat(Sys.getenv('R_LIBS_SITE'))") \
+  && strip ${RLS}/*/libs/*.so \
   ## Clean up
   && if [ ! -z "$PYTHON_VERSION" ]; then \
     apt-get -y purge python3-pip; \
@@ -193,7 +204,6 @@ RUN mkdir -p ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
   && qgis-plugin-manager init \
   && qgis-plugin-manager update \
   && qgis-plugin-manager install 'Processing Saga NextGen Provider'=="${PROC_SAGA_NG_VERSION:-0.0.7}" \
-  && rm -rf .cache_qgis_plugin_manager \
   ## QGIS: Enable plugins
   && qgis_process plugins enable processing_saga_nextgen \
   && qgis_process plugins enable grassprovider \
@@ -204,6 +214,23 @@ RUN mkdir -p ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
   && echo 'customEnvVars="append|PYTHONPATH=:/usr/lib/python3/dist-packages"' >> \
     ${qgis3Ini} \
   && echo "customEnvVarsUse=true\n" >> ${qgis3Ini} \
+  && if [ "$(uname -m)" = "x86_64" ]; then \
+    ## QGIS: Set OTB application folder and OTB folder
+    echo "\n[Processing]" >> ${qgis3Ini}; \
+    if [ -z "${OTB_VERSION}" ]; then \
+      echo "Configuration\OTB_APP_FOLDER=/usr/lib/otb/applications" >> \
+        ${qgis3Ini}; \
+      echo "Configuration\OTB_FOLDER=/usr\n" >> ${qgis3Ini}; \
+    else \
+      echo "Configuration\OTB_APP_FOLDER=/usr/local/lib/otb/applications" >> \
+        ${qgis3Ini}; \
+      echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgis3Ini}; \
+    fi; \
+    ## QGIS: Install and enable OTB plugin
+    qgis-plugin-manager install 'OrfeoToolbox Provider'; \
+    qgis_process plugins enable orfeoToolbox_provider; \
+  fi \
+  && rm -rf .cache_qgis_plugin_manager \
   ## Clean up
   && rm -rf \
     ${HOME}/.cache \

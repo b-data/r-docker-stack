@@ -33,8 +33,9 @@ RUN apt-get update \
   && install2.r --error --deps TRUE  -n $NCPUS plumber \
   ## Set up endpoint
   && echo '#* Return "hello world"\n#* @get /hello\nfunction() {\n  "hello world"\n}' > hello-world.R \
-  ## Strip libraries of binary packages installed from PPM
-  && strip $(R RHOME)/site-library/*/libs/*.so \
+  ## Strip libraries of binary packages installed from PPPM
+  && RLS=$(Rscript -e "cat(Sys.getenv('R_LIBS_SITE'))") \
+  && strip ${RLS}/*/libs/*.so \
   ## Clean up
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/*

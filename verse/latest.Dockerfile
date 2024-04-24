@@ -1,6 +1,6 @@
 ARG BUILD_ON_IMAGE=glcr.b-data.ch/r/tidyverse
 ARG R_VERSION
-ARG QUARTO_VERSION=1.4.550
+ARG QUARTO_VERSION=1.4.553
 ARG CTAN_REPO=https://mirror.ctan.org/systems/texlive/tlnet
 
 FROM ${BUILD_ON_IMAGE}:${R_VERSION}
@@ -139,8 +139,9 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   && apt-get -y autoremove \
   && apt-get -y install --no-install-recommends \
     imagemagick \
-  ## Strip libraries of binary packages installed from PPM
-  && strip $(R RHOME)/site-library/*/libs/*.so \
+  ## Strip libraries of binary packages installed from PPPM
+  && RLS=$(Rscript -e "cat(Sys.getenv('R_LIBS_SITE'))") \
+  && strip ${RLS}/*/libs/*.so \
   ## Clean up
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/* \

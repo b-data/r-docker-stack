@@ -13,11 +13,6 @@ FROM glcr.b-data.ch/python/psi${PYTHON_VERSION:+/}${PYTHON_VERSION:-:none}${PYTH
 
 FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG}
 
-LABEL org.opencontainers.image.licenses="MIT" \
-      org.opencontainers.image.source="https://gitlab.b-data.ch/r/docker-stack" \
-      org.opencontainers.image.vendor="b-data GmbH" \
-      org.opencontainers.image.authors="Olivier Benz <olivier.benz@b-data.ch>"
-
 ARG DEBIAN_FRONTEND=noninteractive
 
 ARG BASE_IMAGE
@@ -30,6 +25,17 @@ ARG R_VERSION
 ARG PYTHON_VERSION
 ARG CRAN
 ARG BUILD_START
+
+ARG CUDA_IMAGE_LICENSE=${CUDA_IMAGE:+"NVIDIA Deep Learning Container License"}
+ARG IMAGE_LICENSE=${CUDA_IMAGE_LICENSE:-"MIT"}
+ARG IMAGE_SOURCE=https://gitlab.b-data.ch/r/docker-stack
+ARG IMAGE_VENDOR="b-data GmbH"
+ARG IMAGE_AUTHORS="Olivier Benz <olivier.benz@b-data.ch>"
+
+LABEL org.opencontainers.image.licenses="$IMAGE_LICENSE" \
+      org.opencontainers.image.source="$IMAGE_SOURCE" \
+      org.opencontainers.image.vendor="$IMAGE_VENDOR" \
+      org.opencontainers.image.authors="$IMAGE_AUTHORS"
 
 ENV BASE_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
     CUDA_IMAGE=${CUDA_IMAGE}${CUDA_IMAGE:+:}${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG} \
@@ -58,7 +64,6 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     build-essential \
     ca-certificates \
-    fonts-texgyre \
     g++ \
     gfortran \
     libbz2-dev \
@@ -82,6 +87,7 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     bash-completion \
     file \
+    fonts-texgyre \
     gsfonts \
     locales \
     tzdata \
@@ -97,14 +103,15 @@ RUN apt-get update \
   && locale-gen \
   && update-locale LANG=$LANG \
   ## Add directory for site-library
-  && mkdir -p $(R RHOME)/site-library \
+  && RLS=$(Rscript -e "cat(Sys.getenv('R_LIBS_SITE'))") \
+  && mkdir -p ${RLS} \
   ## Set configured CRAN mirror
   && echo "options(repos = c(CRAN='$CRAN'), download.file.method = 'libcurl')" >> $(R RHOME)/etc/Rprofile.site \
   ## Use littler installation scripts
   && Rscript -e "install.packages(c('littler', 'docopt'), repos = '$CRAN')" \
-  && ln -s $(R RHOME)/site-library/littler/examples/install2.r /usr/local/bin/install2.r \
-  && ln -s $(R RHOME)/site-library/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
-  && ln -s $(R RHOME)/site-library/littler/bin/r /usr/local/bin/r \
+  && ln -s ${RLS}/littler/examples/install2.r /usr/local/bin/install2.r \
+  && ln -s ${RLS}/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
+  && ln -s ${RLS}/littler/bin/r /usr/local/bin/r \
   ## Clean up
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/*

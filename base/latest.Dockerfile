@@ -3,7 +3,7 @@ ARG BASE_IMAGE_TAG=12
 ARG BUILD_ON_IMAGE=glcr.b-data.ch/r/ver
 ARG R_VERSION
 ARG GIT_VERSION=2.44.0
-ARG GIT_LFS_VERSION=3.4.1
+ARG GIT_LFS_VERSION=3.5.1
 ARG PANDOC_VERSION=3.1.11
 
 FROM glcr.b-data.ch/git/gsi/${GIT_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as gsi
@@ -140,23 +140,17 @@ RUN apt-get update \
     echo "$(which radian) \"\${@}\"" >> $(which radian)_; \
   fi \
   ## Install httpgd
-  ## Archived on 2024-01-24 as check problems were not corrected in time.
-  && install2.r --error --skipinstalled -n $NCPUS \
-    later \
-    systemfonts \
-    cpp11 \
-    BH \
-  && curl -sLO https://cran.r-project.org/src/contrib/Archive/httpgd/httpgd_1.3.1.tar.gz \
-  && R CMD INSTALL httpgd_1.3.1.tar.gz \
-  && rm httpgd_1.3.1.tar.gz \
+  && install2.r --error --deps TRUE --skipinstalled -n $NCPUS \
+    httpgd \
   ## Get rid of libcairo2-dev
   && apt-get -y purge libcairo2-dev \
   ## Get rid of libtiff-dev
   && apt-get -y purge libtiff-dev \
   ## and their dependencies (incl. python3)
   && apt-get -y autoremove \
-  ## Strip libraries of binary packages installed from PPM
-  && strip $(R RHOME)/site-library/*/libs/*.so \
+  ## Strip libraries of binary packages installed from PPPM
+  && RLS=$(Rscript -e "cat(Sys.getenv('R_LIBS_SITE'))") \
+  && strip ${RLS}/*/libs/*.so \
   ## Clean up
   && rm -rf /tmp/* \
     /var/lib/apt/lists/* \
