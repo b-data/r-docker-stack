@@ -1,4 +1,4 @@
-# CUDA-enabled R docker stack
+# CUDA-based R docker stack
 
 GPU accelerated, multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
 
