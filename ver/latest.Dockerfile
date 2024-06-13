@@ -90,6 +90,7 @@ RUN apt-get update \
     file \
     fonts-texgyre \
     gsfonts \
+    libxt6 \
     locales \
     tzdata \
   ## Switch BLAS/LAPACK (manual mode)
