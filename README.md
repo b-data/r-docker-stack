@@ -1,7 +1,7 @@
 [![minimal-readme compliant](https://img.shields.io/badge/readme%20style-minimal-brightgreen.svg)](https://github.com/RichardLitt/standard-readme/blob/master/example-readmes/minimal-readme.md) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) <a href="https://liberapay.com/benz0li/donate"><img src="https://liberapay.com/assets/widgets/donate.svg" alt="Donate using Liberapay" height="20"></a>
 
-| See the [CUDA-enabled R docker stack](CUDA.md) for GPU accelerated docker images. |
-|-----------------------------------------------------------------------------------|
+| See the [CUDA-based R docker stack](CUDA.md) for GPU accelerated docker images. |
+|---------------------------------------------------------------------------------|
 
 # R docker stack
 
@@ -75,8 +75,8 @@ To install docker, follow the instructions for your platform:
 
 ```bash
 docker build \
-  --build-arg R_VERSION=4.3.3 \
-  --build-arg PYTHON_VERSION=3.11.9 \
+  --build-arg R_VERSION=4.4.0 \
+  --build-arg PYTHON_VERSION=3.12.4 \
   -t r/ver \
   -f ver/latest.Dockerfile .
 ```
@@ -127,4 +127,6 @@ This project follows the
 
 ## License
 
-[MIT](LICENSE) © 2020 b-data GmbH
+Copyright © 2020 b-data GmbH
+
+Distributed under the terms of the [MIT License](LICENSE).

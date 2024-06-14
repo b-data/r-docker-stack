@@ -1,6 +1,6 @@
 ARG BUILD_ON_IMAGE=glcr.b-data.ch/r/tidyverse
 ARG R_VERSION
-ARG QUARTO_VERSION=1.4.553
+ARG QUARTO_VERSION=1.4.555
 ARG CTAN_REPO=https://mirror.ctan.org/systems/texlive/tlnet
 
 FROM ${BUILD_ON_IMAGE}:${R_VERSION}
@@ -46,6 +46,8 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     librsvg2-bin \
     qpdf \
     texinfo \
+    ## Python: For h5py wheels (arm64)
+    libhdf5-dev \
   ## Install R package redland
   && install2.r --error --skipinstalled -n $NCPUS redland \
   ## Explicitly install runtime library sub-deps of librdf0-dev
@@ -122,10 +124,6 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     rticles \
     rJava \
     xaringan \
-  ## Install rmdshower
-  ## Archived on 2023-08-18 as email to the maintainer is undeliverable.
-  && curl -sLO https://cran.r-project.org/src/contrib/Archive/rmdshower/rmdshower_2.1.1.tar.gz \
-  && R CMD INSTALL rmdshower_2.1.1.tar.gz \
   ## Install Cairo: R Graphics Device using Cairo Graphics Library
   ## Install magick: Advanced Graphics and Image-Processing in R
   && install2.r --error --skipinstalled -n $NCPUS \

@@ -20,7 +20,6 @@ RUN apt-get update \
     libgeos-dev \
     libgsl0-dev \
     libhdf4-alt-dev \
-    libhdf5-dev \
     libjq-dev \
     libproj-dev \
     libprotobuf-dev \
