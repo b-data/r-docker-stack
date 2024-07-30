@@ -92,6 +92,7 @@ RUN apt-get update \
     gsfonts \
     libxt6 \
     locales \
+    netbase \
     tzdata \
   ## Switch BLAS/LAPACK (manual mode)
   && if [ ${BLAS} = "libopenblas-dev" ]; then \
