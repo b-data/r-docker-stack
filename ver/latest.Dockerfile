@@ -56,10 +56,11 @@ COPY --from=psi /usr/local /usr/local
 
 RUN apt-get update \
   ## Copy script checkbashisms from package devscripts
-  && apt-get install -y --no-install-recommends devscripts \
+  && apt-get download devscripts \
+  && dpkg --force-depends --install devscripts*.deb \
   && cp -a /usr/bin/checkbashisms /usr/local/bin/checkbashisms \
-  && apt-get remove -y --purge devscripts \
-  && apt-get autoremove -y \
+  && dpkg --purge devscripts \
+  && rm devscripts*.deb \
   ## Install R runtime dependencies
   && apt-get install -y --no-install-recommends \
     build-essential \
