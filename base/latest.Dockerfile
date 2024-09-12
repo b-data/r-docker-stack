@@ -150,13 +150,10 @@ RUN apt-get update \
   ## Install httpgd
   && install2.r --error --deps TRUE --skipinstalled -n $NCPUS \
     httpgd \
-  ## Get rid of libcairo2-dev
+  ## Get rid of libcairo2-dev and its dependencies (incl. python3)
   && apt-get -y purge libcairo2-dev \
-  ## Get rid of libtiff-dev
-  && apt-get -y purge libtiff-dev \
-  ## and their dependencies (incl. python3)
   && apt-get -y autoremove \
-  ## Strip libraries of binary packages installed from PPPM
+  ## Strip libraries of binary packages installed from P3M
   && RLS=$(Rscript -e "cat(Sys.getenv('R_LIBS_SITE'))") \
   && strip ${RLS}/*/libs/*.so \
   ## Clean up
