@@ -2,10 +2,12 @@ ARG BASE_IMAGE=debian
 ARG BASE_IMAGE_TAG=12
 ARG BUILD_ON_IMAGE=glcr.b-data.ch/r/ver
 ARG R_VERSION
-ARG GIT_VERSION=2.45.2
+ARG NEOVIM_VERSION=0.10.2
+ARG GIT_VERSION=2.47.0
 ARG GIT_LFS_VERSION=3.5.1
-ARG PANDOC_VERSION=3.1.11
+ARG PANDOC_VERSION=3.2
 
+FROM glcr.b-data.ch/neovim/nvsi:${NEOVIM_VERSION} AS nvsi
 FROM glcr.b-data.ch/git/gsi/${GIT_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as gsi
 FROM glcr.b-data.ch/git-lfs/glfsi:${GIT_LFS_VERSION} as glfsi
 
@@ -16,12 +18,14 @@ ARG NCPUS=1
 ARG DEBIAN_FRONTEND=noninteractive
 
 ARG BUILD_ON_IMAGE
+ARG NEOVIM_VERSION
 ARG GIT_VERSION
 ARG GIT_LFS_VERSION
 ARG PANDOC_VERSION
 ARG BUILD_START
 
 ENV PARENT_IMAGE=${BUILD_ON_IMAGE}:${R_VERSION} \
+    NEOVIM_VERSION=${NEOVIM_VERSION} \
     GIT_VERSION=${GIT_VERSION} \
     GIT_LFS_VERSION=${GIT_LFS_VERSION} \
     PANDOC_VERSION=${PANDOC_VERSION} \
@@ -34,6 +38,8 @@ ENV DOWNLOAD_STATIC_LIBV8=1
 ## Disable prompt to install miniconda
 ENV RETICULATE_MINICONDA_ENABLED=0
 
+## Install Neovim
+COPY --from=nvsi /usr/local /usr/local
 ## Install Git
 COPY --from=gsi /usr/local /usr/local
 ## Install Git LFS
@@ -67,6 +73,8 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     vim-tiny \
     wget \
     zsh \
+    ## Neovim: Additional runtime recommendations
+    ripgrep \
     ## Git: Additional runtime dependencies
     libcurl3-gnutls \
     liberror-perl \
@@ -92,12 +100,10 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     done; \
   else \
     ## Force update pip, setuptools and wheel
-    curl -sLO https://bootstrap.pypa.io/get-pip.py; \
-    python get-pip.py \
+    pip install --upgrade --force-reinstall \
       pip \
       setuptools \
       wheel; \
-    rm get-pip.py; \
   fi \
   ## Git: Set default branch name to main
   && git config --system init.defaultBranch main \
@@ -142,13 +148,10 @@ RUN apt-get update \
   ## Install httpgd
   && install2.r --error --deps TRUE --skipinstalled -n $NCPUS \
     httpgd \
-  ## Get rid of libcairo2-dev
+  ## Get rid of libcairo2-dev and its dependencies (incl. python3)
   && apt-get -y purge libcairo2-dev \
-  ## Get rid of libtiff-dev
-  && apt-get -y purge libtiff-dev \
-  ## and their dependencies (incl. python3)
   && apt-get -y autoremove \
-  ## Strip libraries of binary packages installed from PPPM
+  ## Strip libraries of binary packages installed from P3M
   && RLS=$(Rscript -e "cat(Sys.getenv('R_LIBS_SITE'))") \
   && strip ${RLS}/*/libs/*.so \
   ## Clean up

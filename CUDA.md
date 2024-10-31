@@ -67,10 +67,10 @@ docker build \
   --build-arg BASE_IMAGE=ubuntu \
   --build-arg BASE_IMAGE_TAG=22.04 \
   --build-arg CUDA_IMAGE=nvidia/cuda \
-  --build-arg CUDA_VERSION=12.5.0 \
+  --build-arg CUDA_VERSION=12.6.2 \
   --build-arg CUDA_IMAGE_SUBTAG=runtime-ubuntu22.04 \
-  --build-arg R_VERSION=4.4.0 \
-  --build-arg PYTHON_VERSION=3.12.4 \
+  --build-arg R_VERSION=4.4.1 \
+  --build-arg PYTHON_VERSION=3.12.7 \
   -t cuda/r/ver \
   -f ver/latest.Dockerfile .
 ```
@@ -82,8 +82,8 @@ docker build \
   --build-arg BUILD_ON_IMAGE=cuda/r/ver \
   --build-arg CUDNN_VERSION=8.9.7.29 \
   --build-arg CUDNN_CUDA_VERSION_MAJ_MIN=12.2 \
-  --build-arg LIBNVINFER_VERSION=10.0.1.6 \
-  --build-arg LIBNVINFER_CUDA_VERSION_MAJ_MIN=12.4 \
+  --build-arg LIBNVINFER_VERSION=10.5.0.18 \
+  --build-arg LIBNVINFER_CUDA_VERSION_MAJ_MIN=12.6 \
   --build-arg CUDA_IMAGE_FLAVOR=runtime \
   -t cuda/r/ver \
   -f cuda/latest.Dockerfile .

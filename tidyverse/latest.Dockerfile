@@ -24,7 +24,6 @@ RUN apt-get update \
     libsasl2-dev \
     libsqlite3-dev \
     libssh2-1-dev \
-    libtiff-dev \
     libxtst6 \
     unixodbc-dev \
   && install2.r --error --skipinstalled -n $NCPUS BiocManager \

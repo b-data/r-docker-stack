@@ -54,6 +54,7 @@ and any configuration thereof.
 * [Install](#install)
 * [Usage](#usage)
 * [Contributing](#contributing)
+* [Support](#support)
 * [License](#license)
 
 ## Prerequisites
@@ -75,8 +76,8 @@ To install docker, follow the instructions for your platform:
 
 ```bash
 docker build \
-  --build-arg R_VERSION=4.4.0 \
-  --build-arg PYTHON_VERSION=3.12.4 \
+  --build-arg R_VERSION=4.4.1 \
+  --build-arg PYTHON_VERSION=3.12.7 \
   -t r/ver \
   -f ver/latest.Dockerfile .
 ```
@@ -124,6 +125,13 @@ PRs accepted.
 This project follows the
 [Contributor Covenant](https://www.contributor-covenant.org)
 [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## Support
+
+Community support: Open a new discussion
+[here](https://github.com/orgs/b-data/discussions).
+
+Commercial support: Contact b-data by [email](mailto:support@b-data.ch).
 
 ## License
 
