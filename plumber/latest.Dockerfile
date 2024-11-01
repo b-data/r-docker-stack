@@ -29,6 +29,10 @@ RUN apt-get update \
     libxml2-dev \
     sqlite3 \
     zlib1g-dev \
+  ## Rcpp 1.0.13 build error with R 4.4.2 (VECTOR_PTR_RO)
+  ## https://github.com/RcppCore/Rcpp/issues/1341
+  && install2.r --error --skipinstalled -n $NCPUS remotes \
+  && Rscript -e "remotes::install_github('RcppCore/Rcpp', ref = '3ae789b', upgrade = 'never')" \
   ## Install plumber
   && install2.r --error --deps TRUE  -n $NCPUS plumber \
   ## Set up endpoint
