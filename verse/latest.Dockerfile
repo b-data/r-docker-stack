@@ -145,6 +145,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   ## and their dependencies (incl. python3)
   && apt-get -y autoremove \
   && apt-get -y install --no-install-recommends \
+    '^libmagick\+\+-6.q16-[0-9]+$' \
     imagemagick \
   ## Strip libraries of binary packages installed from PPPM
   && RLS=$(Rscript -e "cat(Sys.getenv('R_LIBS_SITE'))") \
