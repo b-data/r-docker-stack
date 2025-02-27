@@ -146,8 +146,13 @@ RUN apt-get update \
     echo "$(which radian) \"\${@}\"" >> $(which radian)_; \
   fi \
   ## Install httpgd
-  && install2.r --error --deps TRUE --skipinstalled -n $NCPUS \
-    httpgd \
+  ## Archived on 2025-02-14 as requires archived package 'unigd'.
+  && install2.r --error --skipinstalled -n $NCPUS \
+    unigd \
+    AsioHeaders \
+  && curl -sLO https://cran.r-project.org/src/contrib/Archive/httpgd/httpgd_2.0.2.tar.gz \
+  && R CMD INSTALL httpgd_2.0.2.tar.gz \
+  && rm httpgd_2.0.2.tar.gz \
   ## Get rid of libcairo2-dev and its dependencies (incl. python3)
   && apt-get -y purge libcairo2-dev \
   && apt-get -y autoremove \
