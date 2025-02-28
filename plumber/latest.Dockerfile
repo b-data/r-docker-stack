@@ -20,6 +20,7 @@ RUN apt-get update \
     cmake \
     curl \
     libcurl4-openssl-dev \
+    libfontconfig1-dev \
     libgdal-dev \
     libgeos-dev \
     libproj-dev \
