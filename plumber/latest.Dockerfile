@@ -21,6 +21,8 @@ RUN apt-get update \
     curl \
     libcurl4-openssl-dev \
     libfontconfig1-dev \
+    libfribidi-dev \
+    libharfbuzz-dev \
     libgdal-dev \
     libgeos-dev \
     libproj-dev \
