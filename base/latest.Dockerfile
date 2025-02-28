@@ -2,10 +2,10 @@ ARG BASE_IMAGE=debian
 ARG BASE_IMAGE_TAG=12
 ARG BUILD_ON_IMAGE=glcr.b-data.ch/r/ver
 ARG R_VERSION
-ARG NEOVIM_VERSION=0.10.2
-ARG GIT_VERSION=2.47.0
-ARG GIT_LFS_VERSION=3.5.1
-ARG PANDOC_VERSION=3.2
+ARG NEOVIM_VERSION=0.10.4
+ARG GIT_VERSION=2.48.1
+ARG GIT_LFS_VERSION=3.6.1
+ARG PANDOC_VERSION=3.4
 
 FROM glcr.b-data.ch/neovim/nvsi:${NEOVIM_VERSION} AS nvsi
 FROM glcr.b-data.ch/git/gsi/${GIT_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as gsi
@@ -146,8 +146,13 @@ RUN apt-get update \
     echo "$(which radian) \"\${@}\"" >> $(which radian)_; \
   fi \
   ## Install httpgd
-  && install2.r --error --deps TRUE --skipinstalled -n $NCPUS \
-    httpgd \
+  ## Archived on 2025-02-14 as requires archived package 'unigd'.
+  && install2.r --error --skipinstalled -n $NCPUS \
+    unigd \
+    AsioHeaders \
+  && curl -sLO https://cran.r-project.org/src/contrib/Archive/httpgd/httpgd_2.0.2.tar.gz \
+  && R CMD INSTALL httpgd_2.0.2.tar.gz \
+  && rm httpgd_2.0.2.tar.gz \
   ## Get rid of libcairo2-dev and its dependencies (incl. python3)
   && apt-get -y purge libcairo2-dev \
   && apt-get -y autoremove \

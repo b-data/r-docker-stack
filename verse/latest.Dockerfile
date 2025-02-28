@@ -1,6 +1,6 @@
 ARG BUILD_ON_IMAGE=glcr.b-data.ch/r/tidyverse
 ARG R_VERSION
-ARG QUARTO_VERSION=1.5.57
+ARG QUARTO_VERSION=1.6.42
 ARG CTAN_REPO=https://mirror.ctan.org/systems/texlive/tlnet
 
 FROM ${BUILD_ON_IMAGE}:${R_VERSION}
@@ -67,6 +67,9 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   && mkdir -p /opt/quarto \
   && tar -xzf quarto-${QUARTO_VERSION}-linux-${dpkgArch}.tar.gz -C /opt/quarto --no-same-owner --strip-components=1 \
   && rm quarto-${QUARTO_VERSION}-linux-${dpkgArch}.tar.gz \
+  ## Exempt quarto from address space limit
+  && sed -i 's/"${QUARTO_DENO}"/prlimit -v=unlimited: "${QUARTO_DENO}"/g' \
+    /opt/quarto/bin/quarto \
   ## Remove quarto pandoc
   && rm /opt/quarto/bin/tools/$(uname -m)/pandoc \
   ## Link to system pandoc
@@ -142,6 +145,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   ## and their dependencies (incl. python3)
   && apt-get -y autoremove \
   && apt-get -y install --no-install-recommends \
+    '^libmagick\+\+-6.q16-[0-9]+$' \
     imagemagick \
   ## Strip libraries of binary packages installed from PPPM
   && RLS=$(Rscript -e "cat(Sys.getenv('R_LIBS_SITE'))") \
