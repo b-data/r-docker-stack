@@ -81,6 +81,7 @@ RUN apt-get update \
     libpng-dev \
     libreadline-dev \
     '^libtiff[5|6]$' \
+    libzstd-dev \
     pkg-config \
     unzip \
     zip \
