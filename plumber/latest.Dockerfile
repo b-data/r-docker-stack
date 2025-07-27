@@ -17,7 +17,6 @@ WORKDIR /usr/src
 
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
-    cmake \
     curl \
     libcurl4-openssl-dev \
     libfontconfig1-dev \
