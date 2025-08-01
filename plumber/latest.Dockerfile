@@ -31,6 +31,10 @@ RUN apt-get update \
     libxml2-dev \
     sqlite3 \
     zlib1g-dev \
+  ## Install arrow
+  && install2.r --error --deps TRUE  -n $NCPUS arrow \
+  ## Install cmake
+  && apt-get -y install --no-install-recommends cmake \
   ## Install plumber
   && install2.r --error --deps TRUE  -n $NCPUS plumber \
   ## Set up endpoint
