@@ -25,6 +25,7 @@ RUN apt-get update \
     libgdal-dev \
     libgeos-dev \
     libproj-dev \
+    libabsl-dev \
     libsodium-dev \
     libssl-dev \
     libudunits2-dev \
