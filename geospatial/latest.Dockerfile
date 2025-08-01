@@ -24,6 +24,7 @@ RUN apt-get update \
     libproj-dev \
     libprotobuf-dev \
     libnetcdf-dev \
+    libabsl-dev \
     libudunits2-dev \
     nco \
     netcdf-bin \
