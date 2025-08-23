@@ -5,13 +5,6 @@ ARG CUDNN_CUDA_VERSION_MAJ_MIN
 ARG CUDNN_CUDA_VERSION_MAJ_MIN_AMD64=${CUDNN_CUDA_VERSION_MAJ_MIN}
 ARG CUDNN_CUDA_VERSION_MAJ_MIN_ARM64=${CUDNN_CUDA_VERSION_MAJ_MIN}
 
-ARG LIBNVINFER_VERSION
-ARG LIBNVINFER_VERSION_AMD64=${LIBNVINFER_VERSION}
-ARG LIBNVINFER_VERSION_ARM64=${LIBNVINFER_VERSION}
-ARG LIBNVINFER_CUDA_VERSION_MAJ_MIN
-ARG LIBNVINFER_CUDA_VERSION_MAJ_MIN_AMD64=${LIBNVINFER_CUDA_VERSION_MAJ_MIN}
-ARG LIBNVINFER_CUDA_VERSION_MAJ_MIN_ARM64=${LIBNVINFER_CUDA_VERSION_MAJ_MIN}
-
 ARG BUILD_ON_IMAGE
 ARG CUDNN_VERSION_MAJ=${CUDNN_VERSION%%.*}
 ARG CUDNN_VERSION_MAJ=${CUDNN_VERSION_MAJ:-${CUDNN_VERSION_AMD64%%.*}}
@@ -106,10 +99,13 @@ LABEL com.nvidia.cudnn.version="${CUDNN_VERSION_AMD64}"
 ENV CUDNN_VERSION=${CUDNN_VERSION_AMD64}
 ENV NV_CUDNN_PACKAGE_VERSION=${CUDNN_VERSION_AMD64}
 ENV NV_CUDNN_DEV_PACKAGE_VERSION=${CUDNN_VERSION_AMD64}
+ENV NV_CUDNN_HEADERS_PACKAGE_VERSION=${CUDNN_VERSION_AMD64}
 ENV NV_CUDNN_PACKAGE_NAME=libcudnn${NV_CUDNN_PACKAGE_VERSION%%.*}-cuda-${CUDNN_CUDA_VERSION_MAJ_MIN_AMD64%%.*}
 ENV NV_CUDNN_DEV_PACKAGE_NAME=libcudnn${NV_CUDNN_DEV_PACKAGE_VERSION%%.*}-dev-cuda-${CUDNN_CUDA_VERSION_MAJ_MIN_AMD64%%.*}
+ENV NV_CUDNN_HEADERS_PACKAGE_NAME=libcudnn${NV_CUDNN_HEADERS_PACKAGE_VERSION%%.*}-headers-cuda-${CUDNN_CUDA_VERSION_MAJ_MIN_AMD64%%.*}
 ENV NV_CUDNN_PACKAGE="${NV_CUDNN_PACKAGE_NAME}=${NV_CUDNN_PACKAGE_VERSION}-1"
 ENV NV_CUDNN_DEV_PACKAGE="${NV_CUDNN_DEV_PACKAGE_NAME}=${NV_CUDNN_DEV_PACKAGE_VERSION}-1"
+ENV NV_CUDNN_HEADERS_PACKAGE="${NV_CUDNN_HEADERS_PACKAGE_NAME}=${NV_CUDNN_HEADERS_PACKAGE_VERSION}-1"
 
 FROM ${BUILD_ON_IMAGE} AS cudnn9-devel-arm64
 
@@ -121,19 +117,17 @@ LABEL com.nvidia.cudnn.version="${CUDNN_VERSION_ARM64}"
 ENV CUDNN_VERSION=${CUDNN_VERSION_ARM64}
 ENV NV_CUDNN_PACKAGE_VERSION=${CUDNN_VERSION_ARM64}
 ENV NV_CUDNN_DEV_PACKAGE_VERSION=${CUDNN_VERSION_ARM64}
+ENV NV_CUDNN_HEADERS_PACKAGE_VERSION=${CUDNN_VERSION_ARM64}
 ENV NV_CUDNN_PACKAGE_NAME=libcudnn${NV_CUDNN_PACKAGE_VERSION%%.*}-cuda-${CUDNN_CUDA_VERSION_MAJ_MIN_ARM64%%.*}
 ENV NV_CUDNN_DEV_PACKAGE_NAME=libcudnn${NV_CUDNN_DEV_PACKAGE_VERSION%%.*}-dev-cuda-${CUDNN_CUDA_VERSION_MAJ_MIN_ARM64%%.*}
+ENV NV_CUDNN_HEADERS_PACKAGE_NAME=libcudnn${NV_CUDNN_HEADERS_PACKAGE_VERSION%%.*}-headers-cuda-${CUDNN_CUDA_VERSION_MAJ_MIN_ARM64%%.*}
 ENV NV_CUDNN_PACKAGE="${NV_CUDNN_PACKAGE_NAME}=${NV_CUDNN_PACKAGE_VERSION}-1"
 ENV NV_CUDNN_DEV_PACKAGE="${NV_CUDNN_DEV_PACKAGE_NAME}=${NV_CUDNN_DEV_PACKAGE_VERSION}-1"
+ENV NV_CUDNN_HEADERS_PACKAGE="${NV_CUDNN_HEADERS_PACKAGE_NAME}=${NV_CUDNN_HEADERS_PACKAGE_VERSION}-1"
 
 FROM cudnn${CUDNN_VERSION_MAJ}-${CUDA_IMAGE_FLAVOR}-${TARGETARCH}
 
 ARG DEBIAN_FRONTEND=noninteractive
-
-ARG LIBNVINFER_VERSION_AMD64
-ARG LIBNVINFER_VERSION_ARM64
-ARG LIBNVINFER_CUDA_VERSION_MAJ_MIN_AMD64
-ARG LIBNVINFER_CUDA_VERSION_MAJ_MIN_ARM64
 
 ARG CUDA_HOME=/usr/local/cuda
 ARG NVBLAS_CONFIG_FILE=/etc/nvblas.conf
@@ -144,7 +138,6 @@ ARG BUILD_START
 
 ENV CUDA_HOME=${CUDA_HOME} \
     NVBLAS_CONFIG_FILE=${NVBLAS_CONFIG_FILE} \
-    LD_LIBRARY_PATH=${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${CUDA_HOME}/lib:${CUDA_HOME}/lib64${CUPTI_AVAILABLE:+:${CUDA_HOME}/extras/CUPTI/lib64} \
     BUILD_DATE=${BUILD_START}
 
 RUN cpuBlasLib="$(update-alternatives --query \
@@ -190,64 +183,11 @@ RUN cpuBlasLib="$(update-alternatives --query \
   && apt-get -y install --no-install-recommends \
     ${NV_CUDNN_PACKAGE} \
     ${NV_CUDNN_DEV_PACKAGE} \
+    ${NV_CUDNN_HEADERS_PACKAGE} \
   ## Keep apt from auto upgrading the cuDNN packages
   && apt-mark hold \
     ${NV_CUDNN_PACKAGE_NAME} \
     ${NV_CUDNN_DEV_PACKAGE_NAME} \
-  ## Install TensorRT
-  && case "$dpkgArch" in \
-    amd64) LIBNVINFER_VERSION=$LIBNVINFER_VERSION_AMD64 LIBNVINFER_CUDA_VERSION_MAJ_MIN=$LIBNVINFER_CUDA_VERSION_MAJ_MIN_AMD64 ;; \
-    arm64) LIBNVINFER_VERSION=$LIBNVINFER_VERSION_ARM64 LIBNVINFER_CUDA_VERSION_MAJ_MIN=$LIBNVINFER_CUDA_VERSION_MAJ_MIN_ARM64 ;; \
-    *) echo "error: Architecture $dpkgArch unsupported"; exit 1 ;; \
-  esac \
-  ## Install development libraries and headers
-  ## if devel-flavor of CUDA image is used
-  && if [ ${CUDA_IMAGE_FLAVOR} = "devel" ]; then \
-    dev="-dev"; \
-    if dpkg --compare-versions ${LIBNVINFER_VERSION} gt "8.6"; then \
-      headers="-headers"; \
-    fi; \
-  fi \
-  && LIBNVINFER_VERSION_MAJ=${LIBNVINFER_VERSION%%.*} \
-  && CUDA_VERSION_MAJ_MIN=${LIBNVINFER_CUDA_VERSION_MAJ_MIN:-${CUDA_VERSION%.*}} \
-  && apt-get -y install --no-install-recommends \
-    libnvinfer${LIBNVINFER_VERSION_MAJ}=${LIBNVINFER_VERSION}-1+cuda${CUDA_VERSION_MAJ_MIN} \
-    libnvinfer${dev:-${LIBNVINFER_VERSION_MAJ}}=${LIBNVINFER_VERSION}-1+cuda${CUDA_VERSION_MAJ_MIN} \
-    libnvinfer${headers}${dev:-${LIBNVINFER_VERSION_MAJ}}=${LIBNVINFER_VERSION}-1+cuda${CUDA_VERSION_MAJ_MIN} \
-    libnvinfer-plugin${LIBNVINFER_VERSION_MAJ}=${LIBNVINFER_VERSION}-1+cuda${CUDA_VERSION_MAJ_MIN} \
-    libnvinfer-plugin${dev:-${LIBNVINFER_VERSION_MAJ}}=${LIBNVINFER_VERSION}-1+cuda${CUDA_VERSION_MAJ_MIN} \
-    libnvinfer${headers}-plugin${dev:-${LIBNVINFER_VERSION_MAJ}}=${LIBNVINFER_VERSION}-1+cuda${CUDA_VERSION_MAJ_MIN} \
-  ## Keep apt from auto upgrading the libnvinfer packages
-  && apt-mark hold \
-    libnvinfer${LIBNVINFER_VERSION_MAJ} \
-    libnvinfer${dev:-${LIBNVINFER_VERSION_MAJ}} \
-    libnvinfer${headers}${dev:-${LIBNVINFER_VERSION_MAJ}} \
-    libnvinfer-plugin${LIBNVINFER_VERSION_MAJ} \
-    libnvinfer-plugin${dev:-${LIBNVINFER_VERSION_MAJ}} \
-    libnvinfer${headers}-plugin${dev:-${LIBNVINFER_VERSION_MAJ}} \
-  ## Create symlink when only newer TensorRT libraries are available
-  && trtRunLib=$(ls -d /usr/lib/$(uname -m)-linux-gnu/* | \
-    grep 'libnvinfer.so.[0-9]\+$') \
-  && trtPluLib=$(ls -d /usr/lib/$(uname -m)-linux-gnu/* | \
-    grep 'libnvinfer_plugin.so.[0-9]\+$') \
-  && if [ "$(echo $trtRunLib | sed -n 's/.*.so.\([0-9]\+\)/\1/p')" -gt "8" ]; then \
-    ## TensorFlow versions < 2.18 expect TensorRT libraries version 8.6.1/8.6.2
-    if [ "$dpkgArch" = "amd64" ]; then \
-      ln -rs $trtRunLib /usr/lib/$(uname -m)-linux-gnu/libnvinfer.so.8.6.1; \
-      ln -rs $trtPluLib /usr/lib/$(uname -m)-linux-gnu/libnvinfer_plugin.so.8.6.1; \
-    fi; \
-    if [ "$dpkgArch" = "arm64" ]; then \
-      ln -rs $trtRunLib /usr/lib/$(uname -m)-linux-gnu/libnvinfer.so.8.6.2; \
-      ln -rs $trtPluLib /usr/lib/$(uname -m)-linux-gnu/libnvinfer_plugin.so.8.6.2; \
-    fi; \
-    ## TensorFlow versions < 2.15 expect TensorRT libraries version 8
-    ln -rs $trtRunLib /usr/lib/$(uname -m)-linux-gnu/libnvinfer.so.8; \
-    ln -rs $trtPluLib /usr/lib/$(uname -m)-linux-gnu/libnvinfer_plugin.so.8; \
-  fi \
-  && if [ "$(echo $trtRunLib | sed -n 's/.*.so.\([0-9]\+\)/\1/p')" -gt "7" ]; then \
-    ## TensorFlow versions < 2.12 expect TensorRT libraries version 7
-    ln -rs $trtRunLib /usr/lib/$(uname -m)-linux-gnu/libnvinfer.so.7; \
-    ln -rs $trtPluLib /usr/lib/$(uname -m)-linux-gnu/libnvinfer_plugin.so.7; \
-  fi \
+    ${NV_CUDNN_HEADERS_PACKAGE_NAME} \
   ## Clean up
   && rm -rf /var/lib/apt/lists/*
