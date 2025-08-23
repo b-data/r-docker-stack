@@ -27,6 +27,7 @@ RUN apt-get update \
     libproj-dev \
     libsodium-dev \
     libssl-dev \
+    libtool \
     libudunits2-dev \
     libxml2-dev \
     sqlite3 \
