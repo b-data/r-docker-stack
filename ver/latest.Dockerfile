@@ -70,6 +70,8 @@ RUN apt-get update \
     libbz2-dev \
     '^libcurl[3|4]$' \
     libdeflate-dev \
+    libffi-dev \
+    libgdbm-dev \
     libicu-dev \
     '^libjpeg.*-turbo.*-dev$' \
     liblapack-dev \
