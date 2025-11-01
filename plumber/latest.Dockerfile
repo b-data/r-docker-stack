@@ -17,7 +17,6 @@ WORKDIR /usr/src
 
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
-    cmake \
     curl \
     libcurl4-openssl-dev \
     libfontconfig1-dev \
@@ -28,10 +27,15 @@ RUN apt-get update \
     libproj-dev \
     libsodium-dev \
     libssl-dev \
+    libtool \
     libudunits2-dev \
     libxml2-dev \
     sqlite3 \
     zlib1g-dev \
+  ## Install arrow
+  && install2.r --error --deps TRUE  -n $NCPUS arrow \
+  ## Install cmake
+  && apt-get -y install --no-install-recommends cmake \
   ## Install plumber
   && install2.r --error --deps TRUE  -n $NCPUS plumber \
   ## Set up endpoint

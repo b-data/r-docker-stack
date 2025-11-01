@@ -1,18 +1,23 @@
-.env:
-  variables:
-    R_VERSION: "4.5.0"
-    PYTHON_VERSION: "3.12.11"
-    CUDA_VERSION: "12.9.0"
-    CUDNN_VERSION_AMD64: "8.9.7.29"
-    CUDNN_VERSION_ARM64: "8.9.7.29"
-    CUDNN_CUDA_VERSION_MAJ_MIN_AMD64: "12.2"
-    CUDNN_CUDA_VERSION_MAJ_MIN_ARM64: "12.2"
-    LIBNVINFER_VERSION_AMD64: "10.11.0.33"
-    LIBNVINFER_VERSION_ARM64: "10.3.0.26"
-    LIBNVINFER_CUDA_VERSION_MAJ_MIN_AMD64: "12.9"
-    LIBNVINFER_CUDA_VERSION_MAJ_MIN_ARM64: "12.5"
-    TAG_VERSION_MAJ_MIN: "false"
-    TAG_VERSION_MAJ: "false"
+variables:
+  R_VERSION: "4.5.1"
+  PYTHON_VERSION: "3.13.9"
+  CUDA_VERSION: "13.0.1"
+  CUDNN_VERSION_AMD64: "9.14.0.64"
+  CUDNN_VERSION_ARM64: "9.14.0.64"
+  CUDNN_CUDA_VERSION_MAJ_MIN_AMD64: "13.0"
+  CUDNN_CUDA_VERSION_MAJ_MIN_ARM64: "13.0"
+  TAG_VERSION_MAJ_MIN: "false"
+  TAG_VERSION_MAJ: "false"
+
+workflow:
+  rules:
+    - if: $CUDA_BASE_IMAGE == "ubuntu"
+      variables:
+        BASE_IMAGE: "$CUDA_BASE_IMAGE"
+        BASE_IMAGE_TAG: "$CUDA_BASE_IMAGE_TAG"
+        CUDA_IMAGE_DEVEL_SUBTAG: "devel-$BASE_IMAGE$BASE_IMAGE_TAG"
+        CUDA_IMAGE_SUBTAG: "runtime-$BASE_IMAGE$BASE_IMAGE_TAG"
+    - if: $CI_COMMIT_BRANCH
 
 .before-script-all: &before-script-all
   - |
@@ -49,7 +54,6 @@
 .build:
   image: glcr.b-data.ch/docker/docker:dind
   stage: build
-  extends: .env
   services:
     - name: glcr.b-data.ch/docker/docker:dind
       alias: docker
@@ -65,7 +69,6 @@
 .post:
   image: glcr.b-data.ch/docker/docker:dind
   stage: .post
-  extends: .env
   before_script:
     - *before-script-all
 

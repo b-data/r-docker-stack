@@ -15,7 +15,6 @@ ENV PARENT_IMAGE=${BUILD_ON_IMAGE}:${R_VERSION} \
 
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
-    cmake \
     default-libmysqlclient-dev \
     libfribidi-dev \
     libgit2-dev \
@@ -41,6 +40,8 @@ RUN apt-get update \
   && apt-get -y purge libharfbuzz-dev \
   && apt-get -y autoremove \
   && apt-get -y install --no-install-recommends libharfbuzz-icu0 \
+  ## Install cmake
+  && apt-get -y install --no-install-recommends cmake \
   ## Strip libraries of binary packages installed from PPPM
   && RLS=$(Rscript -e "cat(Sys.getenv('R_LIBS_SITE'))") \
   && strip ${RLS}/*/libs/*.so \

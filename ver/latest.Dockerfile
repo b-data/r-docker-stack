@@ -1,5 +1,5 @@
 ARG BASE_IMAGE=debian
-ARG BASE_IMAGE_TAG=12
+ARG BASE_IMAGE_TAG=13
 ARG CUDA_IMAGE
 ARG CUDA_IMAGE_SUBTAG
 ARG BLAS=libopenblas-dev
@@ -70,6 +70,8 @@ RUN apt-get update \
     libbz2-dev \
     '^libcurl[3|4]$' \
     libdeflate-dev \
+    libffi-dev \
+    libgdbm-dev \
     libicu-dev \
     '^libjpeg.*-turbo.*-dev$' \
     liblapack-dev \
