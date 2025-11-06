@@ -66,7 +66,7 @@ docker build \
   --build-arg BASE_IMAGE=ubuntu \
   --build-arg BASE_IMAGE_TAG=24.04 \
   --build-arg CUDA_IMAGE=nvidia/cuda \
-  --build-arg CUDA_VERSION=13.0.1 \
+  --build-arg CUDA_VERSION=13.0.2 \
   --build-arg CUDA_IMAGE_SUBTAG=runtime-ubuntu24.04 \
   --build-arg R_VERSION=4.5.2 \
   --build-arg PYTHON_VERSION=3.13.9 \
@@ -79,7 +79,7 @@ docker build \
 ```bash
 docker build \
   --build-arg BUILD_ON_IMAGE=cuda/r/ver \
-  --build-arg CUDNN_VERSION=9.13.0.50 \
+  --build-arg CUDNN_VERSION=9.15.0.58 \
   --build-arg CUDNN_CUDA_VERSION_MAJ_MIN=13.0 \
   --build-arg CUDA_IMAGE_FLAVOR=runtime \
   -t cuda/r/ver \
