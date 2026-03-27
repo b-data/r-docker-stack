@@ -29,6 +29,7 @@ RUN apt-get update \
     libssl-dev \
     libtool \
     libudunits2-dev \
+    libuv1-dev \
     libxml2-dev \
     sqlite3 \
     zlib1g-dev \
