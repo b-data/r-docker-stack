@@ -131,6 +131,7 @@ RUN apt-get update \
     libfontconfig1-dev \
     libssl-dev \
     libtiff-dev \
+    libuv1-dev \
     libxml2-dev \
   ## Install radian
   && export PIP_BREAK_SYSTEM_PACKAGES=1 \
