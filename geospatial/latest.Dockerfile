@@ -64,4 +64,5 @@ RUN apt-get update \
   && strip ${RLS}/*/libs/*.so \
   ## Clean up
   && rm -rf /tmp/* \
-  && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/* \
+    ${HOME}/.config/R
