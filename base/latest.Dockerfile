@@ -123,6 +123,8 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
 ## Install R related stuff
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
+    ## Install cmake
+    cmake \
     ## Current ZeroMQ library for R pbdZMQ
     libzmq3-dev \
     ## Required for R extension
