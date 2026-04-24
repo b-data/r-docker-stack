@@ -32,6 +32,8 @@ RUN apt-get update \
     libxml2-dev \
     sqlite3 \
     zlib1g-dev \
+    ## Required for R package fs
+    libuv1-dev \
   ## Install arrow
   && install2.r --error --deps TRUE  -n $NCPUS arrow \
   ## Install cmake

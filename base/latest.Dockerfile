@@ -2,10 +2,10 @@ ARG BASE_IMAGE=debian
 ARG BASE_IMAGE_TAG=13
 ARG BUILD_ON_IMAGE=glcr.b-data.ch/r/ver
 ARG R_VERSION
-ARG NEOVIM_VERSION=0.11.6
-ARG GIT_VERSION=2.53.0
+ARG NEOVIM_VERSION=0.12.2
+ARG GIT_VERSION=2.54.0
 ARG GIT_LFS_VERSION=3.7.1
-ARG PANDOC_VERSION=3.6.3
+ARG PANDOC_VERSION=3.8.3
 
 FROM glcr.b-data.ch/neovim/nvsi:${NEOVIM_VERSION} AS nvsi
 FROM glcr.b-data.ch/git/gsi/${GIT_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as gsi
@@ -123,6 +123,8 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
 ## Install R related stuff
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
+    ## Install cmake
+    cmake \
     ## Current ZeroMQ library for R pbdZMQ
     libzmq3-dev \
     ## Required for R extension
@@ -132,6 +134,8 @@ RUN apt-get update \
     libssl-dev \
     libtiff-dev \
     libxml2-dev \
+    ## Required for R package fs
+    libuv1-dev \
   ## Install radian
   && export PIP_BREAK_SYSTEM_PACKAGES=1 \
   && pip install radian \
