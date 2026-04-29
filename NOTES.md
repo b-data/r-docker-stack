@@ -72,7 +72,7 @@ The CUDA version is selected as follows:
 * Provide NVBLAS-enabled R and Rscript.
   * Enabled at runtime and only if `nvidia-smi` and at least one GPU are
     present.
-* Provide NVBLAS-enabled radian (base+ images).
+* Provide NVBLAS-enabled arf (base+ images).
   * Enabled at runtime and only if `nvidia-smi` and at least one GPU are
     present.
 
