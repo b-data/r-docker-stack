@@ -252,12 +252,12 @@ RUN cpuBlasLib="$(update-alternatives --query \
   && echo '#!/bin/bash' > $(which R)_ \
   && echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[[:space:]]\?[[:digit:]]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
     >> $(which R)_ \
-  && echo "$(which R) \"\${@}\"" >> $(which R)_ \
+  && echo "exec $(which R) \"\${@}\"" >> $(which R)_ \
   && cp -a $(which Rscript) $(which Rscript)_ \
   && echo '#!/bin/bash' > $(which Rscript)_ \
   && echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[[:space:]]\?[[:digit:]]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
     >> $(which Rscript)_ \
-  && echo "$(which Rscript) \"\${@}\"" >> $(which Rscript)_ \
+  && echo "exec $(which Rscript) \"\${@}\"" >> $(which Rscript)_ \
   ## Install cuDNN
   && apt-get -y install --no-install-recommends \
     ${NV_CUDNN_PACKAGE} \

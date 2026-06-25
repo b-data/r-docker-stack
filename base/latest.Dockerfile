@@ -2,10 +2,11 @@ ARG BASE_IMAGE=debian
 ARG BASE_IMAGE_TAG=13
 ARG BUILD_ON_IMAGE=glcr.b-data.ch/r/ver
 ARG R_VERSION
-ARG NEOVIM_VERSION=0.12.2
+ARG NEOVIM_VERSION=0.12.3
 ARG GIT_VERSION=2.54.0
 ARG GIT_LFS_VERSION=3.7.1
 ARG PANDOC_VERSION=3.8.3
+ARG ARF_VERSION=0.4.1
 
 FROM glcr.b-data.ch/neovim/nvsi:${NEOVIM_VERSION} AS nvsi
 FROM glcr.b-data.ch/git/gsi/${GIT_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as gsi
@@ -22,6 +23,7 @@ ARG NEOVIM_VERSION
 ARG GIT_VERSION
 ARG GIT_LFS_VERSION
 ARG PANDOC_VERSION
+ARG ARF_VERSION
 ARG BUILD_START
 
 ENV PARENT_IMAGE=${BUILD_ON_IMAGE}:${R_VERSION} \
@@ -29,6 +31,7 @@ ENV PARENT_IMAGE=${BUILD_ON_IMAGE}:${R_VERSION} \
     GIT_VERSION=${GIT_VERSION} \
     GIT_LFS_VERSION=${GIT_LFS_VERSION} \
     PANDOC_VERSION=${PANDOC_VERSION} \
+    ARF_VERSION=${ARF_VERSION} \
     BUILD_DATE=${BUILD_START}
 
 ## Installing V8 on Linux, the alternative way
@@ -136,18 +139,21 @@ RUN apt-get update \
     libxml2-dev \
     ## Required for R package fs
     libuv1-dev \
-  ## Install radian
-  && export PIP_BREAK_SYSTEM_PACKAGES=1 \
-  && pip install radian \
-  ## Provide NVBLAS-enabled radian_
+  ## Install arf
+  && cd /tmp \
+  && curl -sL https://github.com/eitsupi/arf/releases/download/v"${ARF_VERSION}"/arf-console-"$(uname -m)"-unknown-linux-gnu.tar.xz \
+    | tar xJf - --no-same-owner --strip-components=1 \
+  && mv arf /usr/local/bin \
+  ## Provide NVBLAS-enabled arf_
   ## Enabled at runtime and only if nvidia-smi and at least one GPU are present
   && if [ ! -z "$CUDA_IMAGE" ]; then \
     nvblasLib="$(cd $CUDA_HOME/lib* && ls libnvblas.so* | head -n 1)"; \
-    cp -a $(which radian) $(which radian)_; \
-    echo '#!/bin/bash' > $(which radian)_; \
+    touch $(which arf)_; \
+    echo '#!/bin/bash' > $(which arf)_; \
     echo "command -v nvidia-smi >/dev/null && nvidia-smi -L | grep 'GPU[[:space:]]\?[[:digit:]]\+' >/dev/null && export LD_PRELOAD=$nvblasLib" \
-      >> $(which radian)_; \
-    echo "$(which radian) \"\${@}\"" >> $(which radian)_; \
+      >> $(which arf)_; \
+    echo "exec $(which arf) \"\${@}\"" >> $(which arf)_; \
+    chmod +x $(which arf)_; \
   fi \
   ## Install httpgd
   && install2.r --error --deps TRUE --skipinstalled -n $NCPUS \
