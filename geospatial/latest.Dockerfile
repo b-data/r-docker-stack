@@ -32,8 +32,6 @@ RUN apt-get update \
     sqlite3 \
     tk-dev \
   && install2.r --error --skipinstalled -n $NCPUS \
-    BH \
-    RcppArmadillo \
     RNetCDF \
     classInt \
     deldir \
@@ -44,7 +42,6 @@ RUN apt-get update \
     ncdf4 \
     proj4 \
     raster \
-    rgl \
     sf \
     sfarrow \
     sp \
