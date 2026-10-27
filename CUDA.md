@@ -69,7 +69,7 @@ docker build \
   --build-arg CUDA_VERSION=13.4.3 \
   --build-arg CUDA_IMAGE_SUBTAG=runtime-ubuntu24.04 \
   --build-arg R_VERSION=4.6.1 \
-  --build-arg PYTHON_VERSION=3.14.9 \
+  --build-arg PYTHON_VERSION=3.14.10 \
   -t cuda/r/ver \
   -f ver/latest.Dockerfile .
 ```
