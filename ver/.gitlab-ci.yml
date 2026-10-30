@@ -370,7 +370,6 @@ trigger-latest-build:
     - apk add --update --no-cache curl
   script:
     - curl -X POST -F token=$R_BASE -F ref=main https://gitlab.b-data.ch/api/v4/projects/293/trigger/pipeline
-    - curl -X POST -F token=$R_PLUMBER -F ref=main https://gitlab.b-data.ch/api/v4/projects/176/trigger/pipeline
   rules:
     - if: $CUDA_IMAGE
       when: never
@@ -388,7 +387,6 @@ trigger-version-build:
     - apk add --update --no-cache curl
   script:
     - curl -X POST -F token=$R_BASE -F ref=freeze-version https://gitlab.b-data.ch/api/v4/projects/293/trigger/pipeline
-    - curl -X POST -F token=$R_PLUMBER -F ref=freeze-version https://gitlab.b-data.ch/api/v4/projects/176/trigger/pipeline
   rules:
     - if: $CUDA_IMAGE
       when: never
