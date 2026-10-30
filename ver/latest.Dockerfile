@@ -94,10 +94,15 @@ RUN apt-get update \
     file \
     fonts-texgyre \
     gsfonts \
+    libsqlite3-dev \
     libxt6 \
     locales \
     netbase \
     tzdata \
+  && if ([ "${BASE_IMAGE%:*}" = "debian" ] && dpkg --compare-versions "${BASE_IMAGE#*:}" ge "13") \
+    || ([ "${BASE_IMAGE%:*}" = "ubuntu" ] && dpkg --compare-versions "${BASE_IMAGE#*:}" ge "26"); then \
+    apt-get install -y --no-install-recommends libmpdec-dev; \
+  fi \
   ## Switch BLAS/LAPACK (manual mode)
   && if [ ${BLAS} = "libopenblas-dev" ]; then \
     update-alternatives --set libblas.so.3-$(uname -m)-linux-gnu \
