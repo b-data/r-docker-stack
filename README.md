@@ -21,11 +21,6 @@ Images considered stable for R versions ≥ 4.2.0.
 :point_right: The current state may eventually be backported to versions ≥
 4.0.4.
 
-Due to ongoing DDoS attacks, access to b-data's IT infrastructure has been
-blocked for all Chinese servers.  
-:information_source: For any requests to unblock individual Chinese IPs or CIDR
-blocks, please contact <olivier.benz@b-data.ch>.
-
 **Build chain**
 
 ver → base → tidyverse → verse → geospatial → qgisprocess  
@@ -81,8 +76,8 @@ To install docker, follow the instructions for your platform:
 
 ```bash
 docker build \
-  --build-arg R_VERSION=4.6.0 \
-  --build-arg PYTHON_VERSION=3.14.6 \
+  --build-arg R_VERSION=4.6.1 \
+  --build-arg PYTHON_VERSION=3.14.10 \
   -t r/ver \
   -f ver/latest.Dockerfile .
 ```
