@@ -213,19 +213,19 @@ RUN apt-get update \
     ## Qt: Support running on headless computer
 ENV QT_QPA_PLATFORM=offscreen
 
-RUN mkdir -p ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
-  && cd ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
+RUN mkdir -p ${HOME}/.local/share/QGIS/QGIS4/profiles/default/python/plugins \
+  && cd ${HOME}/.local/share/QGIS/QGIS4/profiles/default/python/plugins \
   && qgis-plugin-manager init \
   && qgis-plugin-manager update \
   ## QGIS: Enable plugins
   && qgis_process plugins enable grassprovider \
   ## QGIS: Add custom environment variable
-  && mkdir -p ${HOME}/.local/share/QGIS/QGIS3/profiles/default/QGIS \
-  && qgis3Ini="${HOME}/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini" \
-  && echo "\n[qgis]" >> ${qgis3Ini} \
+  && mkdir -p ${HOME}/.local/share/QGIS/QGIS4/profiles/default/QGIS \
+  && qgis4Ini="${HOME}/.local/share/QGIS/QGIS4/profiles/default/QGIS/QGIS4.ini" \
+  && echo "\n[qgis]" >> ${qgis4Ini} \
   && echo 'customEnvVars="append|PYTHONPATH=:/usr/lib/python3/dist-packages"' >> \
-    ${qgis3Ini} \
-  && echo "customEnvVarsUse=true\n" >> ${qgis3Ini} \
+    ${qgis4Ini} \
+  && echo "customEnvVarsUse=true\n" >> ${qgis4Ini} \
   && rm -rf .cache_qgis_plugin_manager \
   ## Clean up
   && rm -rf /tmp/* \
