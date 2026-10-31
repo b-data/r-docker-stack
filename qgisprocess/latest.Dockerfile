@@ -229,6 +229,19 @@ RUN mkdir -p ${HOME}/.local/share/QGIS/QGIS4/profiles/default/python/plugins \
   && echo 'customEnvVars="append|PYTHONPATH=:/usr/lib/python3/dist-packages"' >> \
     ${qgis4Ini} \
   && echo "customEnvVarsUse=true\n" >> ${qgis4Ini} \
+  && if [ "$(uname -m)" = "x86_64" ]; then \
+    ## QGIS: Set OTB application folder and OTB folder
+    echo "\n[Processing]" >> ${qgis4Ini}; \
+    if [ -z "${OTB_VERSION}" ]; then \
+      echo "Configuration\OTB_APP_FOLDER=/usr/lib/otb/applications" >> \
+        ${qgis4Ini}; \
+      echo "Configuration\OTB_FOLDER=/usr\n" >> ${qgis4Ini}; \
+    else \
+      echo "Configuration\OTB_APP_FOLDER=/usr/local/lib/otb/applications" >> \
+        ${qgis4Ini}; \
+      echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgis4Ini}; \
+    fi; \
+  fi \
   && rm -rf .cache_qgis_plugin_manager \
   ## Clean up
   && rm -rf /tmp/* \
